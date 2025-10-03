@@ -24,9 +24,9 @@ const normalizeCurrentPath = (pathname) =>
 const currentPath = normalizeCurrentPath(Astro.url.pathname);
 
 const baseMenu = [
-  { name: "DEPANNAGE", path: "/depannage" },
-  { name: "ACCESSOIRES", path: "/accessoires" },
-  { name: "QUI SOMMES NOUS ?", path: "/a-propos" },
+  { name: "Page 1", path: "/page-1" },
+  { name: "Page 2", path: "/page-2" },
+  { name: "Page 3", path: "/page-3" },
 ];
 
 const menu = baseMenu.map((item) => {
@@ -44,8 +44,8 @@ const menu = baseMenu.map((item) => {
 });
 
 const menuLogo = {
-  url: `${baseWithSlash}images/logo.svg`,
-  alt: "Envolet & Toit",
+  url: `${baseWithSlash}images/astro-logo.svg`,
+  alt: "Logo Mon Entreprise",
 };
 ---
 

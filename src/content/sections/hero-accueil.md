@@ -9,12 +9,15 @@ content: >-
 primaryCta:
   label: "Démarrer un projet"
   href: "/page-1"
+  icon: "circle-check"
 secondaryCta:
   label: "Voir nos services"
   href: "/page-2"
+  icon: "circle-check"
 tertiaryCta:
   label: "QUI SOMMES NOUS"
   href: "/page-3"
+  icon: "circle-check"
 image:
   src: "/images/hero-placeholder.svg"
   alt: "Présentation de la maquette du site"

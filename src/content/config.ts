@@ -3,6 +3,7 @@ import { defineCollection, z } from 'astro:content';
 const callToActionSchema = z.object({
   label: z.string(),
   href: z.string(),
+  icon: z.string().optional(),
 });
 
 const heroSchema = z.object({
