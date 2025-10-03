@@ -29,7 +29,7 @@
   &__intro {
     :global(p) {
       margin: 0;
-      color: var(--color-muted, #555);
+      color: var(--color-neutral-content, #555);
     }
   }
 
@@ -65,7 +65,7 @@
 
     :global(button[data-active='true']) {
       background: var(--color-primary);
-      color: var(--color-background) !important;
+      color: var(--color-base-100) !important;
       border-bottom: none !important;
     }
 
@@ -93,7 +93,7 @@
   &__panel_description {
     :global(p) {
       margin: 0 0 var(--space-3);
-      color: var(--color-muted, #555);
+      color: var(--color-neutral-content, #555);
       text-align: center;
     }
   }
@@ -121,7 +121,7 @@
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 1rem;
     overflow: hidden;
-    background: var(--color-background);
+    background: var(--color-base-100);
     box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
@@ -159,7 +159,7 @@
 
     &__media {
       margin: 0;
-      background: var(--color-background);
+      background: var(--color-base-100);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -180,7 +180,7 @@
       flex-direction: column;
       gap: 1rem;
       padding: var(--space-3);
-      background: var(--color-background);
+      background: var(--color-base-100);
       box-sizing: border-box;
       transform: rotateX(-90deg);
       transform-origin: bottom;
@@ -203,14 +203,14 @@
     &__reference {
       margin: 0;
       font-size: var(--step--1);
-      color: var(--color-muted, #555);
+      color: var(--color-neutral-content, #555);
     }
 
     &__description {
       :global(p) {
         margin: 0;
         line-height: 1.5;
-        color: var(--color-muted, #555);
+        color: var(--color-neutral-content, #555);
       }
     }
 
@@ -228,7 +228,7 @@
       justify-content: center;
       padding: var(--space-1) var(--space-2);
       background: var(--color-primary);
-      color: var(--color-background);
+      color: var(--color-base-100);
       font-family: Bold, 'Montserrat', sans-serif;
       font-size: var(--step--1);
       letter-spacing: 0.08em;
@@ -251,7 +251,7 @@
     align-items: center;
     justify-content: center;
     padding: var(--space-1) var(--space-2);
-    background: var(--color-background);
+    background: var(--color-base-100);
     color: var(--color-primary);
     font-family: Bold, 'Montserrat', sans-serif;
     font-size: var(--step--1);
@@ -263,25 +263,25 @@
     &:focus-visible {
       outline: none;
       background: var(--color-primary);
-      color: var(--color-background) !important;
+      color: var(--color-base-100) !important;
     }
 
     &:focus-visible {
-      box-shadow: 0 0 0 3px var(--transp-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-transparent);
     }
   }
 
   &__note {
     :global(p) {
       margin: 1.5rem 0 0;
-      color: var(--color-muted, #555);
+      color: var(--color-neutral-content, #555);
       text-align: center;
     }
   }
 
   &__footnote {
     text-align: center;
-    color: var(--color-muted, #555);
+    color: var(--color-neutral-content, #555);
     font-size: 0.9rem;
 
     :global(p) {
