@@ -1,24 +1,33 @@
 import type { CollectionEntry } from 'astro:content';
 
+import CatalogueSection from '@components/Catalogue/CatalogueSection.astro';
 import CtaBanner from '@components/CtaBanner.astro';
 import FeatureGrid from '@components/FeatureGrid.astro';
-import HeroSection from '@components/HeroSection.astro';
+import HeroSection from '@components/Home/HeroSection.astro';
 import MarkdownSection from '@components/MarkdownSection.astro';
-import TestimonialSection from '@components/TestimonialSection.astro';
+import FAQSection from '@components/FAQSection.astro';
+import ParcoursSection from '@components/ParcoursSection.astro';
+import ImagesGrid from '@components/ImagesGrid.astro';
+import MapSection from '@components/MapSection.astro';
+
 
 const componentMap = {
   hero: HeroSection,
   'feature-grid': FeatureGrid,
-  testimonials: TestimonialSection,
+  parcours: ParcoursSection,
+  faq: FAQSection,
   markdown: MarkdownSection,
+  map: MapSection,
   cta: CtaBanner,
+  images: ImagesGrid,
+  catalogue: CatalogueSection,
 } as const;
 
 type SectionComponentName = keyof typeof componentMap;
 
 type ResolvedSection = {
   Component: (typeof componentMap)[SectionComponentName];
-  props: Record<string, unknown>;
+  props: any;
 };
 
 export async function resolveSection(
@@ -40,6 +49,7 @@ export async function resolveSection(
           content: section.data.content,
           primaryCta: section.data.primaryCta,
           secondaryCta: section.data.secondaryCta,
+          tertiaryCta: section.data.tertiaryCta,
           image: section.data.image,
         },
       };
@@ -53,13 +63,23 @@ export async function resolveSection(
           features: section.data.features,
         },
       };
-    case 'testimonials':
+    case 'parcours':
+      return {
+        Component,
+        props: {
+          title: section.data.title,
+          schema: section.data.schema,
+          description: section.data.description,
+          steps: section.data.steps,
+        },
+      };
+    case 'faq':
       return {
         Component,
         props: {
           title: section.data.title,
           description: section.data.description,
-          testimonials: section.data.testimonials,
+          questions: section.data.questions,
         },
       };
     case 'markdown': {
@@ -68,10 +88,21 @@ export async function resolveSection(
         Component,
         props: {
           title: section.data.title,
+          description: section.data.description,
+          images: section.data.images,
           Content,
         },
       };
     }
+    case 'map':
+      return {
+        Component,
+        props: {
+          title: section.data.title,
+          caption: section.data.caption,
+          embedUrl: section.data.embedUrl,
+        },
+      };
     case 'cta':
       return {
         Component,
@@ -79,8 +110,28 @@ export async function resolveSection(
           eyebrow: section.data.eyebrow,
           title: section.data.title,
           description: section.data.description,
+          content: section.data.content,
           primaryCta: section.data.primaryCta,
           secondaryCta: section.data.secondaryCta,
+        },
+      };
+    case 'images':
+      return {
+        Component,
+        props: {
+          images: section.data.images,
+        },
+      };
+    case 'catalogue':
+      return {
+        Component,
+        props: {
+          eyebrow: section.data.eyebrow,
+          title: section.data.title,
+          intro: section.data.intro,
+          categories: section.data.categories,
+          defaultCategory: section.data.defaultCategory,
+          footnote: section.data.footnote,
         },
       };
     default:

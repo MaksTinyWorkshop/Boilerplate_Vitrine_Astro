@@ -1,8 +1,18 @@
 import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
+import mdx from '@astrojs/mdx';
+import { webcore } from 'webcoreui/integration'
+
 
 export default defineConfig({
-  site: 'https://www.yoursite.tld',
+  site: 'https://makstinyworkshop.github.io',
+
   scopedStyleStrategy: 'where',
+  integrations: [tailwind(), mdx(), webcore()],
+  // Rajout de ces deux lignes pour GithubPages
+  output: 'static',
+  base: '/Nom_du_Repo',
+  //
   markdown: {
     syntaxHighlight: 'prism',
   },

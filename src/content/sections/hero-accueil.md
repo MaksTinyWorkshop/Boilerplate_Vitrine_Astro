@@ -8,10 +8,13 @@ content: >-
   sans toucher au code.
 primaryCta:
   label: "Démarrer un projet"
-  href: "/contact"
+  href: "/page-1"
 secondaryCta:
   label: "Voir nos services"
-  href: "/services"
+  href: "/page-2"
+tertiaryCta:
+  label: "QUI SOMMES NOUS"
+  href: "/page-3"
 image:
   src: "/images/hero-placeholder.svg"
   alt: "Présentation de la maquette du site"

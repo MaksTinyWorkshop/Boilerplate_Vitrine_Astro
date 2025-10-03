@@ -18,6 +18,7 @@ const heroSchema = z.object({
     .optional(),
   primaryCta: callToActionSchema.optional(),
   secondaryCta: callToActionSchema.optional(),
+  tertiaryCta: callToActionSchema.optional(),
 });
 
 const featureGridSchema = z.object({
@@ -36,15 +37,31 @@ const featureGridSchema = z.object({
     .min(1),
 });
 
-const testimonialSchema = z.object({
-  component: z.literal('testimonials'),
+const parcoursSchema = z.object({
+  component: z.literal('parcours'),
   title: z.string(),
+  schema: z.string().optional(),
   description: z.string().optional(),
-  testimonials: z
+  steps: z
     .array(
       z.object({
-        quote: z.string(),
-        author: z.string(),
+        title: z.string(),
+        description: z.string(),
+        icon: z.string().optional(),
+      }),
+    )
+    .min(1),
+});
+
+const faqSchema = z.object({
+  component: z.literal('faq'),
+  title: z.string(),
+  description: z.string().optional(),
+  questions: z
+    .array(
+      z.object({
+        question: z.string(),
+        answer: z.string(),
         role: z.string().optional(),
       }),
     )
@@ -54,6 +71,23 @@ const testimonialSchema = z.object({
 const markdownSchema = z.object({
   component: z.literal('markdown'),
   title: z.string().optional(),
+  description: z.string().optional(),
+  images: z
+    .array(
+      z.object({
+        src: z.string(),
+        alt: z.string().optional(),
+        caption: z.string().optional(),
+      }),
+    )
+    .optional()
+});
+
+const mapSchema = z.object({
+  component: z.literal('map'),
+  title: z.string().optional(),
+  caption: z.string().optional(),
+  embedUrl: z.string(),
 });
 
 const ctaSchema = z.object({
@@ -61,16 +95,67 @@ const ctaSchema = z.object({
   eyebrow: z.string().optional(),
   title: z.string(),
   description: z.string().optional(),
-  primaryCta: callToActionSchema,
+  content: z.string().optional(),
+  primaryCta: callToActionSchema.optional(),
   secondaryCta: callToActionSchema.optional(),
 });
+
+const imagesSchema = z.object({
+  component: z.literal('images'),
+  images: z
+    .array(
+      z.object({
+        src: z.string(),
+        alt: z.string().optional(),
+        caption: z.string().optional(),
+      }),
+    )
+    .min(1),
+});
+
+const catalogueItemSchema = z.object({
+  title: z.string(),
+  reference: z.string().optional(),
+  description: z.string().optional(),
+  price: z.string().optional(),
+  image: z
+    .object({
+      src: z.string(),
+      alt: z.string().optional(),
+    })
+    .optional(),
+  cta: callToActionSchema.optional(),
+});
+
+const catalogueCategorySchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  description: z.string().optional(),
+  note: z.string().optional(),
+  items: z.array(catalogueItemSchema).min(1),
+});
+
+const catalogueSchema = z.object({
+  component: z.literal('catalogue'),
+  eyebrow: z.string().optional(),
+  title: z.string().optional(),
+  intro: z.string().optional(),
+  categories: z.array(catalogueCategorySchema).min(1),
+  defaultCategory: z.string().optional(),
+  footnote: z.string().optional(),
+});
+
 
 const sectionSchema = z.discriminatedUnion('component', [
   heroSchema,
   featureGridSchema,
-  testimonialSchema,
+  parcoursSchema,
+  faqSchema,
   markdownSchema,
+  mapSchema,
   ctaSchema,
+  imagesSchema,
+  catalogueSchema,
 ]);
 
 const sections = defineCollection({
