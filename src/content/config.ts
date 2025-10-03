@@ -145,6 +145,20 @@ const catalogueSchema = z.object({
   footnote: z.string().optional(),
 });
 
+const testimonialsSchema = z.object({
+  component: z.literal('testimonials'),
+  title: z.string(),
+  description: z.string().optional(),
+  testimonials: z
+    .array(
+      z.object({
+        quote: z.string(),
+        author: z.string(),
+        role: z.string().optional(),
+      }),
+    )
+    .min(1),
+});
 
 const sectionSchema = z.discriminatedUnion('component', [
   heroSchema,
@@ -156,6 +170,7 @@ const sectionSchema = z.discriminatedUnion('component', [
   ctaSchema,
   imagesSchema,
   catalogueSchema,
+  testimonialsSchema,
 ]);
 
 const sections = defineCollection({

@@ -9,6 +9,7 @@ import FAQSection from '@components/FAQSection.astro';
 import ParcoursSection from '@components/ParcoursSection.astro';
 import ImagesGrid from '@components/ImagesGrid.astro';
 import MapSection from '@components/MapSection.astro';
+import TestimonialsSection from '@components/TestimonialsSection.astro';
 
 
 const componentMap = {
@@ -21,6 +22,7 @@ const componentMap = {
   cta: CtaBanner,
   images: ImagesGrid,
   catalogue: CatalogueSection,
+  testimonials: TestimonialsSection
 } as const;
 
 type SectionComponentName = keyof typeof componentMap;
@@ -132,6 +134,15 @@ export async function resolveSection(
           categories: section.data.categories,
           defaultCategory: section.data.defaultCategory,
           footnote: section.data.footnote,
+        },
+      };
+    case 'testimonials':
+      return {
+        Component,
+        props: {
+          title: section.data.title,
+          description: section.data.description,
+          testimonials: section.data.testimonials,
         },
       };
     default:
