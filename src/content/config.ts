@@ -6,6 +6,21 @@ const callToActionSchema = z.object({
   icon: z.string().optional(),
 });
 
+// Schéma décomoposé de la grille tarifaire
+const optionTarifSchema = z.object({
+  price: z.string().optional(),
+  description: z.string(),
+});
+
+const grilleTarifaireSchema = z.object({
+  component: z.literal('tarif'),
+  icon: z.string().optional(),
+  eyebrow: z.string().optional(),
+  price: z.string(),
+  description: z.string(),
+  options: z.array(optionTarifSchema)
+});
+  
 const heroSchema = z.object({
   component: z.literal('hero'),
   eyebrow: z.string().optional(),
@@ -72,6 +87,7 @@ const faqSchema = z.object({
 const markdownSchema = z.object({
   component: z.literal('markdown'),
   title: z.string().optional(),
+  variant: z.string().optional(),
   description: z.string().optional(),
   images: z
     .array(
@@ -163,6 +179,7 @@ const testimonialsSchema = z.object({
 
 const sectionSchema = z.discriminatedUnion('component', [
   heroSchema,
+  grilleTarifaireSchema,
   featureGridSchema,
   parcoursSchema,
   faqSchema,
