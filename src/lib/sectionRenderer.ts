@@ -1,7 +1,7 @@
 import type { CollectionEntry } from 'astro:content';
 
 import CatalogueSection from '@components/Catalogue/CatalogueSection.astro';
-import CtaBanner from '@components/CtaBanner.astro';
+import CtaBanner from '@components/CTAs/CTABanner/CtaBanner.astro';
 import FeatureGrid from '@components/FeatureGrid.astro';
 import HeroSection from '@components/Home/HeroSection.astro';
 import MarkdownSection from '@components/MarkdownSection.astro';

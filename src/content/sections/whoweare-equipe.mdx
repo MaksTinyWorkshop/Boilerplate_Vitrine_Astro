@@ -4,25 +4,11 @@ title: "L'equipe"
 description: "team"
 ---
 
-export const baseHref = import.meta.env.BASE_URL;
-export const withTrailingSlash = (value) =>
-  value.endsWith("/") ? value : `${value}/`;
-export const baseWithSlash = withTrailingSlash(baseHref);
-export const resolveAsset = (path) => {
-  if (!path || path === "") {
-    return path;
-  }
-  if (/^(?:[a-z+]+:)?\/\//i.test(path) || path.startsWith("data:")) {
-    return path;
-  }
-  if (path === "/") {
-    return baseWithSlash;
-  }
-  const normalized = path.startsWith("/") ? path.slice(1) : path;
-  return `${baseWithSlash}${normalized}`;
-};
+import { resolveUrl } from "@lib/urlHelpers";
 
-<img src={resolveAsset("/images/gallery/Seb.png")} alt="Photodu CEO" />
+const sebImage = resolveUrl("/images/gallery/Seb.png");
+
+<img src={sebImage} alt="Photodu CEO" />
 
 #### Sébastien
 

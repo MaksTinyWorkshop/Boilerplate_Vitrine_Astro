@@ -27,8 +27,7 @@ npm install
 │   │   └── sections/       # Sections réutilisables en Markdown
 │   ├── layouts/            # Layouts globaux
 │   ├── lib/                # Utilitaires (rendu des sections)
-│   ├── pages/              # Routes Astro (`index`, `[slug]`, `404`)
-│   └── styles/             # Styles globaux
+│   └── pages/              # Routes Astro (`index`, `[slug]`, `404`)
 ```
 
 ## Créer ou modifier une page
@@ -39,7 +38,7 @@ npm install
 
 Chaque section possède :
 
-- Un champ `component` qui détermine le composant Astro utilisé (`hero`, `feature-grid`, `testimonials`, `markdown`, `cta`).
+- Un champ `component` qui détermine le composant Astro utilisé (`hero`, `feature-grid`, `testimonials`, `markdown`, `cta`, ...).
 - Des champs frontmatter spécifiques selon le composant (CTA, listes, visuels…).
 - Pour les sections `markdown`, le contenu de la section se rédige dans le corps du fichier.
 
@@ -52,9 +51,9 @@ Chaque section possède :
 
 ## Personnalisation
 
-- Modifiez les couleurs et la typographie depuis `src/styles/global.css`.
+- Style global géré dans `webcore.config.scss`.
 - Remplacez le logo et les images dans `public/`.
-- Ajustez la navigation principale dans `src/layouts/BaseLayout.astro`.
+- Les pages sont gérées dans `src/lib/siteData.ts`, ainsi que les datas de l'entreprise.
 
 ## Déploiement
 

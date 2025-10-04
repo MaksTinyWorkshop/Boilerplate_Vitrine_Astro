@@ -1,34 +1,16 @@
 ---
 import Icon from "@components/Icons/Icon.astro";
 import { companyDetails } from "@lib/siteData";
+import { resolveUrl } from "@lib/urlHelpers";
 
 const year = new Date().getFullYear();
-const baseHref = import.meta.env.BASE_URL;
-const withTrailingSlash = (value) =>
-  value.endsWith("/") ? value : `${value}/`;
-const baseWithSlash = withTrailingSlash(baseHref);
-const resolveHref = (path) => {
-  if (path === "/" || path === "") {
-    return baseWithSlash;
-  }
-  const normalized = path.startsWith("/") ? path.slice(1) : path;
-  return `${baseWithSlash}${normalized}`;
-};
-const resolveAsset = (path) => {
-  if (!path) {
-    return "";
-  }
-  if (/^(?:[a-z+]+:)?\/\//i.test(path)) {
-    return path;
-  }
-  const normalized = path.startsWith("/") ? path.slice(1) : path;
-  return `${baseWithSlash}${normalized}`;
-};
 
 const primaryLogo = companyDetails.logos?.[0];
-const logoSrc = primaryLogo ? resolveAsset(primaryLogo.src) : "";
+const logoSrc = primaryLogo ? resolveUrl(primaryLogo.source.src) : "";
 const secondaryLogo = companyDetails.logos?.[1];
-const secondaryLogoSrc = secondaryLogo ? resolveAsset(secondaryLogo.src) : "";
+const secondaryLogoSrc = secondaryLogo
+  ? resolveUrl(secondaryLogo.source.src)
+  : "";
 const addressLines = [
   companyDetails.address,
   `${companyDetails.zipCode} ${companyDetails.city}`.trim(),
@@ -111,7 +93,7 @@ const socialLinks = companyDetails.socialLinks ?? [];
     © {year}
     {companyDetails.name}.
     <span>
-      <a class="footer__link" href={resolveHref("/mentions-legales")}>
+      <a class="footer__link" href={resolveUrl("/mentions-legales")}>
         Mentions légales
       </a>
     </span>

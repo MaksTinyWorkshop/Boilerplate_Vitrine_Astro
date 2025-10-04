@@ -1,0 +1,47 @@
+---
+import CtaToCallback from "@components/CTAs/CTAtoCallback/CtaToCallback.astro";
+import Spacer from "@components/UI/Spacer.astro";
+import { resolveUrl } from "@lib/urlHelpers";
+import styles from "./ctaBanner.module.scss";
+
+interface CallToAction {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  content?: string;
+  primaryCta: CallToAction;
+  secondaryCta?: CallToAction;
+}
+
+const { eyebrow, title, description, content, primaryCta, secondaryCta } =
+  Astro.props as Props;
+const primaryLabel = primaryCta?.label ?? "ÊTRE RAPPELÉ";
+const resolvedSecondary = secondaryCta
+  ? { ...secondaryCta, href: resolveUrl(secondaryCta.href || "/") }
+  : undefined;
+---
+
+<section class="section-container">
+  <div class={styles.content}>
+    <div class={styles.cta}>
+      {eyebrow && <span class={styles.eyebrow}>{eyebrow}</span>}
+      <h2>{title}</h2>
+      {description && <p set:html={description} />}
+      {content && <p class={styles.bold} set:html={content} />}
+    </div>
+    <CtaToCallback label={primaryLabel} />
+    {
+      resolvedSecondary && (
+        <a class={styles.secondary_link} href={resolvedSecondary.href}>
+          {resolvedSecondary.label}
+        </a>
+      )
+    }
+    <Spacer size=".5rem" />
+  </div>
+</section>

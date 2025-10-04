@@ -19,6 +19,6 @@ tertiaryCta:
   href: "/page-3"
   icon: "circle-check"
 image:
-  src: "/images/hero-placeholder.svg"
+  src: "/images/hero-bg.svg"
   alt: "Présentation de la maquette du site"
 ---
