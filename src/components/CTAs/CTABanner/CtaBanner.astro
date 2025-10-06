@@ -1,8 +1,8 @@
 ---
-import CtaToCallback from "@components/CTAs/CTAtoCallback/CtaToCallback.astro";
 import Spacer from "@components/UI/Spacer.astro";
 import { resolveUrl } from "@lib/urlHelpers";
 import styles from "./ctaBanner.module.scss";
+import CtaDevis from "../CTADevis/CtaDevis.astro";
 
 interface CallToAction {
   label: string;
@@ -14,34 +14,77 @@ interface Props {
   title: string;
   description?: string;
   content?: string;
-  primaryCta: CallToAction;
-  secondaryCta?: CallToAction;
+  note?: string;
+  ctas?: CallToAction[];
 }
 
-const { eyebrow, title, description, content, primaryCta, secondaryCta } =
+const { eyebrow, title, description, content, ctas = [] } =
   Astro.props as Props;
-const primaryLabel = primaryCta?.label ?? "ÊTRE RAPPELÉ";
-const resolvedSecondary = secondaryCta
-  ? { ...secondaryCta, href: resolveUrl(secondaryCta.href || "/") }
-  : undefined;
+const resolvedCtas = ctas.map((cta) => ({
+  ...cta,
+  href: resolveUrl(cta.href || "/"),
+}));
+const primaryCta = resolvedCtas[0];
+
+const resolvedClassName = () => {
+  if (eyebrow === "devis") {
+    return styles.devis;
+  }
+  if (eyebrow === "mail") {
+    return styles.mail;
+  }
+  if (eyebrow === "simple") {
+    return styles.simple;
+  }
+};
 ---
 
-<section class="section-container">
-  <div class={styles.content}>
-    <div class={styles.cta}>
-      {eyebrow && <span class={styles.eyebrow}>{eyebrow}</span>}
-      <h2>{title}</h2>
-      {description && <p set:html={description} />}
-      {content && <p class={styles.bold} set:html={content} />}
-    </div>
-    <CtaToCallback label={primaryLabel} />
-    {
-      resolvedSecondary && (
-        <a class={styles.secondary_link} href={resolvedSecondary.href}>
-          {resolvedSecondary.label}
-        </a>
-      )
-    }
-    <Spacer size=".5rem" />
-  </div>
+<section class={`${resolvedClassName()} section-container`}>
+  {
+    eyebrow === "devis" && (
+      <div class={styles.content}>
+        <div class={styles.logo_box}>
+          <img src="/images/company-logo.svg" alt="Logo C'Com" />
+        </div>
+        <div class={styles.cta}>
+          <h2>{title}</h2>
+          {description && <p set:html={description} />}
+          {content && <p class={styles.bold} set:html={content} />}
+        </div>
+        {primaryCta && (
+          <CtaDevis label={primaryCta.label} href={primaryCta.href} />
+        )}
+        <Spacer size=".5rem" />
+      </div>
+    )
+  }
+
+  {
+    eyebrow === "mail" && (
+      <div class={styles.content}>
+        <div class={styles.cta}>
+          <h2>{title}</h2>
+          {description && <p set:html={description} />}
+          {content && <p class={styles.bold} set:html={content} />}
+        </div>
+        {primaryCta && (
+          <a class={styles.secondary_link} href={primaryCta.href}>
+            {primaryCta.label}
+          </a>
+        )}
+        <Spacer size=".5rem" />
+      </div>
+    )
+  }
+
+  {
+    eyebrow === "simple" && (
+      <div class={styles.content}>
+        <div class={styles.cta}>
+          {description && <p set:html={description} />}
+        </div>
+        <Spacer size=".5rem" />
+      </div>
+    )
+  }
 </section>

@@ -1,6 +1,6 @@
 ---
 import { resolveUrl } from "@lib/urlHelpers";
-import Icon from "@components/Icons/Icon.astro";
+import CtaDevis from "@components/CTAs/CTADevis/CtaDevis.astro";
 
 interface CallToAction {
   label: string;
@@ -12,9 +12,7 @@ interface Props {
   eyebrow?: string;
   title: string;
   content: string;
-  primaryCta?: CallToAction;
-  secondaryCta?: CallToAction;
-  tertiaryCta?: CallToAction;
+  ctas?: CallToAction[];
   image?: {
     src: string;
     alt?: string;
@@ -25,15 +23,11 @@ const {
   eyebrow,
   title,
   content,
-  primaryCta,
-  secondaryCta,
-  tertiaryCta,
+  ctas = [],
   image,
 } = Astro.props as Props;
 
-const ctaCards = (
-  [primaryCta, secondaryCta, tertiaryCta].filter(Boolean) as CallToAction[]
-).map((cta) => ({
+const ctaCards = ctas.map((cta) => ({
   ...cta,
   href: resolveUrl(cta.href || "/"),
 }));
@@ -57,16 +51,9 @@ const emphasizePhrase = (value: string) =>
     {
       ctaCards.length > 0 && (
         <ul class="cta-cards">
-          {ctaCards.map((cta, index) => (
+          {ctaCards.map((cta) => (
             <li>
-              <a href={cta.href} class="cta-card">
-                {cta.icon && (
-                  <span class="cta-card__icon" aria-hidden="true">
-                    <Icon type={cta.icon} />
-                  </span>
-                )}
-                <span class="cta-card__label">{cta.label}</span>
-              </a>
+              <CtaDevis label={cta.label} href={cta.href} />
             </li>
           ))}
         </ul>

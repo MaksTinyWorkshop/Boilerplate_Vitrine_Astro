@@ -41,10 +41,25 @@
         .planBadge {
         display: inline-flex;
         align-items: center;
+        gap: var(--space-1);
 
           .planIcon {
           display: inline-flex;
           } 
+
+          .planBadgeText {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: var(--step--2);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: var(--color-secondary);
+            color: var(--color-primary);
+          }
         
         }
 

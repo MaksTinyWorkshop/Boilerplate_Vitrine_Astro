@@ -32,7 +32,7 @@ const {
 const sectionClass = [
   "section-container",
   styles.markdown,
-  variant ? styles[`markdown--${variant}`] ?? "" : "",
+  variant ? (styles[`markdown--${variant}`] ?? "") : "",
 ]
   .filter(Boolean)
   .join(" ");
@@ -48,7 +48,7 @@ const resolvedImages = images?.map((image) => ({
 
   {
     resolvedImages && resolvedImages.length > 0 && (
-      <div class={styles["image-gallery"] ?? "image-gallery"}>
+      <div class={styles.imageGallery ?? "image-gallery"}>
         {resolvedImages.map((image) => (
           <figure>
             <img src={image.src} alt={image.alt ?? ""} />

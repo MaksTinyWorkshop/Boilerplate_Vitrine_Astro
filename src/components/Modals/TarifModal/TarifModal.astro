@@ -25,7 +25,7 @@ const {
 
 const replaceScopedClasses = (input?: string | null) => {
   if (!input) return "";
-  return input.replace(/\{styles\.([\w-]+)\}/g, (match, token) => {
+  return input.replace(/\{styles\.([\w-]+)\}/g, (_, token) => {
     const resolved = styles[token as keyof typeof styles];
     return typeof resolved === "string" ? resolved : token;
   });

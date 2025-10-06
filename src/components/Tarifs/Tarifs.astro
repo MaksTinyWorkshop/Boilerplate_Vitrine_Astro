@@ -7,7 +7,7 @@ import styles from "./tarifs.module.scss";
 
 export interface Plan {
   slug: string;
-  badge: string;
+  badge?: string;
   icon?: IconProps["type"];
   subtitle?: string;
   price: string;
@@ -57,7 +57,7 @@ const props = Astro.props as Props;
 
 const replaceModalScopedClasses = (input?: string | null) => {
   if (!input) return input ?? null;
-  return input.replace(/\{styles\.([\w-]+)\}/g, (match, token) => {
+  return input.replace(/\{styles\.([\w-]+)\}/g, (_, token) => {
     const resolved = modalStyles[token as keyof typeof modalStyles];
     return typeof resolved === "string" ? resolved : token;
   });

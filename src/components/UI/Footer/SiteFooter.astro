@@ -1,102 +1,42 @@
 ---
-import Icon from "@components/Icons/Icon.astro";
 import { companyDetails } from "@lib/siteData";
 import { resolveUrl } from "@lib/urlHelpers";
 import styles from "./footer.module.scss";
+import Spacer from "../Spacer.astro";
+import CtaDevis from "@components/CTAs/CTADevis/CtaDevis.astro";
 
 const year = new Date().getFullYear();
 
-const primaryLogo = companyDetails.logos?.[0];
-const logoSrc = primaryLogo ? resolveUrl(primaryLogo.source.src) : "";
 const secondaryLogo = companyDetails.logos?.[1];
 const secondaryLogoSrc = secondaryLogo
   ? resolveUrl(secondaryLogo.source.src)
   : "";
-const addressLines = [
-  companyDetails.address,
-  `${companyDetails.zipCode} ${companyDetails.city}`.trim(),
-  companyDetails.country,
-].filter(Boolean);
-const contactItems = companyDetails.contactItems ?? [];
-const socialLinks = companyDetails.socialLinks ?? [];
 ---
 
 <footer class={styles.footer}>
-  <div class={styles.inner}>
-    <div class={styles.info}>
-      <p class={styles.brand}>{companyDetails.name}</p>
-      {
-        addressLines.length > 0 && (
-          <ul class={styles.footer_adress}>
-            {addressLines.map((line) => (
-              <li>{line}</li>
-            ))}
-          </ul>
-        )
-      }
-      {
-        contactItems.length > 0 && (
-          <ul class={styles.contact}>
-            {contactItems.map((item) => (
-              <li>
-                <a class={styles.contact_link} href={item.href}>
-                  <span class={styles.contact_icon} aria-hidden="true">
-                    <Icon type={item.icon} size={20} />
-                  </span>
-                  <span>{item.label}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        )
-      }
-    </div>
-    <div class={styles.badge} aria-hidden="true">
-      {
-        logoSrc && (
-          <img
-            src={logoSrc}
-            alt={primaryLogo?.source.alt ?? "Logo"}
-            loading="lazy"
-          />
-        )
-      }
-      {
-        secondaryLogoSrc && (
-          <img
-            src={secondaryLogoSrc}
-            alt={secondaryLogo?.source.alt ?? "Logo secondaire"}
-            loading="lazy"
-          />
-        )
-      }
-    </div>
+  <div class={styles.logo} aria-hidden="true">
     {
-      socialLinks.length > 0 && (
-        <ul class={styles.social}>
-          {socialLinks.map((link) => (
-            <li>
-              <a
-                href={link.href}
-                aria-label={link.ariaLabel ?? link.name}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {link.icon ? <Icon type={link.icon} size={22} /> : link.name}
-              </a>
-            </li>
-          ))}
-        </ul>
+      secondaryLogoSrc && (
+        <img
+          src={secondaryLogoSrc}
+          alt={secondaryLogo?.source.alt ?? "Logo secondaire"}
+          loading="lazy"
+        />
       )
     }
   </div>
+
+  <CtaDevis label="Demander un devis" href={resolveUrl("/contact")} />
+
+  <div class={styles.cgv_legals}>
+    <a class={styles.link} href={resolveUrl("/mentions-legales")}>
+      Mentions légales
+    </a>
+    <Spacer size="1rem" axis="horizontal" />
+    <a class={styles.link} href={resolveUrl("/cgv")}> CGV </a>
+  </div>
   <p class={styles.copyright}>
-    © {year}
+    Propulsé par Mindleaf © {year} |
     {companyDetails.name}.
-    <span>
-      <a class={styles.link} href={resolveUrl("/mentions-legales")}>
-        Mentions légales
-      </a>
-    </span>
   </p>
 </footer>
