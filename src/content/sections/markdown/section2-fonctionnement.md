@@ -13,11 +13,11 @@ Une campagne d'affichage, qu'elle soit traditionnelle (panneaux, abribus) ou num
 
 ![Exemple d'implémentation](/images/screen-example.png)
 
-### Connexion de la clé C'Com à internet
+### Connexion du lecteur multimédia
 
-Un technicien s’occuper d’installer le boîtier à sa prise, relier l’écran avec le câble HDMI… et bim, presque prêt ! Un p’tit coup de Wi-Fi (ou de câble RJ45 et c’est connecté.
+Un technicien installe le lecteur sur sa prise, relie l’écran en HDMI et vérifie immédiatement la connexion réseau (Wi-Fi ou câble RJ45). Dès que le matériel est en ligne, la diffusion peut commencer.
 
-Vous n’avez rien à faire, on s’occupe de tout.
+Vous n’avez rien à faire, l’équipe projet s’occupe de chaque étape.
 
 
 ![Exemple d'implémentation](/images/screen-example.png)
@@ -27,4 +27,3 @@ Vous n’avez rien à faire, on s’occupe de tout.
 La diffusion d'une campagne publicitaire est la phase opérationnelle qui consiste à déployer les messages et visuels finalisés sur les canaux de communication sélectionnés. 
 
 Ce processus débute après la validation des créations et du plan média. 
-

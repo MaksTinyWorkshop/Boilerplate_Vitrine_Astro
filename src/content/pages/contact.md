@@ -1,5 +1,5 @@
 ---
-title: "C'Com | Formulaires Contact"
+title: "Nom de votre entreprise | Contact"
 description: "Contactez-nous"
 sections:
   - slug: markdown/propos-studio

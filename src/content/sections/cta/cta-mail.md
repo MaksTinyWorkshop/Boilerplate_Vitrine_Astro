@@ -9,5 +9,5 @@ description: "Affichez vos prochains événements, vos promotions ou encore une 
 
 ctas:
   - label: "Envoyer un mail"
-    href: "mailto:contact@c-com.fr"
+    href: "mailto:contact@votre-entreprise.fr"
 ---

@@ -1,6 +1,6 @@
 ---
-title: "C'Com | Secteurs d'activités"
-description: "A quel style d'entreprise C'Com s'adresse-t-elle ?"
+title: "Nom de votre entreprise | Secteurs d'activités"
+description: "À quels types d'entreprises s'adresse votre solution d'affichage dynamique ?"
 sections:
   - slug: feature-grid/secteurs-activites
   - slug: cta/cta-devis

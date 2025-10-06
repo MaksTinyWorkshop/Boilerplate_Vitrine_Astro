@@ -12,7 +12,7 @@ const { title, caption, embedUrl } = Astro.props as Props;
   {title && <h3>{title}</h3>}
   <div class="map-wrapper">
     <iframe
-      title={caption ?? title ?? "Localisation Envolet'toit"}
+      title={caption ?? title ?? "Localisation de votre entreprise"}
       src={embedUrl}
       loading="lazy"
       referrerpolicy="no-referrer-when-downgrade"

@@ -211,12 +211,12 @@ const initialiseRoot = (root: HTMLElement) => {
       ? config.defaultPlan
       : planCards[0]?.dataset.planSlug ?? "";
 
-    if (!hasBase && planDetails.has("csimple")) {
-      slug = "csimple";
+    if (!hasBase && planDetails.has("starter")) {
+      slug = "starter";
     }
 
-    if (hasVideo && planDetails.has("cpro")) {
-      slug = "cpro";
+    if (hasVideo && planDetails.has("premium")) {
+      slug = "premium";
     }
 
     planCards.forEach((card) => {

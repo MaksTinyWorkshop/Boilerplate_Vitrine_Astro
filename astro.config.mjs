@@ -5,7 +5,7 @@ import { webcore } from 'webcoreui/integration'
 
 
 export default defineConfig({
-  site: 'https://makstinyworkshop.github.io',
+  site: 'https://votre-site.com',
 
   scopedStyleStrategy: 'where',
   integrations: [tailwind(), mdx(), webcore()],

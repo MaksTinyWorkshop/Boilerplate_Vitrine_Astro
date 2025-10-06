@@ -46,42 +46,42 @@ export type CompanyDetails = {
 };
 
 export const companyDetails: CompanyDetails = {
-  name: "C'Com",
-  address: "1 Rue de la Paix",
-  zipCode: "75000",
-  city: "Paris",
-  country: "France",
+  name: "Nom de votre entreprise",
+  address: "Adresse de votre entreprise",
+  zipCode: "00000",
+  city: "Ville",
+  country: "Pays",
   contactItems: [
     {
       type: "phone",
       icon: "phone",
-      href: "tel:+33606060606",
-      label: "06 06 06 06 06",
+      href: "tel:+33123456789",
+      label: "01 23 45 67 89",
     },
     {
       type: "mail",
       icon: "mail",
-      href: "mailto:contact@c-com.fr",
-      label: "contact@c-com.fr",
+      href: "mailto:contact@votre-entreprise.fr",
+      label: "contact@votre-entreprise.fr",
     }],
   socialLinks: [
     {
       name: "Facebook",
       icon: "facebook",
-      href: "https://www.facebook.com/",
-      ariaLabel: "Rejoindre Facebook",
+      href: "https://www.facebook.com/votreentreprise",
+      ariaLabel: "Rejoindre l'entreprise sur Facebook",
     },
     {
       name: "LinkedIn",
       icon: "linkedin",
-      href: "https://www.linkedin.com/",
-      ariaLabel: "Visiter LinkedIn",
+      href: "https://www.linkedin.com/company/votreentreprise",
+      ariaLabel: "Visiter la page LinkedIn de l'entreprise",
     },
     {
       name: "GitHub",
       icon: "github",
-      href: "https://github.com/",
-      ariaLabel: "Accéder au GitHub",
+      href: "https://github.com/votre-entreprise",
+      ariaLabel: "Accéder au GitHub de l'entreprise",
     },
   ],
   logos: [
@@ -89,18 +89,17 @@ export const companyDetails: CompanyDetails = {
       name: "Logo Principal",
       source: {
         src: "images/company-logo.svg",
-        alt: "Logo C'com",
+        alt: "Logo de votre entreprise",
       }
     },
     {
       name: "Logo Full",
       source: {
         src: "images/company-logo-full.svg",
-        alt: "Logo C'Com",
+        alt: "Logo complet de votre entreprise",
       }
     }
   ] 
 };
-
 
 
