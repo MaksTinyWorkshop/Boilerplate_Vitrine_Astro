@@ -1,0 +1,140 @@
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 5vw, 3rem);
+  background: rgba(17, 5, 42, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 999;
+}
+
+.modalBackdrop[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal {
+  width: min(520px, 90vw);
+  border-radius: clamp(1.5rem, 4vw, 2rem);
+  background: var(--color-base-100);
+  color: var(--color-primary);
+  box-shadow: 0 32px 80px rgba(58, 0, 104, 0.35);
+  padding: clamp(1.75rem, 4vw, 2.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 3vw, 1.75rem);
+  transform: translateY(24px);
+  transition: transform 0.3s ease;
+  position: relative;
+
+  .modalClose {
+    position: absolute;
+    z-index: 1500;
+    top: var(--space-2);
+    right: var(--space-2);
+    align-self: flex-end;
+    width: 42px;
+    height: 42px;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--color-primary);
+    cursor: pointer;
+  }
+
+}
+
+.modalBackdrop[data-open="true"] .modal {
+  transform: translateY(0);
+}
+
+.modalHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  .srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  }
+
+}
+
+.modalIconGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+
+  .modalIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(4.5rem, 12vw, 5.5rem);
+  height: clamp(4.5rem, 12vw, 5.5rem);
+  position: relative;
+
+    > * {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &[data-empty="true"] {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: none;
+      padding: 0 1rem;
+      border-radius: 999px;
+      color: var(--color-base-100);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      min-width: auto;
+      height: auto;
+    }
+  }
+}
+
+
+
+.modalBody {
+  color: var(--color-neutral-content);
+  display: flex;
+  flex-direction: column;
+  font-size: var(--step--2);
+
+  .bold {
+  font-weight: 700;
+  }
+
+  .centered {
+    margin: var(--space-1) 0;
+    color: var(--color-primary);
+    text-align: center;
+  }
+
+  .modalCommon {
+    margin-bottom: 0;
+    text-align: justify;
+
+    p {
+      margin: 0;
+    }
+  }
+
+
+}
+
+
+

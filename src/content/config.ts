@@ -6,21 +6,41 @@ const callToActionSchema = z.object({
   icon: z.string().optional(),
 });
 
-// Schéma décomoposé de la grille tarifaire
-const optionTarifSchema = z.object({
-  price: z.string().optional(),
-  description: z.string(),
+const tarifsOptionSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  description: z.string().optional(),
+  price: z.string(),
+  type: z.enum(['base', 'video', 'extra']).default('extra'),
+  defaultSelected: z.boolean().optional(),
+  disabled: z.boolean().optional(),
 });
 
-const grilleTarifaireSchema = z.object({
-  component: z.literal('tarif'),
+const tarifsPlanSchema = z.object({
+  slug: z.string(),
   icon: z.string().optional(),
-  eyebrow: z.string().optional(),
+  subtitle: z.string().optional(),
   price: z.string(),
-  description: z.string(),
-  options: z.array(optionTarifSchema)
+  footnote: z.string().optional(),
+  description: z.string().optional(),
+  moreInfoTitle: z.string().optional(),
+  moreInfoContent: z.string().optional(),
 });
-  
+
+const tarifsSchema = z.object({
+  component: z.literal('tarifs'),
+  defaultPlan: z.string(),
+  plans: z.array(tarifsPlanSchema).min(1),
+  options: z.array(tarifsOptionSchema).min(1),
+  modal: z
+    .object({
+      title: z.string().optional(),
+      content: z.string(),
+    })
+    .optional(),
+});
+
+
 const heroSchema = z.object({
   component: z.literal('hero'),
   eyebrow: z.string().optional(),
@@ -179,7 +199,6 @@ const testimonialsSchema = z.object({
 
 const sectionSchema = z.discriminatedUnion('component', [
   heroSchema,
-  grilleTarifaireSchema,
   featureGridSchema,
   parcoursSchema,
   faqSchema,
@@ -189,6 +208,7 @@ const sectionSchema = z.discriminatedUnion('component', [
   imagesSchema,
   catalogueSchema,
   testimonialsSchema,
+  tarifsSchema,
 ]);
 
 const sections = defineCollection({

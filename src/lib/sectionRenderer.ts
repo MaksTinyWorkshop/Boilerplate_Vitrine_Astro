@@ -57,15 +57,14 @@ export async function resolveSection(
           image: section.data.image,
         },
       };
-    case 'tarif':
+    case 'tarifs':
       return {
         Component,
         props: {
-          icon: section.data.icon,
-          eyebrow: section.data.eyebrow,
-          price: section.data.price,
-          description: section.data.description,
+          defaultPlan: section.data.defaultPlan,
+          plans: section.data.plans,
           options: section.data.options,
+          modal: section.data.modal,
         },
       };
     case 'feature-grid':
