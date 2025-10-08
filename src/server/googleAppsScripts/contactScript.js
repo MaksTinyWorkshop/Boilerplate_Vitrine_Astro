@@ -5,9 +5,14 @@
 /**
  * Configuration
  */
-const CONTACT_SHEET_ID = '1hh4LihfRMUGLwulb5vjqq_nhkkoi7jf21lJ2wkuqNXQ';
-const CONTACT_SHEET_NAME = 'Feuille 1';
+const CONTACT_SHEET_ID = 'identifiant de la feuille google sheet';
+const CONTACT_SHEET_NAME = 'Nom de la feuille';
 const STATIC_HEADERS = ['Date Demande', 'Formule'];
+// Définir cette propriété dans "Project Settings > Script properties" côté Apps Script.
+const CONTACT_SECRET_PROPERTY_KEY = 'copier ici  la variable définie dans GOOGLE_CONTACT_SCRIPT_SECRET';
+const CONTACT_NOTIFICATION_RECIPIENTS = ['contact@exemple.com'];
+const CONTACT_NOTIFICATION_SUBJECT =
+  "Nouvelle demande reçue via le formulaire de contact";
 
 /**
  * Point d’entrée appelé par Astro (POST).
@@ -24,6 +29,8 @@ function doPost(e) {
     if (!payload) {
       throw new Error('Payload vide ou invalide.');
     }
+
+    validateSecret(payload);
 
     const { formulaId, formulaLabel } = payload;
     if (!formulaId) {
@@ -45,9 +52,15 @@ function doPost(e) {
     ];
 
     sheet.appendRow(row);
+    sendNotification({ formulaId, formulaLabel, fields });
+
     return jsonResponse({ success: true });
   } catch (error) {
-    return jsonResponse({ success: false, message: error.message }, 500);
+    const status =
+      typeof error.httpStatus === 'number' && !Number.isNaN(error.httpStatus)
+        ? error.httpStatus
+        : 500;
+    return jsonResponse({ success: false, message: error.message }, status);
   }
 }
 
@@ -160,4 +173,103 @@ function jsonResponse(body, status = 200) {
   return ContentService.createTextOutput(JSON.stringify(body))
     .setMimeType(ContentService.MimeType.JSON)
     .setStatusCode(status);
+}
+
+/**
+ * Vérifie que la demande est authentifiée via un secret partagé.
+ */
+function validateSecret(payload) {
+  const storedSecretValue = PropertiesService.getScriptProperties().getProperty(
+    CONTACT_SECRET_PROPERTY_KEY
+  );
+  const storedSecret = storedSecretValue ? storedSecretValue.trim() : '';
+
+  if (!storedSecret) {
+    return;
+  }
+
+  let receivedSecret = '';
+  if (payload.secret != null) {
+    receivedSecret =
+      typeof payload.secret === 'string'
+        ? payload.secret.trim()
+        : String(payload.secret).trim();
+  }
+
+  if (!receivedSecret || receivedSecret !== storedSecret) {
+    throw createHttpError('Accès non autorisé.', 403);
+  }
+}
+
+/**
+ * Crée une erreur contenant un code HTTP personnalisé.
+ */
+function createHttpError(message, status) {
+  const error = new Error(message);
+  error.httpStatus = status;
+  return error;
+}
+
+/**
+ * Détermine l'adresse email de réponse si un champ pertinent est présent.
+ */
+function resolveReplyTo(fields) {
+  for (const [key, value] of Object.entries(fields)) {
+    if (typeof value !== 'string') continue;
+    const lowerKey = key.toLowerCase();
+    if (lowerKey.includes('email') || lowerKey.includes('mail')) {
+      return value;
+    }
+  }
+  return null;
+}
+
+/**
+ * Envoie un email de notification si des destinataires sont configurés.
+ */
+function sendNotification({ formulaId, formulaLabel, fields }) {
+  const recipients = (CONTACT_NOTIFICATION_RECIPIENTS || []).filter((email) =>
+    typeof email === 'string' && email.includes('@')
+  );
+
+  if (!recipients.length) {
+    return;
+  }
+
+  try {
+    const label = normaliseValue(formulaLabel) || normaliseValue(formulaId);
+    const subject = `${CONTACT_NOTIFICATION_SUBJECT}${label ? ` - ${label}` : ''}`;
+
+    const entries = Object.entries(fields)
+      .map(
+        ([key, value]) =>
+          `<tr><td style="padding:4px 8px;font-weight:600;">${key}</td><td style="padding:4px 8px;">${value}</td></tr>`
+      )
+      .join('');
+
+    const htmlBody = `
+      <p>Une nouvelle demande a été enregistrée dans la feuille "${CONTACT_SHEET_NAME}".</p>
+      <p><strong>Formule :</strong> ${label || 'Non spécifiée'}</p>
+      <table style="border-collapse:collapse;border:1px solid #ddd;">
+        <tbody>${entries || '<tr><td style="padding:4px 8px;">Aucune donnée</td></tr>'}</tbody>
+      </table>
+    `;
+
+    const plainBodyLines = [
+      `Une nouvelle demande a été enregistrée dans la feuille "${CONTACT_SHEET_NAME}".`,
+      `Formule : ${label || 'Non spécifiée'}`,
+      '',
+      ...Object.entries(fields).map(([key, value]) => `${key}: ${value}`),
+    ];
+    const plainBody = plainBodyLines.join('\n');
+
+    const replyTo = resolveReplyTo(fields);
+    GmailApp.sendEmail(recipients.join(','), subject, plainBody, {
+      htmlBody,
+      replyTo: replyTo || undefined,
+      name: "Formulaire C'Com",
+    });
+  } catch (mailError) {
+    console.error("Impossible d'envoyer la notification email :", mailError);
+  }
 }

@@ -56,6 +56,11 @@ npm run lint    # vérifier schémas et types de contenu
 - **Formulaire de contact** : `src/content/sections/contact/formulaire.md`
   - Chaque `formula` correspond à un onglet du formulaire,
   - Les champs disponibles sont listés dans le tableau `fields`.
+  - **Connexion Google Sheets** :
+    1. Créez une feuille avec une première ligne d'en-têtes (`Date Demande`, `Formule`, puis un en-tête par champ du formulaire). Les libellés doivent correspondre aux labels des champs pour que les colonnes se remplissent automatiquement.
+    2. Depuis l'onglet `Extensions > Apps Script` de la feuille, copiez le contenu de `src/server/googleAppsScripts/contactScript.js`, puis ajustez `CONTACT_SHEET_ID`, `CONTACT_SHEET_NAME`, les destinataires de notification et, si besoin, la constante `STATIC_HEADERS`.
+    3. Dans `Project Settings > Script properties`, ajoutez une propriété `GOOGLE_CONTACT_SCRIPT_SECRET` si vous souhaitez verrouiller l'accès, puis faites-la suivre dans le champ `secret` du payload côté Astro (`src/server/contact.server.ts`).
+    4. Déployez le script en tant qu'application Web (`Deploy > New deployment`) et copiez l'URL `exec` dans la variable d'environnement `GOOGLE_CONTACT_SCRIPT_URL` (ou `GOOGLE_APPS_SCRIPT_URL` pour un point d'entrée commun) de votre projet Astro.
 - **Tarifs** : `src/content/sections/tarifs/offre.md`
   - `plans` décrit les cartes affichées,
   - `options` contrôle le configurateur (quantités, tarifs dynamiques),
