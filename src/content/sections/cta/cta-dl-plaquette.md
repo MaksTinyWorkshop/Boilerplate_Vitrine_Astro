@@ -1,17 +1,9 @@
 ---
 component: cta
-
-eyebrow: "Plaquette"
-
 title: "Télécharger la plaquette"
-
-description: "Retrouvez une présentation complète de vos offres et des exemples de campagnes à personnaliser."
-
-note: "Format PDF — 2 Mo"
-
 downloadName: "plaquette.pdf"
-
+content: "/images/apercu_plaquette.svg"
 file:
-  label: "Télécharger"
+  label: "Aperçu plaquette"
   href: "/assets/plaquette.pdf"
 ---

@@ -13,11 +13,9 @@ Une campagne d'affichage, qu'elle soit traditionnelle (panneaux, abribus) ou num
 
 ![Exemple d'implémentation](/images/screen-example.png)
 
-### Connexion du lecteur multimédia
+### Connexion de la clé média à internet
 
-Un technicien installe le lecteur sur sa prise, relie l’écran en HDMI et vérifie immédiatement la connexion réseau (Wi-Fi ou câble RJ45). Dès que le matériel est en ligne, la diffusion peut commencer.
-
-Vous n’avez rien à faire, l’équipe projet s’occupe de chaque étape.
+Un technicien installe le boîtier, raccorde l’écran en HDMI et sécurise la connexion réseau (Wi-Fi ou RJ45) pour garantir une diffusion continue. Vous restez concentré sur vos messages, l’équipe s’occupe de la partie technique.
 
 
 ![Exemple d'implémentation](/images/screen-example.png)

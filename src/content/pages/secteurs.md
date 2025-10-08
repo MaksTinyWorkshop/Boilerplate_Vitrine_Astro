@@ -1,6 +1,6 @@
 ---
-title: "Nom de votre entreprise | Secteurs d'activités"
-description: "À quels types d'entreprises s'adresse votre solution d'affichage dynamique ?"
+title: "Votre entreprise | Secteurs d'activités"
+description: "Les secteurs types adressés par votre offre"
 sections:
   - slug: feature-grid/secteurs-activites
   - slug: cta/cta-devis

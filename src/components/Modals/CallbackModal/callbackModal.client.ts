@@ -1,11 +1,8 @@
+import type { CallbackPayload } from "@app-types/contact";
+
 const MODAL_ROOT_SELECTOR = "[data-callback-modal-root]";
 const TRIGGER_SELECTOR = "[data-callback-trigger]";
 const CALLBACK_ENDPOINT = import.meta.env.PUBLIC_CALLBACK_ENDPOINT;
-
-interface CallbackPayload {
-  name: string;
-  phone: string;
-}
 
 let openModalHandler: (() => void) | null = null;
 let closeModalHandler: (() => void) | null = null;
@@ -58,26 +55,18 @@ const submitCallbackForm = async (
     };
 
     if (isCrossOrigin) {
-      const searchParams = new URLSearchParams({
-        name: payload.name,
-        phone: payload.phone,
-        timestamp: new Date().toISOString(),
-      });
-      requestInit.body = searchParams.toString();
-      requestInit.headers = {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-      };
-      requestInit.mode = "no-cors";
-    } else {
-      requestInit.body = JSON.stringify(payload);
-      requestInit.headers = {
-        "Content-Type": "application/json",
-      };
+      requestInit.mode = "cors";
+      requestInit.credentials = "omit";
     }
+
+    requestInit.body = JSON.stringify(payload);
+    requestInit.headers = {
+      "Content-Type": "application/json",
+    };
 
     const response = await fetch(CALLBACK_ENDPOINT, requestInit);
 
-    if (!requestInit.mode && !response.ok) {
+    if (!response.ok) {
       throw new Error(await response.text());
     }
 

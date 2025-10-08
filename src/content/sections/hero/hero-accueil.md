@@ -1,12 +1,12 @@
 ---
 component: hero
 eyebrow: ""
-title: "Votre régie publicitaire sur mesure pour vos écrans"
-content: ""
+title: "Un site vitrine prêt à être personnalisé"
+content: "Présentez votre expertise, vos services et vos preuves sociales en combinant simplement des sections Markdown."
 ctas:
-  - label: "Demander un devis"
-    href: "/contact"
+  - label: "Voir les sections"
+    href: "/fonctionnement"
 image:
   src: "/images/hero-bg.svg"
-  alt: "Arrière-plan"
+  alt: "Illustration abstraite"
 ---

@@ -1,6 +1,6 @@
 ---
-import type { IconProps } from './icon'
-import iconMap from './map'
+import type { IconProps } from './icon';
+import iconMap from './map';
 
 interface Props extends IconProps {}
 
@@ -9,26 +9,29 @@ const {
     size = 24,
     color,
     theme,
-    iconSet
-} = Astro.props
+    iconSet,
+} = Astro.props;
 
-const icons = {
-    ...iconMap,
-    ...(iconSet || {})
-}
+const icons: Record<string, string> = {
+  ...iconMap,
+  ...(iconSet || {}),
+};
 
-const svg = icons[type as keyof typeof iconMap]
+const svg = icons[type];
 
 if (!svg) {
-    // eslint-disable-next-line no-console
-    console.error('Cannot find icon type:', type)
+  // eslint-disable-next-line no-console
+  console.error("Cannot find icon type:", type);
 }
 
 const icon = svg
-    ?.replace('width="24"', `width=${size}`)
-    ?.replace('height="24"', color || theme
-        ? `height=${size} color=${color || `var(--w-color-${theme})`}`
-        : `height=${size}`)
+  ?.replace('width="24"', `width=${size}`)
+  ?.replace(
+    'height="24"',
+    color || theme
+      ? `height=${size} color=${color || `var(--w-color-${theme})`}`
+      : `height=${size}`,
+  );
 ---
 
 <Fragment set:html={icon} />

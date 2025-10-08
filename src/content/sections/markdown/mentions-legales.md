@@ -6,38 +6,39 @@ description: "legal"
 
 ## Éditeur du site
 
-**Nom de l'entreprise**  
-Forme juridique : à compléter  
-Siège social : adresse à compléter  
-Immatriculation : numéro et registre du commerce le cas échéant  
-Tél. : [00 00 00 00 00](tel:+33000000000)  
-E-mail : [contact@votre-entreprise.fr](mailto:contact@votre-entreprise.fr)
+**Nom de la boîte**  
+SAS au capital de 50 000 €  
+Siège social : 1 rue du Test, 35000 Rennes  
+Immatriculée au RCS de Rennes sous le numéro 123 456 789  
+Tél. : [02 02 02 02 02](tel:+33202020202)  
+E-mail : [contact@masuper-boite.fr](mailto:contact@masuper-boite.fr)
 
-Directeur ou directrice de la publication : nom et fonction à compléter.
+Directeur de la publication : Sébastien Martin, en qualité de président.
 
 ## Hébergement
 
-Hébergeur : **Nom de l'hébergeur**  
-Adresse : adresse à compléter  
-Site web : [https://www.votre-hebergeur.fr](https://www.votre-hebergeur.fr)  
-Téléphone : numéro à compléter
+Le site est hébergé par :  
+**GitHub** – GitHub Inc.  
+88 Colin P Kelly Jr St, San Francisco, CA 94107, États-Unis  
+Site web : [https://pages.github.com](https://pages.github.com)  
+Téléphone : +1 877 448 4820
 
 ## Propriété intellectuelle
 
-L'ensemble des éléments figurant sur ce site (textes, images, graphismes, logos, vidéos, icônes, etc.) est protégé par la législation relative à la propriété intellectuelle. Toute reproduction, représentation, modification ou exploitation, totale ou partielle, sans autorisation préalable écrite est strictement interdite.
+L'ensemble des éléments figurant sur ce site (textes, images, graphismes, logos, vidéos, icônes, etc.) est protégé par les lois françaises et internationales relatives à la propriété intellectuelle. Toute reproduction, représentation, modification ou exploitation, totale ou partielle, sans autorisation préalable écrite est strictement interdite.
 
 ## Données personnelles
 
-Les informations recueillies via les formulaires sont destinées à la gestion des demandes clients. Elles sont conservées pendant une durée limitée et ne sont pas transmises à des tiers non autorisés. Conformément au Règlement général sur la protection des données (RGPD), vous disposez d'un droit d'accès, de rectification, d'effacement, d'opposition et de portabilité de vos données. Pour exercer vos droits, contactez-nous à l'adresse [privacy@votre-entreprise.fr](mailto:privacy@votre-entreprise.fr).
+Les informations recueillies via le formulaire de rappel sont destinées à la gestion des demandes clients. Elles sont conservées pendant une durée maximale de 3 ans et ne sont pas transmises à des tiers non autorisés. Conformément au Règlement général sur la protection des données (RGPD), vous disposez d'un droit d'accès, de rectification, d'effacement, d'opposition et de portabilité de vos données. Pour exercer vos droits, contactez-nous à l'adresse [contact@envolet-toit.fr](mailto:contact@envolet-toit.fr).
 
 ## Cookies
 
-La navigation sur ce site peut entraîner l'installation de cookies sur le terminal de l'utilisateur afin de mesurer l'audience et d'améliorer l'expérience. Vous pouvez configurer votre navigateur pour refuser les cookies ou être informé de leur dépôt.
+La navigation sur ce site peut entraîner l'installation de cookies sur le terminal de l'utilisateur afin de mesurer l'audience et d'améliorer l'expérience utilisateur. Vous pouvez configurer votre navigateur pour refuser les cookies ou être informé de leur dépôt.
 
 ## Responsabilité
 
-L'éditeur du site s'efforce de fournir des informations exactes et à jour. Toutefois, il ne saurait être tenu responsable des erreurs, omissions ou résultats obtenus par l'usage de ces informations, ni de l'utilisation des liens externes présents sur le site.
+Envolet'toit s'efforce de fournir des informations exactes et à jour. Toutefois, l'entreprise ne saurait être tenue responsable des erreurs, omissions ou résultats obtenus par l'usage de ces informations, ni de l'utilisation des liens externes présents sur le site.
 
 ## Droit applicable
 
-Le présent site est soumis au droit applicable dans le pays de l'éditeur. En cas de litige, et après tentative de résolution amiable, les tribunaux compétents du ressort du siège social seront seuls compétents.
+Le présent site est soumis au droit français. En cas de litige, et après tentative de résolution amiable, les tribunaux compétents du ressort de Rennes seront seuls compétents.

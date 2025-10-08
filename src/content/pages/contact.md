@@ -1,7 +1,7 @@
 ---
-title: "Nom de votre entreprise | Contact"
+title: "Votre entreprise | Contact"
 description: "Contactez-nous"
 sections:
-  - slug: markdown/propos-studio
-  - slug: markdown/equipe-studio
+  - slug: contact/formulaire
+  - slug: cta/cta-simple
 ---

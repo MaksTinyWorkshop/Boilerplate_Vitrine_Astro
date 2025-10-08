@@ -1,49 +1,9 @@
-export type IconProps = {
-    type: 'alert'
-        | 'check'
-        | 'chevron-down'
-        | 'chevron-left'
-        | 'chevron-right'
-        | 'chevron-up'
-        | 'circle-check'
-        | 'circle-close'
-        | 'close'
-        | 'components'
-        | 'copy'
-        | 'plan-premium'
-        | 'plan-standard'
-        | 'plan-starter'
-        | 'process-approval'
-        | 'process-estimate'
-        | 'process-launch'
-        | 'sector-cultural'
-        | 'sector-education'
-        | 'sector-foodservice'
-        | 'sector-hospitality'
-        | 'sector-industrial'
-        | 'sector-public'
-        | 'sector-realestate'
-        | 'sector-retail'
-        | 'discord'
-        | 'facebook'
-        | 'file'
-        | 'github'
-        | 'instagram'
-        | 'linkedin'
-        | 'mail'
-        | 'phone'
-        | 'home'
-        | 'info'
-        | 'moon'
-        | 'order'
-        | 'search'
-        | 'sun'
-        | 'warning'
-        | string
-    size?: number
-    color?: string
-    theme?: 'info' | 'success' | 'warning' | 'alert'
-    iconSet?: {
-        [key: string]: string
-    }
-}
+import type { IconName } from "./map";
+
+export type IconProps<Name extends string = IconName> = {
+  type: Name;
+  size?: number;
+  color?: string;
+  theme?: "info" | "success" | "warning" | "alert";
+  iconSet?: Record<string, string>;
+};

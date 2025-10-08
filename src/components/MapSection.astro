@@ -1,18 +1,14 @@
 ---
-interface Props {
-  title?: string;
-  caption?: string;
-  embedUrl: string;
-}
+import type { MapSectionProps } from "@app-types/map";
 
-const { title, caption, embedUrl } = Astro.props as Props;
+const { title, caption, embedUrl } = Astro.props as MapSectionProps;
 ---
 
 <section class="section-container map-section">
   {title && <h3>{title}</h3>}
   <div class="map-wrapper">
     <iframe
-      title={caption ?? title ?? "Localisation de votre entreprise"}
+      title={caption ?? title ?? "Localisation Envolet'toit"}
       src={embedUrl}
       loading="lazy"
       referrerpolicy="no-referrer-when-downgrade"

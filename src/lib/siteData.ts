@@ -46,11 +46,11 @@ export type CompanyDetails = {
 };
 
 export const companyDetails: CompanyDetails = {
-  name: "Nom de votre entreprise",
-  address: "Adresse de votre entreprise",
-  zipCode: "00000",
-  city: "Ville",
-  country: "Pays",
+  name: "Votre entreprise",
+  address: "12 Rue de l'Exemple",
+  zipCode: "75000",
+  city: "Paris",
+  country: "France",
   contactItems: [
     {
       type: "phone",
@@ -68,19 +68,19 @@ export const companyDetails: CompanyDetails = {
     {
       name: "Facebook",
       icon: "facebook",
-      href: "https://www.facebook.com/votreentreprise",
-      ariaLabel: "Rejoindre l'entreprise sur Facebook",
+      href: "https://www.facebook.com/votre-entreprise",
+      ariaLabel: "Suivre l'entreprise sur Facebook",
     },
     {
       name: "LinkedIn",
       icon: "linkedin",
-      href: "https://www.linkedin.com/company/votreentreprise",
-      ariaLabel: "Visiter la page LinkedIn de l'entreprise",
+      href: "https://www.linkedin.com/company/votre-entreprise",
+      ariaLabel: "Découvrir l'entreprise sur LinkedIn",
     },
     {
       name: "GitHub",
       icon: "github",
-      href: "https://github.com/votre-entreprise",
+      href: "https://github.com/your-company",
       ariaLabel: "Accéder au GitHub de l'entreprise",
     },
   ],
@@ -89,17 +89,16 @@ export const companyDetails: CompanyDetails = {
       name: "Logo Principal",
       source: {
         src: "images/company-logo.svg",
-        alt: "Logo de votre entreprise",
+        alt: "Logo de l'entreprise",
       }
     },
     {
       name: "Logo Full",
       source: {
-        src: "images/company-logo-full.svg",
-        alt: "Logo complet de votre entreprise",
+        src: "images/company-logo.svg",
+        alt: "Logo complet de l'entreprise",
       }
     }
   ] 
 };
-
 

@@ -1,30 +1,27 @@
 ---
 import Spacer from "@components/UI/Spacer.astro";
 import { resolveUrl } from "@lib/urlHelpers";
+import { companyDetails } from "@lib/siteData";
 import styles from "./ctaBanner.module.scss";
 import CtaDevis from "../CTADevis/CtaDevis.astro";
+import type { CTABannerProps } from "@app-types/cta";
 
-interface CallToAction {
-  label: string;
-  href: string;
-}
-
-interface Props {
-  eyebrow?: string;
-  title: string;
-  description?: string;
-  content?: string;
-  note?: string;
-  ctas?: CallToAction[];
-}
-
-const { eyebrow, title, description, content, ctas = [] } =
-  Astro.props as Props;
+const {
+  eyebrow,
+  title,
+  description,
+  content,
+  ctas = [],
+} = Astro.props as CTABannerProps;
 const resolvedCtas = ctas.map((cta) => ({
   ...cta,
   href: resolveUrl(cta.href || "/"),
 }));
 const primaryCta = resolvedCtas[0];
+
+const logoAsset = companyDetails.logos?.[0];
+const logoSrc = resolveUrl(logoAsset?.source.src ?? "/images/company-logo.svg");
+const logoAlt = logoAsset?.source.alt ?? "Logo de l'entreprise";
 
 const resolvedClassName = () => {
   if (eyebrow === "devis") {
@@ -44,11 +41,11 @@ const resolvedClassName = () => {
     eyebrow === "devis" && (
       <div class={styles.content}>
         <div class={styles.logo_box}>
-          <img src="/images/company-logo.svg" alt="Logo de votre entreprise" />
+          <img src={logoSrc} alt={logoAlt} />
         </div>
         <div class={styles.cta}>
           <h2>{title}</h2>
-          {description && <p set:html={description} />}
+          {description && <p class={styles.bold} set:html={description} />}
           {content && <p class={styles.bold} set:html={content} />}
         </div>
         {primaryCta && (

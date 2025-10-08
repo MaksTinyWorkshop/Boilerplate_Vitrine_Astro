@@ -3,9 +3,11 @@ import type { CollectionEntry } from 'astro:content';
 import CatalogueSection from '@components/Catalogue/CatalogueSection.astro';
 import CtaBanner from '@components/CTAs/CTABanner/CtaBanner.astro';
 import CtaDownload from '@components/CTAs/CTADownload/CtaDownload.astro';
-import FeatureGrid from '@components/FeatureGrid.astro';
+import FeatureGrid from '@components/Features/FeatureSecteur.astro';
+import FeatureTarif from '@components/Features/FeatureTarif.astro';
 import HeroSection from '@components/Home/HeroSection.astro';
 import MarkdownSection from '@components/Markdown/MarkdownSection.astro';
+import ContactFormSection from '@components/Form/ContactFormSection.astro';
 import Tarifs from '@components/Tarifs/Tarifs.astro';
 import FAQSection from '@components/FAQSection.astro';
 import ParcoursSection from '@components/ParcoursSection.astro';
@@ -20,6 +22,7 @@ const componentMap = {
   parcours: ParcoursSection,
   tarifs: Tarifs,
   faq: FAQSection,
+  'contact-form': ContactFormSection,
   markdown: MarkdownSection,
   map: MapSection,
   cta: CtaBanner,
@@ -32,7 +35,8 @@ type SectionComponentName = keyof typeof componentMap;
 
 type SectionComponentResult =
   | (typeof componentMap)[SectionComponentName]
-  | typeof CtaDownload;
+  | typeof CtaDownload
+  | typeof FeatureTarif;
 
 type ResolvedSection = {
   Component: SectionComponentResult;
@@ -72,6 +76,18 @@ export async function resolveSection(
         },
       };
     case 'feature-grid':
+      if (section.data.key === 'grid-tarifs') {
+        return {
+          Component: FeatureTarif,
+          props: {
+            eyebrow: section.data.eyebrow,
+            title: section.data.title,
+            description: section.data.description,
+            features: section.data.features,
+          },
+        };
+      }
+      
       return {
         Component,
         props: {
@@ -98,6 +114,19 @@ export async function resolveSection(
           title: section.data.title,
           description: section.data.description,
           questions: section.data.questions,
+        },
+      };
+    case 'contact-form':
+      return {
+        Component,
+        props: {
+          title: section.data.title,
+          subtitle: section.data.subtitle,
+          highlights: section.data.highlights,
+          formulas: section.data.formulas,
+          defaultFormula: section.data.defaultFormula,
+          submitLabel: section.data.submitLabel,
+          successMessage: section.data.successMessage,
         },
       };
     case 'markdown': {
@@ -129,6 +158,7 @@ export async function resolveSection(
           props: {
             eyebrow: section.data.eyebrow,
             title: section.data.title,
+            content: section.data.content,
             description: section.data.description,
             note: section.data.note,
             file: section.data.file,
