@@ -37,7 +37,7 @@ const BASE_LAYOUT: FormGroupLayout[] = [
     ],
   },
   {
-    title: "Votre projet",
+    title: "C'Com",
     rows: [
       ["visuals", "videos"],
       ["commitmentDuration"],
