@@ -1,5 +1,6 @@
 ---
 import type { FeatureTarifProps } from "@app-types/features";
+import { resolveUrl } from "@lib/urlHelpers";
 
 const { features } = Astro.props as FeatureTarifProps;
 ---
@@ -10,7 +11,7 @@ const { features } = Astro.props as FeatureTarifProps;
       features.map((feature) => (
         <article class="feature">
           <div class="feature__img">
-            <img src={feature.icon} alt="" role="presentation" />
+            <img src={resolveUrl(feature.icon)} alt={feature.title} />
           </div>
           <h3>{feature.title}</h3>
           <p set:html={feature.description} />

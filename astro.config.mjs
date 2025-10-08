@@ -1,26 +1,32 @@
-import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
-import mdx from '@astrojs/mdx';
-import { webcore } from 'webcoreui/integration'
+import { defineConfig } from "astro/config";
+import tailwind from "@astrojs/tailwind";
+import mdx from "@astrojs/mdx";
+import { webcore } from "webcoreui/integration";
+import node from "@astrojs/node";
+import { rehypeBaseImages } from "./src/lib/rehypeBaseImages";
 
+const siteUrl = "https://urlSite.com";
+const siteBase = "";
 
 export default defineConfig({
-  site: 'https://makstinyworkshop.github.io',
+  site: siteUrl,
 
-  scopedStyleStrategy: 'where',
+  scopedStyleStrategy: "where",
   integrations: [tailwind(), mdx(), webcore()],
-  // Rajout de ces deux lignes pour GithubPages
-  //output: 'static',
-  //base: '/Nom_du_Repo',
-  //
+  adapter: node({
+    mode: "standalone",
+  }),
+  output: "static",
+  base: siteBase,
   markdown: {
-    syntaxHighlight: 'prism',
+    syntaxHighlight: "prism",
+    rehypePlugins: [[rehypeBaseImages, { base: siteBase }]],
   },
   alias: {
-    '@components': './src/components',
-    '@layouts': './src/layouts',
-    '@lib': './src/lib',
-    '@styles': './src/styles',
-    '@content': './src/content',
+    "@components": "./src/components",
+    "@layouts": "./src/layouts",
+    "@lib": "./src/lib",
+    "@styles": "./src/styles",
+    "@content": "./src/content",
   },
 });
