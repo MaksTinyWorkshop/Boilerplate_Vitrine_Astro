@@ -19,6 +19,15 @@
 
   .cgv_legals {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-1);
+
+    .linkWrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
 
     .link {
       text-decoration: none;
@@ -40,4 +49,3 @@
     
   }
 }
-

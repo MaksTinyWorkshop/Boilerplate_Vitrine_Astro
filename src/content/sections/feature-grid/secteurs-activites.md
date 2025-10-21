@@ -1,9 +1,11 @@
 ---
 component: feature-grid
 key: "secteurs-activites"
-eyebrow: ""
+display: grid
+theme: light
+eyebrow: "Secteurs"
 title: "Secteurs d'activité"
-description: ""
+description: "Des composants prêts pour présenter les secteurs couverts par votre offre."
 features:
   - title: "Commerce de proximité"
     description: "Diffusez vos offres en vitrine et dynamisez l'expérience client."
@@ -29,5 +31,4 @@ features:
   - title: "Culturel"
     description: "Promouvez votre programmation et engagez votre public."
     icon: "sector-culture"
-
 ---

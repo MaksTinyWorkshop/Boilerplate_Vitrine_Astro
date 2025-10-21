@@ -1,87 +1,208 @@
 ---
-import Spacer from "@components/UI/Spacer.astro";
+import ActionButton from "@components/CTAs/ActionButton/ActionButton.astro";
 import { resolveUrl } from "@lib/urlHelpers";
-import { companyDetails } from "@lib/siteData";
-import styles from "./ctaBanner.module.scss";
-import CtaDevis from "../CTADevis/CtaDevis.astro";
-import type { CTABannerProps } from "@app-types/cta";
+import type { CTASectionProps } from "@app-types/cta";
 
 const {
+  variant = "banner",
   eyebrow,
   title,
   description,
-  content,
-  ctas = [],
-} = Astro.props as CTABannerProps;
-const resolvedCtas = ctas.map((cta) => ({
-  ...cta,
-  href: resolveUrl(cta.href || "/"),
+  body,
+  note,
+  actions = [],
+  media,
+  align = "center",
+  theme = "light",
+} = Astro.props as CTASectionProps;
+
+const resolvedActions = actions.map((action) => ({
+  ...action,
+  href: resolveUrl(action.href || "/"),
 }));
-const primaryCta = resolvedCtas[0];
 
-const logoAsset = companyDetails.logos?.[0];
-const logoSrc = resolveUrl(logoAsset?.source.src ?? "/images/company-logo.svg");
-const logoAlt = logoAsset?.source.alt ?? "Logo de l'entreprise";
+const resolvedMedia = media
+  ? {
+      ...media,
+      src: resolveUrl(media.src),
+    }
+  : null;
 
-const resolvedClassName = () => {
-  if (eyebrow === "devis") {
-    return styles.devis;
-  }
-  if (eyebrow === "mail") {
-    return styles.mail;
-  }
-  if (eyebrow === "simple") {
-    return styles.simple;
-  }
-};
+const alignmentClass = `cta-section--align-${align}`;
+const sectionClasses = [
+  "cta-section",
+  `cta-section--${variant}`,
+  `cta-section--${theme}`,
+  alignmentClass,
+]
+  .filter(Boolean)
+  .join(" ");
 ---
 
-<section class={`${resolvedClassName()} section-container`}>
-  {
-    eyebrow === "devis" && (
-      <div class={styles.content}>
-        <div class={styles.logo_box}>
-          <img src={resolveUrl("/images/company-logo.svg")} alt="Logo C'Com" />
-        </div>
-        <div class={styles.cta}>
-          <h2>{title}</h2>
-          {description && <p class={styles.bold} set:html={description} />}
-          {content && <p class={styles.bold} set:html={content} />}
-        </div>
-        {primaryCta && (
-          <CtaDevis label={primaryCta.label} href={primaryCta.href} />
-        )}
-        <Spacer size=".5rem" />
+<section class={`${sectionClasses} section-container`}>
+  <div class="cta-shell">
+    {resolvedMedia && (
+      <div class="cta-media">
+        <img src={resolvedMedia.src} alt={resolvedMedia.alt ?? title ?? "Illustration"} loading="lazy" />
       </div>
-    )
-  }
-
-  {
-    eyebrow === "mail" && (
-      <div class={styles.content}>
-        <div class={styles.cta}>
-          <h2>{title}</h2>
-          {description && <p set:html={description} />}
-          {content && <p class={styles.bold} set:html={content} />}
+    )}
+    <div class="cta-content">
+      {eyebrow && <span class="cta-eyebrow">{eyebrow}</span>}
+      {title && <h2>{title}</h2>}
+      {description && <p class="cta-description" set:html={description} />}
+      {body && <div class="cta-body" set:html={body} />}
+      {note && <p class="cta-note">{note}</p>}
+      {resolvedActions.length > 0 && (
+        <div class="cta-actions">
+          {resolvedActions.map((action) => (
+            <ActionButton {...action} />
+          ))}
         </div>
-        {primaryCta && (
-          <a class={styles.secondary_link} href={primaryCta.href}>
-            {primaryCta.label}
-          </a>
-        )}
-        <Spacer size=".5rem" />
-      </div>
-    )
-  }
-
-  {
-    eyebrow === "simple" && (
-      <div class={styles.content}>
-        <div class={styles.cta}>
-          {description && <p set:html={description} />}
-        </div>
-        <Spacer size=".5rem" />
-      </div>
-    )
-  }
+      )}
+    </div>
+  </div>
 </section>
+
+<style lang="scss">
+  .cta-section {
+    padding: var(--space-5) 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .cta-shell {
+    width: min(960px, 100%);
+    display: grid;
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  .cta-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    text-align: center;
+  }
+
+  .cta-section--align-start .cta-content {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .cta-section--align-end .cta-content {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  .cta-eyebrow {
+    display: inline-flex;
+    padding: 0.15rem 0.75rem;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: var(--radius-pill, 999px);
+    font-size: var(--step--1);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    align-self: center;
+  }
+
+  .cta-section--align-start .cta-eyebrow {
+    align-self: flex-start;
+  }
+
+  .cta-section--align-end .cta-eyebrow {
+    align-self: flex-end;
+  }
+
+  .cta-description,
+  .cta-body {
+    margin: 0;
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  .cta-note {
+    margin: 0;
+    font-size: var(--step--2);
+    opacity: 0.8;
+  }
+
+  .cta-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: center;
+  }
+
+  .cta-section--align-start .cta-actions {
+    align-items: flex-start;
+  }
+
+  .cta-section--align-end .cta-actions {
+    align-items: flex-end;
+  }
+
+  .cta-media {
+    display: flex;
+    justify-content: center;
+  }
+
+  .cta-media img {
+    width: 100%;
+    max-width: 320px;
+    border-radius: var(--radius-lg, 1.5rem);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+  }
+
+  .cta-section--banner {
+    background: var(--color-primary);
+    color: var(--color-base-100);
+  }
+
+  .cta-section--card {
+    background: var(--color-secondary);
+    color: var(--color-base-content);
+  }
+
+  .cta-section--text-only {
+    background: transparent;
+    color: var(--color-base-content);
+  }
+
+  .cta-section--dark {
+    background: var(--color-base-content);
+    color: var(--color-neutral);
+  }
+
+  .cta-section--light {
+    background: var(--color-base-100);
+    color: var(--color-base-content);
+  }
+
+  .cta-section--accent {
+    background: var(--color-secondary);
+    color: var(--color-primary);
+  }
+
+  @media (min-width: 768px) {
+    .cta-shell {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+  }
+
+  @media (min-width: 960px) {
+    .cta-section {
+      padding: var(--space-6) 0;
+    }
+
+    .cta-actions {
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    .cta-section--align-start .cta-actions,
+    .cta-section--align-end .cta-actions {
+      justify-content: flex-start;
+    }
+  }
+</style>

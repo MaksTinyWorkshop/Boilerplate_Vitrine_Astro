@@ -3,15 +3,19 @@ import Navbar from "@components/UI/Navbar/Navbar.astro";
 import CallbackModal from "@components/Modals/CallbackModal/CallbackModal.astro";
 import SiteFooter from "@components/UI/Footer/SiteFooter.astro";
 import type { BaseLayoutProps } from "@app-types/layout";
+import { siteConfig } from "@lib/siteData";
 
 const {
   title,
-  description = "Site vitrine moderne pour présenter vos services.",
+  description = siteConfig.brand.tagline ??
+    "Site vitrine moderne pour présenter vos services.",
 } = Astro.props as BaseLayoutProps;
+const language = siteConfig.language || "fr";
+const theme = siteConfig.ui.theme || "mindleaf";
 ---
 
 <!doctype html>
-<html lang="fr" data-theme="mindleaf">
+<html lang={language} data-theme={theme}>
   <head>
     <base href={import.meta.env.BASE_URL} />
     <meta charset="utf-8" />

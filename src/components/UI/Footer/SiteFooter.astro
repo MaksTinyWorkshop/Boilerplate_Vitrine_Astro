@@ -1,16 +1,25 @@
 ---
-import { companyDetails } from "@lib/siteData";
+import ActionButton from "@components/CTAs/ActionButton/ActionButton.astro";
+import { siteConfig } from "@lib/siteData";
 import { resolveUrl } from "@lib/urlHelpers";
 import styles from "./footer.module.scss";
 import Spacer from "../Spacer.astro";
-import CtaDevis from "@components/CTAs/CTADevis/CtaDevis.astro";
 
 const year = new Date().getFullYear();
 
-const secondaryLogo = companyDetails.logos?.[1];
+const secondaryLogo = siteConfig.brand.logos[1];
 const secondaryLogoSrc = secondaryLogo
-  ? resolveUrl(secondaryLogo.source.src)
+  ? resolveUrl(secondaryLogo.src)
   : "";
+const primaryAction = siteConfig.contact.primaryAction;
+const companyName = siteConfig.legal.companyName || siteConfig.brand.name;
+const footerLinks = [
+  ...siteConfig.navigation.footer,
+  ...siteConfig.legal.links,
+].filter(
+  (link, index, array) =>
+    array.findIndex((candidate) => candidate.href === link.href) === index
+);
 ---
 
 <footer class={styles.footer}>
@@ -19,23 +28,40 @@ const secondaryLogoSrc = secondaryLogo
       secondaryLogoSrc && (
         <img
           src={secondaryLogoSrc}
-          alt={secondaryLogo?.source.alt ?? "Logo secondaire"}
+          alt={secondaryLogo?.alt ?? "Logo secondaire"}
           loading="lazy"
         />
       )
     }
   </div>
 
-  <CtaDevis label="Demander un devis" href={resolveUrl("/contact")} />
+  {
+    primaryAction && (
+      <ActionButton
+        label={primaryAction.label}
+        href={resolveUrl(primaryAction.href)}
+        icon={primaryAction.icon}
+      />
+    )
+  }
 
-  <div class={styles.cgv_legals}>
-    <a class={styles.link} href={resolveUrl("/mentions-legales")}>
-      Mentions légales
-    </a>
-    <Spacer size="1rem" axis="horizontal" />
-    <a class={styles.link} href={resolveUrl("/cgv")}> CGV </a>
-  </div>
+  {
+    footerLinks.length > 0 && (
+      <div class={styles.cgv_legals}>
+        {footerLinks.map((link, index) => (
+          <span class={styles.linkWrapper}>
+            <a class={styles.link} href={resolveUrl(link.href)}>
+              {link.label}
+            </a>
+            {index < footerLinks.length - 1 && (
+              <Spacer size="1rem" axis="horizontal" />
+            )}
+          </span>
+        ))}
+      </div>
+    )
+  }
   <p class={styles.copyright}>
-    © {year} {companyDetails.name}. Site vitrine propulsé par Astro.
+    © {year} {companyName}. Site vitrine propulsé par Astro.
   </p>
 </footer>

@@ -1,16 +1,16 @@
 ---
+import type {
+ContactFormSectionProps,
+FormField,
+FormFormula,
+} from "@app-types/form";
 import Icon from "@components/Icons/Icon.astro";
 import "./form.module.scss";
 import {
-  buildFormGroups,
-  type FormGroupConfig,
-  type BuildGroupOptions,
+buildFormGroups,
+type BuildGroupOptions,
+type FormGroupConfig,
 } from "./formLayout";
-import type {
-  ContactFormSectionProps,
-  FormField,
-  FormFormula,
-} from "@app-types/form";
 
 const {
   title,
@@ -22,15 +22,131 @@ const {
   groupLayout,
   includeRemainingFields,
   remainingGroupTitle,
+  showFormulaSelect: showFormulaSelectProp,
+  layout: layoutProp,
+  structure: structureProp,
+  submission: submissionProp,
+  options,
 } = Astro.props as ContactFormSectionProps;
+const layoutSource = structureProp ?? layoutProp;
+
+const normaliseSubmissionConfig = (
+  config?: ContactFormSectionProps["submission"] | FormFormula["submission"],
+) => {
+  if (!config) return undefined;
+
+  const { endpoint, sheet, staticFields } = config;
+  const resolvedStaticFields =
+    Array.isArray(staticFields) && staticFields.length > 0
+      ? staticFields.filter(
+          (entry): entry is { name: string; value: string } =>
+            Boolean(entry?.name) && Boolean(entry?.value),
+        )
+      : undefined;
+
+  return {
+    ...(endpoint ? { endpoint } : {}),
+    ...(sheet ? { sheet } : {}),
+    ...(resolvedStaticFields ? { staticFields: resolvedStaticFields } : {}),
+  };
+};
+
+const mergeSubmissionConfigs = (
+  base?: ContactFormSectionProps["submission"],
+  override?: ContactFormSectionProps["submission"] | FormFormula["submission"],
+) => {
+  const resolvedBase = normaliseSubmissionConfig(base);
+  const resolvedOverride = normaliseSubmissionConfig(override);
+
+  if (!resolvedBase && !resolvedOverride) return undefined;
+
+  const endpoint =
+    resolvedOverride?.endpoint ?? resolvedBase?.endpoint ?? undefined;
+  const sheet = resolvedOverride?.sheet ?? resolvedBase?.sheet ?? undefined;
+
+  const baseStaticFields = resolvedBase?.staticFields ?? [];
+  const overrideStaticFields = resolvedOverride?.staticFields ?? [];
+  const staticFields = [...baseStaticFields, ...overrideStaticFields];
+
+  const filteredStaticFields =
+    staticFields.length > 0
+      ? staticFields.filter(
+          (entry, index, all) =>
+            entry.name &&
+            entry.value &&
+            index ===
+              all.findIndex(
+                (item) =>
+                  item.name === entry.name && item.value === entry.value,
+              ),
+        )
+      : undefined;
+
+  return {
+    ...(endpoint ? { endpoint } : {}),
+    ...(sheet ? { sheet } : {}),
+    ...(filteredStaticFields ? { staticFields: filteredStaticFields } : {}),
+  };
+};
+
+const resolvedSectionSubmission = mergeSubmissionConfigs(
+  submissionProp,
+  options?.submission,
+);
+
+const resolvedLayout = {
+  mode: options?.layout?.mode ?? layoutSource?.mode,
+  groups:
+    options?.layout?.groups ??
+    layoutSource?.groups ??
+    groupLayout ??
+    undefined,
+  includeRemainingFields:
+    options?.layout?.includeRemainingFields ??
+    layoutSource?.includeRemainingFields ??
+    includeRemainingFields,
+  remainingGroupTitle:
+    options?.layout?.remainingGroupTitle ??
+    layoutSource?.remainingGroupTitle ??
+    remainingGroupTitle,
+  showTitles: options?.layout?.showTitles ?? layoutSource?.showTitles,
+};
+
+const layoutMode = resolvedLayout.mode ?? "grouped";
+const showGroupTitles =
+  resolvedLayout.showTitles ?? layoutMode === "grouped";
+
+const showFormulaSelect =
+  options?.showFormulaSelect ??
+  showFormulaSelectProp ??
+  formulas.length > 1;
 
 const initialFormula =
   (defaultFormula && formulas.some((item) => item.id === defaultFormula)
     ? defaultFormula
     : undefined) ?? formulas[0]?.id;
 
+const formulasToRender = showFormulaSelect
+  ? formulas
+  : formulas.filter((formula) => formula.id === initialFormula);
+const activeFormulas =
+  formulasToRender.length > 0 ? formulasToRender : formulas.slice(0, 1);
+
+const baseGroupOptions: BuildGroupOptions = {};
+if (resolvedLayout.groups) {
+  baseGroupOptions.layout = resolvedLayout.groups as FormGroupConfig[];
+}
+if (typeof resolvedLayout.includeRemainingFields === "boolean") {
+  baseGroupOptions.includeRemainingFields =
+    resolvedLayout.includeRemainingFields;
+}
+if (resolvedLayout.remainingGroupTitle) {
+  baseGroupOptions.remainingGroupTitle = resolvedLayout.remainingGroupTitle;
+}
+
 const formatPlaceholder = (field: FormField, isRequired: boolean) =>
   field.placeholder ?? `${field.label}${isRequired ? "*" : ""}`;
+
 ---
 
 {
@@ -55,35 +171,81 @@ const formatPlaceholder = (field: FormField, isRequired: boolean) =>
         </div>
 
         <div class="form-card">
-          <div class="form-header">
-            <span class="form-header-label">Formule</span>
-            <div class="select-wrapper">
-              <select
-                name="formula"
-                aria-label="Choisir une formule"
-                data-contact-select
-              >
-                {formulas.map((formula) => (
-                  <option
-                    value={formula.id}
-                    selected={formula.id === initialFormula}
-                  >
-                    {formula.label}
-                  </option>
-                ))}
-              </select>
-              <span class="select-icon">
-                <Icon type="chevron-down" size={18} />
-              </span>
+          {showFormulaSelect && formulas.length > 1 && (
+            <div class="form-header">
+              <span class="form-header-label">Formule</span>
+              <div class="select-wrapper">
+                <select
+                  name="formula"
+                  aria-label="Choisir une formule"
+                  data-contact-select
+                >
+                  {formulas.map((formula) => (
+                    <option
+                      value={formula.id}
+                      selected={formula.id === initialFormula}
+                    >
+                      {formula.label}
+                    </option>
+                  ))}
+                </select>
+                <span class="select-icon">
+                  <Icon type="chevron-down" size={18} />
+                </span>
+              </div>
             </div>
-          </div>
+          )}
 
-          {formulas.map((formula) => {
+          {activeFormulas.map((formula) => {
+            const formulaSubmissionEntry =
+              typeof formula.submissionName === "string" &&
+              formula.submissionName.trim().length > 0
+                ? formula.submissionName.trim()
+                : undefined;
+            const formulaSubmissionValue =
+              typeof formula.submissionValue === "string" &&
+              formula.submissionValue.trim().length > 0
+                ? formula.submissionValue.trim()
+                : formula.label;
+            const submissionConfig = mergeSubmissionConfigs(
+              resolvedSectionSubmission,
+              formula.submission,
+            );
+            const submissionConfigString =
+              submissionConfig && Object.keys(submissionConfig).length > 0
+                ? JSON.stringify(submissionConfig)
+                : undefined;
+            const isActive = formula.id === initialFormula;
+            const useGroupedLayout =
+              layoutMode === "grouped" || Boolean(baseGroupOptions.layout);
+            const groups = useGroupedLayout
+              ? buildFormGroups(formula.fields, baseGroupOptions)
+              : [
+                  {
+                    title: resolvedLayout.remainingGroupTitle ?? "",
+                    rows: formula.fields.map((field) => [field]),
+                  },
+                ];
+            const includeFormulaField =
+              showFormulaSelect ||
+              formulas.length > 1 ||
+              Boolean(formulaSubmissionEntry);
+
             const renderField = (field: FormField) => {
               const fieldId = `contact-${formula.id}-${field.id}`;
               const fieldType = field.type ?? "text";
               const isRequired = field.required !== false;
               const placeholder = formatPlaceholder(field, isRequired);
+              const submissionName =
+                typeof field.submissionName === "string" &&
+                field.submissionName.trim().length > 0
+                  ? field.submissionName.trim()
+                  : undefined;
+              const submissionValue =
+                typeof field.submissionValue === "string" &&
+                field.submissionValue.trim().length > 0
+                  ? field.submissionValue.trim()
+                  : undefined;
 
               const isNumberField = fieldType === "number";
               const fieldClass = `form-field${isNumberField ? " form-field--number" : ""}`;
@@ -105,6 +267,9 @@ const formatPlaceholder = (field: FormField, isRequired: boolean) =>
                         placeholder={placeholder}
                         required={isRequired}
                         data-field-label={field.label}
+                        data-submission-name={submissionName}
+                        data-submission-value={submissionValue}
+                        data-field-type={fieldType}
                       />
                     </div>
                   );
@@ -121,13 +286,26 @@ const formatPlaceholder = (field: FormField, isRequired: boolean) =>
                           name={field.id}
                           required={isRequired}
                           data-field-label={field.label}
+                          data-submission-name={submissionName}
+                          data-submission-value={submissionValue}
+                          data-field-type={fieldType}
                         >
                           <option value="" disabled selected>
                             {placeholder}
                           </option>
                           {field.options?.map((option) => (
-                            <option value={option.value}>{option.label}</option>
-                          ))}
+                            <option
+                              value={option.value}
+                              data-submission-value={
+                                option.submissionValue &&
+                                option.submissionValue.trim().length > 0
+                                  ? option.submissionValue.trim()
+                                  : option.label.trim()
+                              }
+                            >
+                              {option.label}
+                            </option>
+                          )) ?? null}
                         </select>
                         <span class="select-icon">
                           <Icon type="chevron-down" size={16} />
@@ -182,6 +360,9 @@ const formatPlaceholder = (field: FormField, isRequired: boolean) =>
                           placeholder={placeholder}
                           required={isRequired}
                           data-field-label={field.label}
+                          data-submission-name={submissionName}
+                          data-submission-value={submissionValue}
+                          data-field-type={fieldType}
                         />
                         <button
                           type="button"
@@ -209,6 +390,9 @@ const formatPlaceholder = (field: FormField, isRequired: boolean) =>
                         placeholder={placeholder}
                         required={isRequired}
                         data-field-label={field.label}
+                        data-submission-name={submissionName}
+                        data-submission-value={submissionValue}
+                        data-field-type={fieldType}
                       />
                     </div>
                   );
@@ -225,29 +409,31 @@ const formatPlaceholder = (field: FormField, isRequired: boolean) =>
               );
             };
 
-            const groupOptions: BuildGroupOptions = {};
-            if (groupLayout) {
-              groupOptions.layout = groupLayout;
-            }
-            if (typeof includeRemainingFields === "boolean") {
-              groupOptions.includeRemainingFields = includeRemainingFields;
-            }
-            if (remainingGroupTitle) {
-              groupOptions.remainingGroupTitle = remainingGroupTitle;
-            }
-
-            const groups = buildFormGroups(formula.fields, groupOptions);
-
             return (
               <form
-                class={`contact-form${
-                  formula.id === initialFormula ? " is-active" : ""
+                class={`contact-form${isActive ? " is-active" : ""}${
+                  layoutMode === "stacked" ? " contact-form--stacked" : ""
                 }`}
                 data-formula-fields
                 data-formula={formula.id}
                 data-formula-label={formula.label}
+                data-formula-entry={formulaSubmissionEntry}
+                data-formula-value={formulaSubmissionValue}
+                data-submission-config={submissionConfigString}
+                data-include-formula={includeFormulaField ? "true" : undefined}
                 method="post"
+                hidden={!isActive && activeFormulas.length > 1}
               >
+                {(formula.description || formula.helper) && (
+                  <div class="form-copy">
+                    {formula.description && (
+                      <p class="form-description">{formula.description}</p>
+                    )}
+                    {formula.helper && (
+                      <p class="form-helper">{formula.helper}</p>
+                    )}
+                  </div>
+                )}
                 <div class="form-groups">
                   {groups.map(({ title, rows }) => {
                     const renderedRows = rows
@@ -258,7 +444,9 @@ const formatPlaceholder = (field: FormField, isRequired: boolean) =>
 
                     return (
                       <section class="form-group">
-                        <h3 class="form-group-title">{title}</h3>
+                        {title && showGroupTitles && (
+                          <h3 class="form-group-title">{title}</h3>
+                        )}
                         <div class="form-group-body">{renderedRows}</div>
                       </section>
                     );
@@ -283,7 +471,28 @@ const formatPlaceholder = (field: FormField, isRequired: boolean) =>
           })}
         </div>
       </div>
-      <script src="./form.client.ts" />
+
+
+      <script src="./form.submit.ts" />
+      <script src="./form.logic.ts" />
+
+      <script>
+  import { initContactForm, initialiseNumberField } from "./form.logic";
+import { submitToGoogleForm } from "./form.submit";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const section = document.querySelector("[data-contact-section]");
+    if (section) initContactForm(section);
+    document.querySelectorAll("[data-number-field]").forEach(initialiseNumberField);
+
+    document.querySelectorAll("form[data-formula-fields]").forEach((form) => {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        await submitToGoogleForm(e.currentTarget);
+      });
+    });
+  });
+</script>
     </section>
   )
 }

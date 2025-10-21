@@ -1,13 +1,11 @@
 ---
 component: cta
-
-eyebrow: "devis"
-
+variant: banner
+theme: accent
+eyebrow: "Devis"
 title: "Un projet de communication ?"
-
 description: "On s'occupe de tout !"
-
-ctas:
+actions:
   - label: "Demander un devis"
     href: "/contact"
 ---

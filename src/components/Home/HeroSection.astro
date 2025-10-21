@@ -1,52 +1,55 @@
 ---
+import ActionButton from "@components/CTAs/ActionButton/ActionButton.astro";
 import { resolveUrl } from "@lib/urlHelpers";
-import CtaDevis from "@components/CTAs/CTADevis/CtaDevis.astro";
-
 import type { HeroProps } from "@app-types/hero";
 
-const { eyebrow, title, content, ctas = [], image } =
-  Astro.props as HeroProps;
+const {
+  eyebrow,
+  title,
+  content,
+  body,
+  ctas = [],
+  image,
+  align = "center",
+  backgroundOverlay = true,
+} = Astro.props as HeroProps;
 
-const ctaCards = ctas.map((cta) => ({
+const actions = ctas.map((cta) => ({
   ...cta,
   href: resolveUrl(cta.href || "/"),
 }));
 
+const heroContent = body ?? content ?? "";
 const backgroundStyle = image
   ? `background-image: url(${resolveUrl(image.src)});`
   : undefined;
-
-const emphasizePhrase = (value: string) =>
-  value.replace(/(régie\s+publicitaire)/gi, "<strong>$1</strong>");
 ---
 
-<section class="hero" style={backgroundStyle}>
+<section class={`hero hero--${align}`} style={backgroundStyle} data-overlay={backgroundOverlay}>
   <div class="hero__content">
     <div class="copy">
       {eyebrow && <span class="eyebrow">{eyebrow}</span>}
-      <h1 set:html={emphasizePhrase(title)} />
-      <p set:html={content} />
+      <h1>{title}</h1>
+      {heroContent && <p set:html={heroContent} />}
     </div>
 
-    {
-      ctaCards.length > 0 && (
-        <ul class="cta-cards">
-          {ctaCards.map((cta) => (
-            <li>
-              <CtaDevis label={cta.label} href={cta.href} />
-            </li>
-          ))}
-        </ul>
-      )
-    }
+    {actions.length > 0 && (
+      <ul class="cta-list">
+        {actions.map((cta) => (
+          <li>
+            <ActionButton {...cta} />
+          </li>
+        ))}
+      </ul>
+    )}
   </div>
 </section>
 
-<style>
+<style lang="scss">
   .hero {
     position: relative;
-    height: calc(100vh - var(--navbar-total-height));
-    padding: 0 var(--space-3);
+    min-height: calc(100vh - var(--navbar-total-height));
+    padding: var(--space-5) var(--space-3);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -55,18 +58,18 @@ const emphasizePhrase = (value: string) =>
     background-repeat: no-repeat;
     background-color: var(--color-base-content);
     color: var(--color-neutral);
-  }
 
-  .hero::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      var(--color-primary-transp),
-      var(--color-primary-transp)
-    );
-    pointer-events: none;
+    &[data-overlay="true"]::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        var(--color-primary-transp),
+        var(--color-primary-transp)
+      );
+      pointer-events: none;
+    }
   }
 
   .hero__content {
@@ -77,11 +80,22 @@ const emphasizePhrase = (value: string) =>
     align-items: stretch;
     gap: var(--space-4);
     text-align: center;
+    max-width: min(48rem, 100%);
+  }
+
+  .hero--start {
+    justify-content: flex-start;
+  }
+
+  .hero--start .hero__content {
+    text-align: left;
+    align-items: flex-start;
   }
 
   .copy {
     display: flex;
     flex-direction: column;
+    gap: var(--space-2);
   }
 
   .copy h1 {
@@ -91,10 +105,6 @@ const emphasizePhrase = (value: string) =>
     text-shadow: 0 4px 16px rgba(0, 0, 0, 0.65);
     font-family: var(fontBold);
     color: var(--color-base-100);
-
-    strong {
-      font-weight: 600;
-    }
   }
 
   .copy p {
@@ -121,91 +131,42 @@ const emphasizePhrase = (value: string) =>
     color: var(--color-secondary);
   }
 
-  .cta-primary {
-    display: flex;
-    justify-content: center;
+  .hero--start .eyebrow {
+    align-self: flex-start;
   }
 
-  .cta-cards {
+  .cta-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
-  }
-
-  .cta-card {
-    padding: var(--space-2) var(--space-3);
-    background: var(--color-base-100);
-    font-weight: 600;
-    font-size: var(--step-1);
-    border-radius: var(--radius-full);
-    color: var(--color-primary);
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
-  }
-
-  .cta-card:hover,
-  .cta-card:focus-visible {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
-  }
-
-  .cta-card__icon {
-    width: var(--step-4);
-    height: var(--step-4);
-    border-radius: 0.9rem;
-    display: inline-flex;
+    gap: var(--space-2);
     align-items: center;
-    justify-content: center;
-    font-size: 2rem;
   }
 
-  .cta-card__icon :global(svg) {
-    width: var(--step-4);
-    height: var(--step-4);
-    display: block;
-  }
-
-  .cta-card__label {
-    flex: 1;
-    text-align: center;
-  }
-
-  .inlineIcon {
-    display: inline-flex;
-    width: var(--step-velux);
-    vertical-align: middle;
-  }
-
-  .inlineIcon :global(svg) {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-
-  .accent {
-    color: var(--color-primary);
+  .hero--start .cta-list {
+    align-items: flex-start;
   }
 
   @media (min-width: 960px) {
     .hero {
-      min-height: calc(100vh - var(--space-4));
-      padding-block: var(--space-5);
+      padding-block: var(--space-6);
     }
 
-    .hero__content {
-      width: min(600px, 100%);
-    }
-
-    .cta-cards {
+    .cta-list {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: var(--space-3);
     }
 
-    .cta-card {
-      font-size: var(--step-2);
-      gap: var(--space-1);
+    .hero--start .cta-list {
+      justify-content: flex-start;
+    }
+
+    .cta-list li {
+      display: flex;
     }
   }
 </style>

@@ -1,36 +1,43 @@
 import type { IconProps } from "@components/Icons/icon";
 
-export type CallToAction = {
+export type CtaIconProps = Partial<IconProps>;
+
+export type CtaAction = {
   label: string;
   href: string;
-  icon?: string;
+  icon?: IconProps["type"];
+  iconProps?: CtaIconProps;
+  target?: "_blank" | "_self";
+  rel?: string;
 };
 
-export interface CTABannerProps {
+export type CTASectionVariant = "banner" | "download" | "text-only" | "card";
+
+export type CTASectionTheme = "light" | "dark" | "accent";
+
+export type CTASectionAlignment = "start" | "center" | "end";
+
+export interface CTASectionProps {
+  variant?: CTASectionVariant;
   eyebrow?: string;
-  title: string;
+  title?: string;
   description?: string;
-  content?: string;
+  body?: string;
   note?: string;
-  ctas?: CallToAction[];
-}
-
-export interface CTADownloadProps extends CallToAction {
-  icon?: string;
-}
-
-export interface CTADevisProps extends CallToAction {
-  icon?: string;
-  iconProps?: Partial<IconProps>;
+  actions?: CtaAction[];
+  media?: {
+    src: string;
+    alt?: string;
+  };
+  download?: {
+    label: string;
+    href: string;
+    name?: string;
+  };
+  align?: CTASectionAlignment;
+  theme?: CTASectionTheme;
 }
 
 export interface CTAtoCallbackProps {
   label?: string;
-}
-
-export interface CTADownloadSectionProps {
-  title: string;
-  content?: string;
-  file: CTADownloadProps;
-  downloadName?: string;
 }

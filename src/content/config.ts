@@ -1,4 +1,4 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, z } from "astro:content";
 
 const callToActionSchema = z.object({
   label: z.string(),
@@ -11,7 +11,7 @@ const tarifsOptionSchema = z.object({
   label: z.string(),
   description: z.string().optional(),
   price: z.string(),
-  type: z.enum(['base', 'video', 'extra']).default('extra'),
+  type: z.enum(["base", "video", "extra"]).default("extra"),
   defaultSelected: z.boolean().optional(),
   disabled: z.boolean().optional(),
   defaultQuantity: z.number().optional(),
@@ -33,10 +33,11 @@ const tarifsPlanSchema = z.object({
   description: z.string().optional(),
   moreInfoTitle: z.string().optional(),
   moreInfoContent: z.string().optional(),
+  availableOptions: z.array(z.string()).optional(),
 });
 
 const tarifsSchema = z.object({
-  component: z.literal('tarifs'),
+  component: z.literal("tarifs"),
   defaultPlan: z.string(),
   plans: z.array(tarifsPlanSchema).min(1),
   options: z.array(tarifsOptionSchema).min(1),
@@ -48,12 +49,12 @@ const tarifsSchema = z.object({
     .optional(),
 });
 
-
 const heroSchema = z.object({
-  component: z.literal('hero'),
+  component: z.literal("hero"),
   eyebrow: z.string().optional(),
   title: z.string(),
-  content: z.string(),
+  content: z.string().optional(),
+  body: z.string().optional(),
   image: z
     .object({
       src: z.string(),
@@ -61,27 +62,37 @@ const heroSchema = z.object({
     })
     .optional(),
   ctas: z.array(callToActionSchema).optional(),
+  align: z.enum(["start", "center"]).optional(),
+  backgroundOverlay: z.boolean().optional(),
 });
 
 const featureGridSchema = z.object({
-  component: z.literal('feature-grid'),
-  key: z.string(),
+  component: z.literal("feature-grid"),
+  key: z.string().optional(),
   eyebrow: z.string().optional(),
-  title: z.string(),
+  title: z.string().optional(),
   description: z.string().optional(),
+  display: z.enum(["grid", "list"]).optional(),
+  theme: z.enum(["light", "dark", "accent"]).optional(),
   features: z
     .array(
       z.object({
         title: z.string(),
-        description: z.string(),
+        description: z.string().optional(),
         icon: z.string().optional(),
-      }),
+        image: z
+          .object({
+            src: z.string(),
+            alt: z.string().optional(),
+          })
+          .optional(),
+      })
     )
     .min(1),
 });
 
 const parcoursSchema = z.object({
-  component: z.literal('parcours'),
+  component: z.literal("parcours"),
   title: z.string(),
   schema: z.string().optional(),
   description: z.string().optional(),
@@ -91,13 +102,13 @@ const parcoursSchema = z.object({
         title: z.string(),
         description: z.string(),
         icon: z.string().optional(),
-      }),
+      })
     )
     .min(1),
 });
 
 const faqSchema = z.object({
-  component: z.literal('faq'),
+  component: z.literal("faq"),
   title: z.string(),
   description: z.string().optional(),
   questions: z
@@ -106,7 +117,7 @@ const faqSchema = z.object({
         question: z.string(),
         answer: z.string(),
         role: z.string().optional(),
-      }),
+      })
     )
     .min(1),
 });
@@ -116,8 +127,8 @@ const contactFormFieldSchema = z.object({
   label: z.string(),
   placeholder: z.string().optional(),
   type: z
-    .enum(['text', 'email', 'tel', 'number', 'textarea', 'select'])
-    .default('text'),
+    .enum(["text", "email", "tel", "number", "textarea", "select"])
+    .default("text"),
   required: z.boolean().default(true),
   min: z.number().optional(),
   max: z.number().optional(),
@@ -127,9 +138,42 @@ const contactFormFieldSchema = z.object({
       z.object({
         label: z.string(),
         value: z.string(),
-      }),
+        submissionValue: z.string().optional(),
+      })
     )
     .optional(),
+  submissionName: z.string().optional(),
+  submissionValue: z.string().optional(),
+});
+
+const contactFormStaticFieldSchema = z.object({
+  name: z.string(),
+  value: z.string(),
+});
+
+const contactFormSubmissionSchema = z.object({
+  endpoint: z.string().optional(),
+  sheet: z.string().optional(),
+  staticFields: z.array(contactFormStaticFieldSchema).optional(),
+});
+
+const contactFormLayoutGroupSchema = z.object({
+  title: z.string(),
+  rows: z.array(z.array(z.string().min(1)).min(1)).min(1),
+});
+
+const contactFormLayoutSchema = z.object({
+  mode: z.enum(["grouped", "stacked"]).optional(),
+  groups: z.array(contactFormLayoutGroupSchema).optional(),
+  includeRemainingFields: z.boolean().optional(),
+  remainingGroupTitle: z.string().optional(),
+  showTitles: z.boolean().optional(),
+});
+
+const contactFormOptionsSchema = z.object({
+  showFormulaSelect: z.boolean().optional(),
+  layout: contactFormLayoutSchema.optional(),
+  submission: contactFormSubmissionSchema.optional(),
 });
 
 const contactFormFormulaSchema = z.object({
@@ -137,8 +181,11 @@ const contactFormFormulaSchema = z.object({
   label: z.string(),
   description: z.string().optional(),
   helper: z.string().optional(),
+  submissionName: z.string().optional(),
+  submissionValue: z.string().optional(),
   fields: z.array(contactFormFieldSchema).min(1),
   submitLabel: z.string().optional(),
+  submission: contactFormSubmissionSchema.optional(),
 });
 
 const contactFormHighlightSchema = z.object({
@@ -148,7 +195,7 @@ const contactFormHighlightSchema = z.object({
 });
 
 const contactFormSchema = z.object({
-  component: z.literal('contact-form'),
+  component: z.literal("contact-form"),
   title: z.string(),
   subtitle: z.string().optional(),
   highlights: z.array(contactFormHighlightSchema).optional(),
@@ -156,10 +203,14 @@ const contactFormSchema = z.object({
   defaultFormula: z.string().optional(),
   submitLabel: z.string().optional(),
   successMessage: z.string().optional(),
+  showFormulaSelect: z.boolean().optional(),
+  submission: contactFormSubmissionSchema.optional(),
+  structure: contactFormLayoutSchema.optional(),
+  options: contactFormOptionsSchema.optional(),
 });
 
 const markdownSchema = z.object({
-  component: z.literal('markdown'),
+  component: z.literal("markdown"),
   title: z.string().optional(),
   variant: z.string().optional(),
   description: z.string().optional(),
@@ -169,32 +220,50 @@ const markdownSchema = z.object({
         src: z.string(),
         alt: z.string().optional(),
         caption: z.string().optional(),
-      }),
+      })
     )
-    .optional()
+    .optional(),
 });
 
 const mapSchema = z.object({
-  component: z.literal('map'),
+  component: z.literal("map"),
   title: z.string().optional(),
   caption: z.string().optional(),
   embedUrl: z.string(),
 });
 
 const ctaSchema = z.object({
-  component: z.literal('cta'),
+  component: z.literal("cta"),
+  variant: z.enum(["banner", "card", "text-only", "download"]).optional(),
+  theme: z.enum(["light", "dark", "accent"]).optional(),
+  align: z.enum(["start", "center", "end"]).optional(),
   eyebrow: z.string().optional(),
-  title: z.string(),
+  title: z.string().optional(),
   description: z.string().optional(),
+  body: z.string().optional(),
   content: z.string().optional(),
   note: z.string().optional(),
+  actions: z.array(callToActionSchema).optional(),
   ctas: z.array(callToActionSchema).optional(),
+  media: z
+    .object({
+      src: z.string(),
+      alt: z.string().optional(),
+    })
+    .optional(),
+  download: z
+    .object({
+      label: z.string(),
+      href: z.string(),
+      name: z.string().optional(),
+    })
+    .optional(),
   downloadName: z.string().optional(),
   file: callToActionSchema.optional(),
 });
 
 const googleFormSchema = z.object({
-  component: z.literal('google-form'),
+  component: z.literal("google-form"),
   title: z.string().optional(),
   description: z.string().optional(),
   formUrl: z.string().url(),
@@ -202,14 +271,14 @@ const googleFormSchema = z.object({
 });
 
 const imagesSchema = z.object({
-  component: z.literal('images'),
+  component: z.literal("images"),
   images: z
     .array(
       z.object({
         src: z.string(),
         alt: z.string().optional(),
         caption: z.string().optional(),
-      }),
+      })
     )
     .min(1),
 });
@@ -237,7 +306,7 @@ const catalogueCategorySchema = z.object({
 });
 
 const catalogueSchema = z.object({
-  component: z.literal('catalogue'),
+  component: z.literal("catalogue"),
   eyebrow: z.string().optional(),
   title: z.string().optional(),
   intro: z.string().optional(),
@@ -247,7 +316,7 @@ const catalogueSchema = z.object({
 });
 
 const testimonialsSchema = z.object({
-  component: z.literal('testimonials'),
+  component: z.literal("testimonials"),
   title: z.string(),
   description: z.string().optional(),
   testimonials: z
@@ -256,12 +325,12 @@ const testimonialsSchema = z.object({
         quote: z.string(),
         author: z.string(),
         role: z.string().optional(),
-      }),
+      })
     )
     .min(1),
 });
 
-const sectionSchema = z.discriminatedUnion('component', [
+const sectionSchema = z.discriminatedUnion("component", [
   heroSchema,
   featureGridSchema,
   parcoursSchema,
@@ -278,12 +347,12 @@ const sectionSchema = z.discriminatedUnion('component', [
 ]);
 
 const sections = defineCollection({
-  type: 'content',
+  type: "content",
   schema: sectionSchema,
 });
 
 const pages = defineCollection({
-  type: 'content',
+  type: "content",
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
@@ -292,7 +361,7 @@ const pages = defineCollection({
     sections: z.array(
       z.object({
         slug: z.string(),
-      }),
+      })
     ),
   }),
 });

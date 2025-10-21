@@ -42,10 +42,14 @@ npm run lint    # vérifier schémas et types de contenu
 
 ### Identité & navigation
 
-- `src/lib/siteData.ts` regroupe :
-  - `mainNavigation` : les liens du header,
-  - `companyDetails` : coordonnées, liens sociaux et logos utilisés dans la navigation et le footer.
-- Déposez vos logos dans `public/images` et mettez à jour les chemins/alt.
+- `src/lib/siteData.ts` centralise `siteConfig`, une configuration unique pour :
+  - `brand` : nom, tagline, logos (header/footer),
+  - `navigation.main` / `navigation.footer` : liens de navigation primaires et secondaires,
+  - `contact` : coordonnées, bouton principal, liens sociaux,
+  - `legal` : libellés et URLs des pages légales,
+  - `interactions.callback` : libellés et champs du module “Être rappelé”,
+  - `ui.theme` : thème WebCoreUI utilisé par défaut.
+- Remplacez les logos et visuels dans `public/images` puis ajustez les chemins/alt dans `siteConfig`.
 
 ### Contenus éditoriaux
 

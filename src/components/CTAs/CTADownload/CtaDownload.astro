@@ -1,40 +1,156 @@
 ---
-import Icon from "@components/Icons/Icon.astro";
-import type { IconProps } from "@components/Icons/icon";
 import { resolveUrl, isExternalUrl } from "@lib/urlHelpers";
-import styles from "./ctaDownload.module.scss";
-import type { CTADownloadSectionProps } from "@app-types/cta";
+import type { CTASectionProps } from "@app-types/cta";
 
-const { title, file, content, downloadName } =
-  Astro.props as CTADownloadSectionProps;
+const {
+  title,
+  description,
+  note,
+  download,
+  media,
+  theme = "light",
+  align = "center",
+} = Astro.props as CTASectionProps;
 
-const resolvedHref = resolveUrl(file.href);
-const resolvedImgUrl = content ? resolveUrl(content) : null;
-const externalLink = isExternalUrl(file.href);
-const sanitizedHref = file.href?.split("#")[0]?.split("?")[0] ?? file.href;
-const derivedDownloadName =
-  downloadName ?? sanitizedHref.split("/").filter(Boolean).pop();
-const downloadAttr = !externalLink ? (derivedDownloadName ?? "") : undefined;
+if (!download) {
+  throw new Error("CTA download section requires a download configuration");
+}
+
+const resolvedHref = resolveUrl(download.href);
+const externalLink = isExternalUrl(download.href);
+const sanitizedHref = download.href?.split("#")[0]?.split("?")[0] ?? download.href;
+const derivedDownloadName = download.name ?? sanitizedHref.split("/").filter(Boolean).pop();
+const downloadAttr = !externalLink ? derivedDownloadName ?? undefined : undefined;
+const resolvedMedia = media
+  ? {
+      ...media,
+      src: resolveUrl(media.src),
+    }
+  : null;
 ---
 
-<section class={`${styles.downloadCta} section-container`}>
-  <div class={styles.shell}>
-    <div class={styles.content}>
-      {
-        resolvedImgUrl && (
-          <img src={resolvedImgUrl} alt={file.label} class={styles.visual} />
-        )
-      }
-
+<section class={`download-section download-section--${theme} section-container download-section--align-${align}`}>
+  <div class="download-shell">
+    {resolvedMedia && (
+      <div class="download-media">
+        <img src={resolvedMedia.src} alt={resolvedMedia.alt ?? title ?? download.label} loading="lazy" />
+      </div>
+    )}
+    <div class="download-content">
+      {title && <h2>{title}</h2>}
+      {description && <p class="download-description" set:html={description} />}
+      {note && <p class="download-note">{note}</p>}
       <a
-        class={styles.action}
+        class="download-action"
         href={resolvedHref}
         target={externalLink ? "_blank" : undefined}
         rel={externalLink ? "noopener noreferrer" : undefined}
         download={downloadAttr}
       >
-        <span class={styles.actionLabel}>{title}</span>
+        {download.label}
       </a>
     </div>
   </div>
 </section>
+
+<style lang="scss">
+  .download-section {
+    padding: var(--space-5) 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .download-shell {
+    width: min(960px, 100%);
+    display: grid;
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  .download-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    text-align: center;
+  }
+
+  .download-section--align-start .download-content {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .download-section--align-end .download-content {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  .download-description {
+    margin: 0;
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  .download-note {
+    margin: 0;
+    font-size: var(--step--2);
+    opacity: 0.7;
+  }
+
+  .download-media {
+    display: flex;
+    justify-content: center;
+  }
+
+  .download-media img {
+    width: 100%;
+    max-width: 360px;
+    border-radius: var(--radius-lg, 1.5rem);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+  }
+
+  .download-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    text-decoration: none;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    transition: transform 0.2s ease;
+  }
+
+  .download-action:hover,
+  .download-action:focus-visible {
+    transform: translateY(-2px);
+  }
+
+  .download-section--light {
+    background: var(--color-base-100);
+    color: var(--color-base-content);
+  }
+
+  .download-section--dark {
+    background: var(--color-base-content);
+    color: var(--color-neutral);
+  }
+
+  .download-section--accent {
+    background: var(--color-secondary);
+    color: var(--color-primary);
+  }
+
+  @media (min-width: 768px) {
+    .download-shell {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+  }
+
+  @media (min-width: 960px) {
+    .download-section {
+      padding: var(--space-6) 0;
+    }
+  }
+</style>

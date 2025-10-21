@@ -1,9 +1,14 @@
 ---
 component: cta
+variant: download
+theme: light
 title: "Télécharger la plaquette"
-downloadName: "plaquette.pdf"
-content: "/images/apercu_plaquette.svg"
-file:
-  label: "Aperçu plaquette"
+description: "Découvrez le détail de l'offre dans une plaquette prête à partager."
+media:
+  src: "/images/apercu_plaquette.svg"
+  alt: "Aperçu de la plaquette"
+download:
+  label: "Télécharger la plaquette"
   href: "/assets/plaquette.pdf"
+  name: "plaquette.pdf"
 ---

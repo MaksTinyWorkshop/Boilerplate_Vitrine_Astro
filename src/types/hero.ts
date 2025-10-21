@@ -1,4 +1,4 @@
-import type { CallToAction } from "./cta";
+import type { CtaAction } from "./cta";
 
 export interface HeroImage {
   src: string;
@@ -8,7 +8,10 @@ export interface HeroImage {
 export interface HeroProps {
   eyebrow?: string;
   title: string;
-  content: string;
-  ctas?: CallToAction[];
+  content?: string;
+  body?: string;
+  ctas?: CtaAction[];
   image?: HeroImage;
+  align?: "start" | "center";
+  backgroundOverlay?: boolean;
 }

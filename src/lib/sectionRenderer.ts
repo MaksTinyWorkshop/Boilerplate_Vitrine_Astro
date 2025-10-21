@@ -1,44 +1,41 @@
-import type { CollectionEntry } from 'astro:content';
+import type { CollectionEntry } from "astro:content";
 
-import CatalogueSection from '@components/Catalogue/CatalogueSection.astro';
-import CtaBanner from '@components/CTAs/CTABanner/CtaBanner.astro';
-import CtaDownload from '@components/CTAs/CTADownload/CtaDownload.astro';
-import FeatureGrid from '@components/Features/FeatureSecteur.astro';
-import FeatureTarif from '@components/Features/FeatureTarif.astro';
-import HeroSection from '@components/Home/HeroSection.astro';
-import MarkdownSection from '@components/Markdown/MarkdownSection.astro';
-import ContactFormSection from '@components/Form/HandmadeForm/ContactFormSection.astro';
-import Tarifs from '@components/Tarifs/Tarifs.astro';
-import GoogleFormSection from '@components/Form/GoogleForm/GoogleFormSection.astro';
-import FAQSection from '@components/FAQSection.astro';
-import ParcoursSection from '@components/ParcoursSection.astro';
-import ImagesGrid from '@components/ImagesGrid.astro';
-import MapSection from '@components/MapSection.astro';
-import TestimonialsSection from '@components/TestimonialsSection.astro';
-
+import CatalogueSection from "@components/Catalogue/CatalogueSection.astro";
+import CtaBanner from "@components/CTAs/CTABanner/CtaBanner.astro";
+import CtaDownload from "@components/CTAs/CTADownload/CtaDownload.astro";
+import FeatureGrid from "@components/Features/FeatureGrid.astro";
+import HeroSection from "@components/Home/HeroSection.astro";
+import MarkdownSection from "@components/Markdown/MarkdownSection.astro";
+import ContactFormSection from "@components/Form/HandmadeForm/ContactFormSection.astro";
+import Tarifs from "@components/Tarifs/Tarifs.astro";
+import GoogleFormSection from "@components/Form/GoogleForm/GoogleFormSection.astro";
+import FAQSection from "@components/FAQSection.astro";
+import ParcoursSection from "@components/ParcoursSection.astro";
+import ImagesGrid from "@components/ImagesGrid.astro";
+import MapSection from "@components/MapSection.astro";
+import TestimonialsSection from "@components/TestimonialsSection.astro";
 
 const componentMap = {
   hero: HeroSection,
-  'feature-grid': FeatureGrid,
+  "feature-grid": FeatureGrid,
   parcours: ParcoursSection,
   tarifs: Tarifs,
   faq: FAQSection,
-  'contact-form': ContactFormSection,
+  "contact-form": ContactFormSection,
   markdown: MarkdownSection,
   map: MapSection,
   cta: CtaBanner,
-  'google-form': GoogleFormSection,
+  "google-form": GoogleFormSection,
   images: ImagesGrid,
   catalogue: CatalogueSection,
-  testimonials: TestimonialsSection
+  testimonials: TestimonialsSection,
 } as const;
 
 type SectionComponentName = keyof typeof componentMap;
 
 type SectionComponentResult =
   | (typeof componentMap)[SectionComponentName]
-  | typeof CtaDownload
-  | typeof FeatureTarif;
+  | typeof CtaDownload;
 
 type ResolvedSection = {
   Component: SectionComponentResult;
@@ -46,7 +43,7 @@ type ResolvedSection = {
 };
 
 export async function resolveSection(
-  section: CollectionEntry<'sections'>,
+  section: CollectionEntry<"sections">
 ): Promise<ResolvedSection> {
   const componentKey = section.data.component as SectionComponentName;
   const Component = componentMap[componentKey];
@@ -56,18 +53,21 @@ export async function resolveSection(
   }
 
   switch (section.data.component) {
-    case 'hero':
+    case "hero":
       return {
         Component,
         props: {
           eyebrow: section.data.eyebrow,
           title: section.data.title,
           content: section.data.content,
+          body: section.data.body,
           ctas: section.data.ctas,
           image: section.data.image,
+          align: section.data.align,
+          backgroundOverlay: section.data.backgroundOverlay,
         },
       };
-    case 'tarifs':
+    case "tarifs":
       return {
         Component,
         props: {
@@ -77,19 +77,7 @@ export async function resolveSection(
           modal: section.data.modal,
         },
       };
-    case 'feature-grid':
-      if (section.data.key === 'grid-tarifs') {
-        return {
-          Component: FeatureTarif,
-          props: {
-            eyebrow: section.data.eyebrow,
-            title: section.data.title,
-            description: section.data.description,
-            features: section.data.features,
-          },
-        };
-      }
-      
+    case "feature-grid":
       return {
         Component,
         props: {
@@ -97,9 +85,11 @@ export async function resolveSection(
           title: section.data.title,
           description: section.data.description,
           features: section.data.features,
+          display: section.data.display,
+          theme: section.data.theme,
         },
       };
-    case 'parcours':
+    case "parcours":
       return {
         Component,
         props: {
@@ -109,7 +99,7 @@ export async function resolveSection(
           steps: section.data.steps,
         },
       };
-    case 'faq':
+    case "faq":
       return {
         Component,
         props: {
@@ -118,7 +108,8 @@ export async function resolveSection(
           questions: section.data.questions,
         },
       };
-    case 'contact-form':
+    case "contact-form": {
+      const legacyLayout = "layout" in section.data ? (section.data as any).layout : undefined;
       return {
         Component,
         props: {
@@ -129,9 +120,15 @@ export async function resolveSection(
           defaultFormula: section.data.defaultFormula,
           submitLabel: section.data.submitLabel,
           successMessage: section.data.successMessage,
+          showFormulaSelect: section.data.showFormulaSelect,
+          layout: section.data.structure ?? legacyLayout,
+          submission: section.data.submission,
+          structure: section.data.structure ?? legacyLayout,
+          options: section.data.options,
         },
       };
-    case 'markdown': {
+    }
+    case "markdown": {
       const { Content } = await section.render();
       return {
         Component,
@@ -144,7 +141,7 @@ export async function resolveSection(
         },
       };
     }
-    case 'map':
+    case "map":
       return {
         Component,
         props: {
@@ -153,7 +150,7 @@ export async function resolveSection(
           embedUrl: section.data.embedUrl,
         },
       };
-    case 'google-form':
+    case "google-form":
       return {
         Component,
         props: {
@@ -163,18 +160,52 @@ export async function resolveSection(
           height: section.data.height,
         },
       };
-    case 'cta': {
-      if (section.data.file) {
+    case "cta": {
+      const variant =
+        section.data.variant ??
+        (section.data.download || section.data.file ? "download" : "banner");
+      const actions = section.data.actions ?? section.data.ctas ?? [];
+      const theme = section.data.theme;
+      const align = section.data.align;
+      const body =
+        section.data.body ??
+        (variant === "download" ? undefined : section.data.content);
+
+      if (variant === "download" || section.data.download || section.data.file) {
+        const downloadConfig =
+          section.data.download ??
+          (section.data.file
+            ? {
+                label: section.data.file.label,
+                href: section.data.file.href,
+                name: section.data.downloadName,
+              }
+            : null);
+
+        if (!downloadConfig) {
+          throw new Error(`CTA download section missing download configuration: ${section.id}`);
+        }
+
+        const media =
+          section.data.media ??
+          (section.data.content && !section.data.body
+            ? {
+                src: section.data.content,
+                alt: section.data.title,
+              }
+            : undefined);
+
         return {
           Component: CtaDownload,
           props: {
-            eyebrow: section.data.eyebrow,
+            variant: "download",
             title: section.data.title,
-            content: section.data.content,
             description: section.data.description,
             note: section.data.note,
-            file: section.data.file,
-            downloadName: section.data.downloadName,
+            download: downloadConfig,
+            media,
+            theme,
+            align,
           },
         };
       }
@@ -182,23 +213,27 @@ export async function resolveSection(
       return {
         Component,
         props: {
+          variant,
+          theme,
+          align,
           eyebrow: section.data.eyebrow,
           title: section.data.title,
           description: section.data.description,
-          content: section.data.content,
-          ctas: section.data.ctas,
+          body,
           note: section.data.note,
+          actions,
+          media: section.data.media,
         },
       };
     }
-    case 'images':
+    case "images":
       return {
         Component,
         props: {
           images: section.data.images,
         },
       };
-    case 'catalogue':
+    case "catalogue":
       return {
         Component,
         props: {
@@ -210,7 +245,7 @@ export async function resolveSection(
           footnote: section.data.footnote,
         },
       };
-    case 'testimonials':
+    case "testimonials":
       return {
         Component,
         props: {

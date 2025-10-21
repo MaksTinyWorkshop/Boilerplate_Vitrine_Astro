@@ -1,29 +1,25 @@
 ---
 import Spacer from "@components/UI/Spacer.astro";
-import styles from "./navbar.module.scss";
 import CtaToCallback from "@components/CTAs/CTAtoCallback/CtaToCallback.astro";
 import Icon from "@components/Icons/Icon.astro";
-import { mainNavigation, companyDetails } from "@lib/siteData";
+import { siteConfig } from "@lib/siteData";
 import { resolveUrl, stripBaseFromPath } from "@lib/urlHelpers";
+import styles from "./navbar.module.scss";
 
 const resolveHref = (path: string) => resolveUrl(path || "/");
 
 const currentPath = stripBaseFromPath(Astro.url.pathname);
 
-const contactItems = companyDetails.contactItems ?? [];
-const logoAsset = (() => {
-  const primaryLogo = companyDetails.logos?.[0];
-  if (!primaryLogo) {
-    return { url: "", alt: "" };
-  }
-  return {
-    url: resolveUrl(primaryLogo.source.src),
-    alt: primaryLogo.source.alt,
-  };
-})();
+const primaryLogo = siteConfig.brand.logos[0];
+const logoAsset = primaryLogo
+  ? {
+      url: resolveUrl(primaryLogo.src),
+      alt: primaryLogo.alt ?? siteConfig.brand.name,
+    }
+  : { url: "", alt: "" };
 
-const menu = mainNavigation.map((item) => {
-  const targetPath = item.path;
+const menu = siteConfig.navigation.main.map((item) => {
+  const targetPath = item.href;
   const href = resolveHref(targetPath);
   const active =
     targetPath === "/"
@@ -66,27 +62,29 @@ const menu = mainNavigation.map((item) => {
         {
           menu.map((item) => (
             <li class={item.active ? styles.active : ""}>
-              <a href={item.href}>{item.name}</a>
+              <a href={item.href}>{item.label}</a>
             </li>
           ))
         }
       </ul>
       <Spacer size="3rem" axis="vertical" />
-      <CtaToCallback />
+      <CtaToCallback label={siteConfig.interactions.callback.triggerLabel} />
     </div>
   </div>
   {
-    contactItems.length > 0 && (
+    siteConfig.contact.items.length > 0 && (
       <div class={styles.contact_panel}>
-        {contactItems.map((item) => (
+        {siteConfig.contact.items.map((item) => (
           <a
             class={styles.contact_item}
             href={item.href}
             aria-label={item.label}
           >
-            <span class={styles.contact_icon}>
-              <Icon type={item.icon} color="var(--color-neutral)" />
-            </span>
+            {item.icon && (
+              <span class={styles.contact_icon}>
+                <Icon type={item.icon} color="var(--color-neutral)" />
+              </span>
+            )}
             <span class={styles.contact_label}>{item.label}</span>
           </a>
         ))}
