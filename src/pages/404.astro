@@ -1,13 +1,114 @@
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getSiteConfig } from "@lib/siteData";
+import {
+  DEFAULT_LOCALE,
+  SUPPORTED_LOCALES,
+  isLocale,
+  localizePath,
+} from "@lib/i18n/locales";
+
+const pathSegments = Astro.url.pathname.split("/").filter(Boolean);
+const candidate = pathSegments[0];
+const locale = isLocale(candidate) ? candidate : DEFAULT_LOCALE;
+const remainderSegments = isLocale(candidate) ? pathSegments.slice(1) : pathSegments;
+const remainderPath = remainderSegments.length > 0
+  ? `/${remainderSegments.join("/")}`
+  : "/";
+
+const site = getSiteConfig(locale);
+const homeHref = localizePath("/", locale);
+const contactHref = localizePath("/contact", locale);
+
+const copy = locale === "en"
+  ? {
+      title: "Page not found",
+      description: "The page you are looking for could not be found.",
+      message:
+        "This page does not exist or has moved. Head back to the homepage or contact us for help.",
+      ctaPrimary: "Back to homepage",
+      ctaSecondary: "Contact us",
+      ogTitle: "Error 404 — Page not found",
+      ogDescription:
+        "The requested page is missing. Return to the homepage or get in touch.",
+    }
+  : {
+      title: "Page introuvable",
+      description: "La page que vous cherchez n'existe pas encore.",
+      message:
+        "Cette page n'existe pas ou a été déplacée. Rejoignez l'accueil ou contactez-nous pour obtenir de l'aide.",
+      ctaPrimary: "Retour à l'accueil",
+      ctaSecondary: "Nous contacter",
+      ogTitle: "Erreur 404 — Page introuvable",
+      ogDescription:
+        "La page demandée est introuvable. Retournez à l'accueil ou contactez-nous.",
+    };
+
+const alternates = SUPPORTED_LOCALES.map((code) => ({
+  locale: code,
+  path: remainderPath,
+  url: localizePath(remainderPath, code),
+}));
 ---
-<BaseLayout title="Page introuvable" description="La page que vous cherchez n'existe pas encore.">
-  <section class="section-container">
-    <h1>Page introuvable</h1>
-    <p>Cette page n'existe pas ou a été déplacée. Revenez à l'accueil pour poursuivre votre visite.</p>
-    <div class="button-group">
-      <a class="button primary" href="/">Retour à l'accueil</a>
-      <a class="button secondary" href="/contact">Nous contacter</a>
+
+<BaseLayout
+  title={copy.title}
+  description={copy.description}
+  lang={locale}
+  site={site}
+  alternates={alternates}
+  seo={{
+    noindex: true,
+    title: copy.ogTitle,
+    description: copy.ogDescription,
+    openGraph: {
+      title: copy.ogTitle,
+      description: copy.ogDescription,
+      type: "website",
+    },
+    twitter: {
+      title: copy.ogTitle,
+      description: copy.ogDescription,
+    },
+  }}
+>
+  <section class="not-found">
+    <div class="not-found__badge">404</div>
+    <h1>{copy.title}</h1>
+    <p>{copy.message}</p>
+    <div class="not-found__actions">
+      <a class="button primary" href={homeHref}>{copy.ctaPrimary}</a>
+      <a class="button secondary" href={contactHref}>{copy.ctaSecondary}</a>
     </div>
   </section>
 </BaseLayout>
+
+<style lang="scss">
+  .not-found {
+    display: grid;
+    place-items: center;
+    gap: 1.5rem;
+    text-align: center;
+    padding: clamp(4rem, 12vh, 8rem) 1.5rem;
+    max-width: min(40rem, 90vw);
+    margin: 0 auto;
+
+    &__badge {
+      font-size: clamp(3rem, 10vw, 6rem);
+      font-weight: 700;
+      color: var(--p);
+    }
+
+    &__actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    p {
+      max-width: 32rem;
+      margin: 0 auto;
+    }
+  }
+</style>

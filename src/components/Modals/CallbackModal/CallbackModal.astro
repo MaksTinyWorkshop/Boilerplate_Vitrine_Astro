@@ -1,17 +1,31 @@
 ---
+import type { SiteConfig } from "@lib/siteData";
+import { getSiteConfig } from "@lib/siteData";
+import { DEFAULT_LOCALE, type Locale } from "@lib/i18n/locales";
 import { resolveUrl } from "@lib/urlHelpers";
-import { siteConfig } from "@lib/siteData";
 import styles from "./callbackModal.module.scss";
 
-const primaryLogo = siteConfig.brand.logos[0];
+interface CallbackModalProps {
+  site?: SiteConfig;
+  locale?: Locale;
+}
+
+const { site, locale = DEFAULT_LOCALE } = Astro.props as CallbackModalProps;
+
+const siteContent = site ?? getSiteConfig(locale);
+const primaryLogo = siteContent.brand.logos[0];
 const logoSrc = primaryLogo ? resolveUrl(primaryLogo.src) : "";
-const callbackConfig = siteConfig.interactions.callback;
+const callbackConfig = siteContent.interactions.callback;
 const nameField = callbackConfig.fields.name;
 const phoneField = callbackConfig.fields.phone;
 const nameRequired = nameField.required ?? true;
 const phoneRequired = phoneField.required ?? true;
 const namePlaceholder = nameField.placeholder ?? nameField.label;
 const phonePlaceholder = phoneField.placeholder ?? phoneField.label;
+const closeLabel =
+  siteContent.language === "en"
+    ? "Close the call request modal"
+    : "Fermer la demande de rappel";
 ---
 
 <div
@@ -31,7 +45,7 @@ const phonePlaceholder = phoneField.placeholder ?? phoneField.label;
       type="button"
       class={styles.closeButton}
       data-modal-close
-      aria-label="Fermer la demande de rappel"
+      aria-label={closeLabel}
     >
       ×
     </button>
@@ -41,7 +55,7 @@ const phonePlaceholder = phoneField.placeholder ?? phoneField.label;
         logoSrc && (
           <img
             src={logoSrc}
-            alt={primaryLogo?.alt ?? siteConfig.brand.name}
+            alt={primaryLogo?.alt ?? siteContent.brand.name}
           />
         )
       }

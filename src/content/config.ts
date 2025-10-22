@@ -1,4 +1,47 @@
 import { defineCollection, z } from "astro:content";
+import {
+  DEFAULT_LOCALE,
+  SUPPORTED_LOCALES,
+} from "../lib/i18n/locales";
+
+const localeSchema = z.enum(SUPPORTED_LOCALES);
+
+const localizedFields = {
+  lang: localeSchema.default(DEFAULT_LOCALE),
+  translationKey: z.string().optional(),
+};
+
+const seoOpenGraphSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  type: z.string().optional(),
+  image: z.string().optional(),
+  imageAlt: z.string().optional(),
+});
+
+const seoTwitterSchema = z.object({
+  card: z.string().optional(),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  image: z.string().optional(),
+  imageAlt: z.string().optional(),
+  site: z.string().optional(),
+  creator: z.string().optional(),
+});
+
+const seoSchema = z.object({
+  title: z.string().optional(),
+  description: z.string().optional(),
+  canonical: z.string().optional(),
+  robots: z.string().optional(),
+  keywords: z.union([z.array(z.string()), z.string()]).optional(),
+  openGraph: seoOpenGraphSchema.optional(),
+  twitter: seoTwitterSchema.optional(),
+  structuredData: z
+    .union([z.record(z.string(), z.any()), z.array(z.record(z.string(), z.any()))])
+    .optional(),
+  noindex: z.boolean().optional(),
+});
 
 const callToActionSchema = z.object({
   label: z.string(),
@@ -47,7 +90,7 @@ const tarifsSchema = z.object({
       content: z.string(),
     })
     .optional(),
-});
+}).extend(localizedFields);
 
 const heroSchema = z.object({
   component: z.literal("hero"),
@@ -64,7 +107,7 @@ const heroSchema = z.object({
   ctas: z.array(callToActionSchema).optional(),
   align: z.enum(["start", "center"]).optional(),
   backgroundOverlay: z.boolean().optional(),
-});
+}).extend(localizedFields);
 
 const featureGridSchema = z.object({
   component: z.literal("feature-grid"),
@@ -89,7 +132,7 @@ const featureGridSchema = z.object({
       })
     )
     .min(1),
-});
+}).extend(localizedFields);
 
 const parcoursSchema = z.object({
   component: z.literal("parcours"),
@@ -105,7 +148,7 @@ const parcoursSchema = z.object({
       })
     )
     .min(1),
-});
+}).extend(localizedFields);
 
 const faqSchema = z.object({
   component: z.literal("faq"),
@@ -120,7 +163,7 @@ const faqSchema = z.object({
       })
     )
     .min(1),
-});
+}).extend(localizedFields);
 
 const contactFormFieldSchema = z.object({
   id: z.string(),
@@ -207,13 +250,13 @@ const contactFormSchema = z.object({
   submission: contactFormSubmissionSchema.optional(),
   structure: contactFormLayoutSchema.optional(),
   options: contactFormOptionsSchema.optional(),
-});
+}).extend(localizedFields);
 
 const markdownSchema = z.object({
   component: z.literal("markdown"),
   title: z.string().optional(),
-  variant: z.string().optional(),
   description: z.string().optional(),
+  variant: z.string().optional(),
   images: z
     .array(
       z.object({
@@ -223,14 +266,14 @@ const markdownSchema = z.object({
       })
     )
     .optional(),
-});
+}).extend(localizedFields);
 
 const mapSchema = z.object({
   component: z.literal("map"),
   title: z.string().optional(),
   caption: z.string().optional(),
   embedUrl: z.string(),
-});
+}).extend(localizedFields);
 
 const ctaSchema = z.object({
   component: z.literal("cta"),
@@ -260,7 +303,7 @@ const ctaSchema = z.object({
     .optional(),
   downloadName: z.string().optional(),
   file: callToActionSchema.optional(),
-});
+}).extend(localizedFields);
 
 const googleFormSchema = z.object({
   component: z.literal("google-form"),
@@ -268,7 +311,7 @@ const googleFormSchema = z.object({
   description: z.string().optional(),
   formUrl: z.string().url(),
   height: z.number().optional(),
-});
+}).extend(localizedFields);
 
 const imagesSchema = z.object({
   component: z.literal("images"),
@@ -281,7 +324,7 @@ const imagesSchema = z.object({
       })
     )
     .min(1),
-});
+}).extend(localizedFields);
 
 const catalogueItemSchema = z.object({
   title: z.string(),
@@ -313,7 +356,7 @@ const catalogueSchema = z.object({
   categories: z.array(catalogueCategorySchema).min(1),
   defaultCategory: z.string().optional(),
   footnote: z.string().optional(),
-});
+}).extend(localizedFields);
 
 const testimonialsSchema = z.object({
   component: z.literal("testimonials"),
@@ -328,7 +371,7 @@ const testimonialsSchema = z.object({
       })
     )
     .min(1),
-});
+}).extend(localizedFields);
 
 const sectionSchema = z.discriminatedUnion("component", [
   heroSchema,
@@ -356,8 +399,12 @@ const pages = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
+    slug: z.string().optional(),
+    translationKey: z.string(),
+    lang: localeSchema.default(DEFAULT_LOCALE),
     draft: z.boolean().default(false),
     order: z.number().optional(),
+    seo: seoSchema.optional(),
     sections: z.array(
       z.object({
         slug: z.string(),

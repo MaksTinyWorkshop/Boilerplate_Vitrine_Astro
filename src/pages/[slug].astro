@@ -1,42 +1,9 @@
 ---
-import BaseLayout from "@layouts/BaseLayout.astro";
-import { getCollection, getEntry } from "astro:content";
-import { resolveSection } from "@lib/sectionRenderer";
-import type { CollectionEntry } from "astro:content";
+import { DEFAULT_LOCALE, localizePath } from "@lib/i18n/locales";
 
-export async function getStaticPaths() {
-  const pages = await getCollection("pages", ({ data }) => !data.draft);
-  return pages
-    .filter((page) => page.slug !== "home")
-    .map((page) => ({
-      params: { slug: page.slug },
-      props: { page },
-    }));
-}
+const slugParam = Astro.params.slug ?? "";
+const path = slugParam ? `/${slugParam}` : "/";
+const target = localizePath(path, DEFAULT_LOCALE);
 
-interface Props {
-  page: CollectionEntry<"pages">;
-}
-
-const { page } = Astro.props as Props;
-
-const sectionEntries = await Promise.all(
-  page.data.sections.map(async ({ slug }) => await getEntry("sections", slug)),
-);
-
-const validSections = sectionEntries.filter(
-  (section): section is CollectionEntry<"sections"> => Boolean(section),
-);
-
-if (validSections.length !== sectionEntries.length) {
-  console.warn(
-    `Certaines sections référencées par la page "${page.slug}" sont introuvables et ont été ignorées.`,
-  );
-}
-
-const resolvedSections = await Promise.all(validSections.map(resolveSection));
+return Astro.redirect(target, 307);
 ---
-
-<BaseLayout title={page.data.title} description={page.data.description}>
-  {resolvedSections.map(({ Component, props }) => <Component {...props} />)}
-</BaseLayout>

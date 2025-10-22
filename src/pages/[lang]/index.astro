@@ -1,0 +1,64 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getCollection, getEntry } from "astro:content";
+import { resolveSection } from "@lib/sectionRenderer";
+import type { CollectionEntry } from "astro:content";
+import { SUPPORTED_LOCALES, resolveLocale, localizePath } from "@lib/i18n/locales";
+import { getSiteConfig } from "@lib/siteData";
+
+export async function getStaticPaths() {
+  return SUPPORTED_LOCALES.map((locale) => ({
+    params: { lang: locale },
+  }));
+}
+
+const paramsLocale = Astro.params.lang;
+const locale = resolveLocale(paramsLocale);
+const site = getSiteConfig(locale);
+
+const homePages = await getCollection(
+  "pages",
+  ({ data }) => !data.draft && data.translationKey === "home",
+);
+
+const page = homePages.find((entry) => entry.data.lang === locale);
+
+if (!page) {
+  throw new Error(
+    `La page \"home\" est introuvable pour la langue ${locale}.`,
+  );
+}
+
+const sectionEntries = await Promise.all(
+  page.data.sections.map(async ({ slug }) => await getEntry("sections", slug)),
+);
+
+const validSections = sectionEntries.filter(
+  (section): section is CollectionEntry<"sections"> => Boolean(section),
+);
+
+if (validSections.length !== sectionEntries.length) {
+  console.warn(
+    `Certaines sections référencées par la page home (${locale}) sont introuvables et ont été ignorées.`,
+  );
+}
+
+const resolvedSections = await Promise.all(validSections.map(resolveSection));
+
+const alternates = homePages.map((entry) => ({
+  locale: entry.data.lang,
+  path: "/",
+  url: localizePath("/", entry.data.lang),
+}));
+---
+
+<BaseLayout
+  title={page.data.title}
+  description={page.data.description}
+  seo={page.data.seo}
+  lang={locale}
+  site={site}
+  alternates={alternates}
+>
+  {resolvedSections.map(({ Component, props }) => <Component {...props} />)}
+</BaseLayout>

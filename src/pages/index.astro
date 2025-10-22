@@ -1,32 +1,7 @@
 ---
-import BaseLayout from "@layouts/BaseLayout.astro";
-import { getEntry } from "astro:content";
-import { resolveSection } from "@lib/sectionRenderer";
-import type { CollectionEntry } from "astro:content";
+import { DEFAULT_LOCALE, localizePath } from "@lib/i18n/locales";
 
-const page = await getEntry("pages", "home");
+const target = localizePath("/", DEFAULT_LOCALE);
 
-if (!page) {
-  throw new Error('La page "home" est introuvable dans la collection "pages".');
-}
-
-const sectionEntries = await Promise.all(
-  page.data.sections.map(async ({ slug }) => await getEntry("sections", slug)),
-);
-
-const validSections = sectionEntries.filter(
-  (section): section is CollectionEntry<"sections"> => Boolean(section),
-);
-
-if (validSections.length !== sectionEntries.length) {
-  console.warn(
-    "Certaines sections référencées par la page home sont introuvables et ont été ignorées.",
-  );
-}
-
-const resolvedSections = await Promise.all(validSections.map(resolveSection));
+return Astro.redirect(target, 307);
 ---
-
-<BaseLayout title={page.data.title} description={page.data.description}>
-  {resolvedSections.map(({ Component, props }) => <Component {...props} />)}
-</BaseLayout>

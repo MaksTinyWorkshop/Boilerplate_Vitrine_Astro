@@ -1,0 +1,263 @@
+---
+import type { AlternateLink, SEOProps } from "@app-types/seo";
+import type { SiteConfig } from "@lib/siteData";
+import type { Locale } from "@lib/i18n/locales";
+import { getSiteConfig } from "@lib/siteData";
+import {
+  DEFAULT_LOCALE,
+  isLocale,
+  localizePath,
+  toHreflang,
+  toOpenGraphLocale,
+} from "@lib/i18n/locales";
+import { resolveUrl } from "@lib/urlHelpers";
+
+type SeoComponentProps = SEOProps & {
+  site?: SiteConfig;
+  locale?: Locale;
+  alternates?: AlternateLink[];
+};
+
+const {
+  site,
+  locale: providedLocale,
+  alternates = [],
+  title,
+  description,
+  canonical,
+  robots,
+  keywords,
+  openGraph,
+  twitter,
+  structuredData,
+  noindex,
+  additionalMeta,
+} = Astro.props as SeoComponentProps;
+
+const locale = providedLocale ?? DEFAULT_LOCALE;
+const siteContent = site ?? getSiteConfig(locale);
+const siteSeo = siteContent.seo ?? {};
+const siteLocale = siteContent.language ?? locale;
+
+const siteUrl =
+  siteSeo.siteUrl ??
+  (Astro.site ? Astro.site.toString() : undefined) ??
+  Astro.url.origin;
+
+const ABSOLUTE_PATTERN = /^[a-z][a-z0-9+.-]*:/i;
+
+const makeAbsoluteUrl = (
+  value?: string,
+  {
+    localize = false,
+    localeOverride,
+  }: { localize?: boolean; localeOverride?: Locale | string } = {},
+) => {
+  if (!value) return undefined;
+  if (ABSOLUTE_PATTERN.test(value)) return value;
+
+  const targetLocale =
+    (typeof localeOverride === "string" && isLocale(localeOverride)
+      ? localeOverride
+      : localeOverride && isLocale(localeOverride)
+        ? localeOverride
+        : undefined) ?? siteLocale;
+
+  const path = localize ? localizePath(value, targetLocale) : value;
+  const resolvedPath = resolveUrl(path);
+
+  if (siteUrl) {
+    try {
+      return new URL(resolvedPath, siteUrl).toString();
+    } catch {
+      return resolvedPath;
+    }
+  }
+
+  return resolvedPath;
+};
+
+const formatTitle = (value?: string) => {
+  const defaultTitle =
+    siteSeo.defaultTitle ?? siteContent.brand.name ?? "Astro Website";
+  const base = value ?? defaultTitle;
+  const { titleTemplate } = siteSeo;
+
+  if (!titleTemplate) {
+    return base;
+  }
+
+  if (titleTemplate.includes("%s")) {
+    const brand = siteContent.brand.name?.toLowerCase();
+    const lowerValue = value?.toLowerCase();
+
+    if (value && brand && lowerValue && lowerValue.includes(brand)) {
+      return value;
+    }
+
+    return titleTemplate.replace("%s", base);
+  }
+
+  return `${base} ${titleTemplate}`;
+};
+
+const metaTitle = formatTitle(title);
+const metaDescription =
+  description ??
+  siteSeo.defaultDescription ??
+  siteContent.brand.tagline ??
+  "";
+
+const canonicalUrl = canonical
+  ? makeAbsoluteUrl(canonical, { localize: true })
+  : makeAbsoluteUrl(Astro.url.pathname);
+
+const robotsValue = noindex
+  ? "noindex,nofollow"
+  : robots ?? siteSeo.defaultRobots ?? "index,follow";
+
+const keywordsValue = Array.isArray(keywords) ? keywords.join(", ") : keywords;
+
+const ogTitle = openGraph?.title ?? metaTitle;
+const ogDescription = openGraph?.description ?? metaDescription;
+const ogType = openGraph?.type ?? "website";
+const ogImage = makeAbsoluteUrl(
+  openGraph?.image ?? siteSeo.defaultImage?.src,
+);
+const ogImageAlt =
+  openGraph?.imageAlt ?? siteSeo.defaultImage?.alt ?? ogTitle;
+const ogLocale =
+  siteSeo.openGraphLocale ?? toOpenGraphLocale(siteLocale);
+
+const twitterCard =
+  twitter?.card ?? (ogImage ? "summary_large_image" : "summary");
+const twitterTitle = twitter?.title ?? ogTitle;
+const twitterDescription = twitter?.description ?? ogDescription;
+const twitterImage = makeAbsoluteUrl(twitter?.image ?? ogImage);
+const twitterImageAlt = twitter?.imageAlt ?? ogImageAlt;
+const twitterSite = twitter?.site ?? siteSeo.twitter?.site;
+const twitterCreator = twitter?.creator ?? siteSeo.twitter?.creator;
+
+const structuredDataPayload = structuredData
+  ? JSON.stringify(structuredData, null, 2)
+  : undefined;
+
+const normalizedAlternates = alternates
+  .map((alternate) => {
+    const localeCode =
+      typeof alternate.locale === "string"
+        ? alternate.locale
+        : alternate.locale;
+
+    const localizedLocale = isLocale(localeCode) ? localeCode : undefined;
+
+    const href =
+      alternate.url ??
+      makeAbsoluteUrl(alternate.path ?? "/", {
+        localize: Boolean(localizedLocale),
+        localeOverride: localizedLocale ?? localeCode,
+      });
+
+    if (!href) {
+      return null;
+    }
+
+    return {
+      locale: localeCode,
+      hreflang:
+        alternate.hreflang ??
+        (localizedLocale ? toHreflang(localizedLocale) : localeCode),
+      href,
+      label: alternate.label ?? localeCode,
+    };
+  })
+  .filter((alternate): alternate is { locale: string; hreflang: string; href: string; label: string } =>
+    Boolean(alternate),
+  );
+
+const hasCurrentLocaleAlternate = normalizedAlternates.some(
+  (alternate) => alternate.locale === siteLocale,
+);
+
+if (!hasCurrentLocaleAlternate) {
+  const href = makeAbsoluteUrl(Astro.url.pathname);
+  if (href) {
+    normalizedAlternates.push({
+      locale: siteLocale,
+      hreflang: toHreflang(siteLocale),
+      href,
+      label: siteLocale,
+    });
+  }
+}
+
+const hasXDefault = normalizedAlternates.some(
+  (alternate) => alternate.locale === "x-default",
+);
+
+if (!hasXDefault) {
+  const href = makeAbsoluteUrl("/", {
+    localize: true,
+    localeOverride: DEFAULT_LOCALE,
+  });
+  if (href) {
+    normalizedAlternates.push({
+      locale: "x-default",
+      hreflang: "x-default",
+      href,
+      label: "Default",
+    });
+  }
+}
+--- 
+<title>{metaTitle}</title>
+{metaDescription && <meta name="description" content={metaDescription} />}
+{canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+{robotsValue && <meta name="robots" content={robotsValue} />}
+{keywordsValue && <meta name="keywords" content={keywordsValue} />}
+{siteSeo.applicationName && (
+  <meta name="application-name" content={siteSeo.applicationName} />
+)}
+<meta name="generator" content="Astro" />
+{canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+{ogTitle && <meta property="og:title" content={ogTitle} />}
+{ogDescription && (
+  <meta property="og:description" content={ogDescription} />
+)}
+{ogType && <meta property="og:type" content={ogType} />}
+{siteContent.brand.name && (
+  <meta property="og:site_name" content={siteContent.brand.name} />
+)}
+{ogLocale && <meta property="og:locale" content={ogLocale} />}
+{ogImage && <meta property="og:image" content={ogImage} />}
+{ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
+{twitterCard && <meta name="twitter:card" content={twitterCard} />}
+{twitterTitle && <meta name="twitter:title" content={twitterTitle} />}
+{twitterDescription && (
+  <meta name="twitter:description" content={twitterDescription} />
+)}
+{twitterImage && <meta name="twitter:image" content={twitterImage} />}
+{twitterImageAlt && (
+  <meta name="twitter:image:alt" content={twitterImageAlt} />
+)}
+{twitterSite && <meta name="twitter:site" content={twitterSite} />}
+{twitterCreator && (
+  <meta name="twitter:creator" content={twitterCreator} />
+)}
+{normalizedAlternates.map((alternate) => (
+  <link
+    rel="alternate"
+    hreflang={alternate.hreflang}
+    href={alternate.href}
+  />
+))}
+{additionalMeta?.map(({ name, property, content }) => {
+  if (!content) return null;
+
+  return <meta name={name} property={property} content={content} />;
+})}
+{structuredDataPayload && (
+  <script type="application/ld+json" is:inline>
+    {structuredDataPayload}
+  </script>
+)}

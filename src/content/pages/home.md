@@ -2,6 +2,9 @@
 title: "Votre entreprise | Accueil"
 description: "Page d'accueil générique à personnaliser pour votre site vitrine."
 draft: false
+lang: fr
+translationKey: home
+slug: home
 sections:
   - slug: hero/hero-accueil
   - slug: cta/cta-devis
@@ -9,4 +12,11 @@ sections:
   - slug: markdown/home1
   - slug: markdown/home2
   - slug: cta/cta-simple
+seo:
+  canonical: "/"
+  openGraph:
+    type: "website"
+    image: "/images/hero-bg.svg"
+  twitter:
+    card: "summary_large_image"
 ---

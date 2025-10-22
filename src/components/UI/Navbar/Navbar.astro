@@ -2,35 +2,112 @@
 import Spacer from "@components/UI/Spacer.astro";
 import CtaToCallback from "@components/CTAs/CTAtoCallback/CtaToCallback.astro";
 import Icon from "@components/Icons/Icon.astro";
-import { siteConfig } from "@lib/siteData";
+import type { AlternateLink } from "@app-types/seo";
+import type { SiteConfig } from "@lib/siteData";
+import { getSiteConfig } from "@lib/siteData";
+import {
+  DEFAULT_LOCALE,
+  isInternalHref,
+  localizePath,
+  stripLocaleFromPath,
+  type Locale,
+} from "@lib/i18n/locales";
 import { resolveUrl, stripBaseFromPath } from "@lib/urlHelpers";
 import styles from "./navbar.module.scss";
 
-const resolveHref = (path: string) => resolveUrl(path || "/");
+interface NavbarProps {
+  site?: SiteConfig;
+  locale?: Locale;
+  alternates?: AlternateLink[];
+}
 
-const currentPath = stripBaseFromPath(Astro.url.pathname);
+const {
+  site,
+  locale = DEFAULT_LOCALE,
+  alternates = [],
+} = Astro.props as NavbarProps;
 
-const primaryLogo = siteConfig.brand.logos[0];
+const siteContent = site ?? getSiteConfig(locale);
+
+const normalizePath = (value: string) => {
+  if (!value) return "/";
+  const withSlash = value.startsWith("/") ? value : `/${value}`;
+  return withSlash.length > 1 && withSlash.endsWith("/")
+    ? withSlash.slice(0, -1)
+    : withSlash;
+};
+
+const resolveHref = (path: string) => {
+  if (!path || path === "/") {
+    return resolveUrl(localizePath("/", locale));
+  }
+
+  if (!isInternalHref(path)) {
+    return path;
+  }
+
+  return resolveUrl(localizePath(path, locale));
+};
+
+const currentPath = stripLocaleFromPath(
+  stripBaseFromPath(Astro.url.pathname),
+  locale,
+);
+const normalizedCurrentPath = normalizePath(currentPath);
+
+const primaryLogo = siteContent.brand.logos[0];
 const logoAsset = primaryLogo
   ? {
       url: resolveUrl(primaryLogo.src),
-      alt: primaryLogo.alt ?? siteConfig.brand.name,
+      alt: primaryLogo.alt ?? siteContent.brand.name,
     }
   : { url: "", alt: "" };
 
-const menu = siteConfig.navigation.main.map((item) => {
+const menu = siteContent.navigation.main.map((item) => {
   const targetPath = item.href;
   const href = resolveHref(targetPath);
+  const normalizedTarget = normalizePath(targetPath);
   const active =
-    targetPath === "/"
-      ? currentPath === "/"
-      : currentPath.startsWith(targetPath);
+    normalizedTarget === "/"
+      ? normalizedCurrentPath === "/"
+      : normalizedCurrentPath.startsWith(normalizedTarget);
   return {
     ...item,
     href,
     active,
   };
 });
+
+const contactItems = siteContent.contact.items.map((item) => ({
+  ...item,
+  href: isInternalHref(item.href) ? resolveHref(item.href) : item.href,
+}));
+
+const languageSwitcherLabel =
+  siteContent.language === "en" ? "Change language" : "Changer de langue";
+
+const alternateHrefByLocale = new Map<string, string>();
+alternates.forEach((alternate) => {
+  const localeCode =
+    typeof alternate.locale === "string"
+      ? alternate.locale
+      : alternate.locale;
+  if (!localeCode || localeCode === "x-default") return;
+  const href = alternate.url ?? alternate.path;
+  if (href) {
+    alternateHrefByLocale.set(localeCode, href);
+  }
+});
+
+const languageOptions =
+  siteContent.i18n?.locales?.map((option) => ({
+    ...option,
+    href: alternateHrefByLocale.get(option.code),
+  })) ?? [];
+
+const otherLocales = languageOptions.filter(
+  (option) => option.code !== locale && Boolean(option.href),
+);
 ---
 
 <nav data-navbar>
@@ -68,13 +145,24 @@ const menu = siteConfig.navigation.main.map((item) => {
         }
       </ul>
       <Spacer size="3rem" axis="vertical" />
-      <CtaToCallback label={siteConfig.interactions.callback.triggerLabel} />
+      <CtaToCallback label={siteContent.interactions.callback.triggerLabel} />
+      {
+        otherLocales.length > 0 && (
+          <div class={styles.languageSwitcher} aria-label={languageSwitcherLabel}>
+            {otherLocales.map((option) => (
+              <a href={option.href} lang={option.code}>
+                {option.shortLabel ?? option.label}
+              </a>
+            ))}
+          </div>
+        )
+      }
     </div>
   </div>
   {
-    siteConfig.contact.items.length > 0 && (
+    contactItems.length > 0 && (
       <div class={styles.contact_panel}>
-        {siteConfig.contact.items.map((item) => (
+        {contactItems.map((item) => (
           <a
             class={styles.contact_item}
             href={item.href}

@@ -1,10 +1,9 @@
 ---
-import { siteConfig } from "@lib/siteData";
 import styles from "./ctaToCallback.module.scss";
 import type { CTAtoCallbackProps } from "@app-types/cta";
 
-const defaultLabel = siteConfig.interactions.callback.triggerLabel;
-const { label = defaultLabel } = Astro.props as CTAtoCallbackProps;
+const DEFAULT_LABEL = "Être rappelé";
+const { label = DEFAULT_LABEL } = Astro.props as CTAtoCallbackProps;
 ---
 
 <div class={styles.container}>

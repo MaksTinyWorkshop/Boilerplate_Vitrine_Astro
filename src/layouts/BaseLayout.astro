@@ -1,35 +1,61 @@
----
+import Seo from "@components/SEO/Seo.astro";
 import Navbar from "@components/UI/Navbar/Navbar.astro";
 import CallbackModal from "@components/Modals/CallbackModal/CallbackModal.astro";
 import SiteFooter from "@components/UI/Footer/SiteFooter.astro";
 import type { BaseLayoutProps } from "@app-types/layout";
-import { siteConfig } from "@lib/siteData";
+import { getSiteConfig, type SiteConfig } from "@lib/siteData";
+import { DEFAULT_LOCALE, type Locale } from "@lib/i18n/locales";
 
 const {
   title,
-  description = siteConfig.brand.tagline ??
-    "Site vitrine moderne pour présenter vos services.",
+  description,
+  seo,
+  lang,
+  locale: localeProp,
+  site,
+  theme: providedTheme,
+  alternates = [],
 } = Astro.props as BaseLayoutProps;
-const language = siteConfig.language || "fr";
-const theme = siteConfig.ui.theme || "mindleaf";
+
+const locale =
+  localeProp ??
+  lang ??
+  site?.language ??
+  DEFAULT_LOCALE;
+
+const siteContent: SiteConfig = site ?? getSiteConfig(locale);
+
+const descriptionValue =
+  description ??
+  siteContent.brand.tagline ??
+  "Site vitrine moderne pour présenter vos services.";
+
+const theme = providedTheme ?? siteContent.ui.theme ?? "mindleaf";
+const seoProps = {
+  ...seo,
+  title: seo?.title ?? title,
+  description: seo?.description ?? descriptionValue,
+  site: siteContent,
+  locale,
+  alternates,
+};
 ---
 
 <!doctype html>
-<html lang={language} data-theme={theme}>
+<html lang={locale} data-theme={theme}>
   <head>
     <base href={import.meta.env.BASE_URL} />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <Seo {...seoProps} />
   </head>
   <body>
-    <Navbar />
+    <Navbar site={siteContent} locale={locale} alternates={alternates} />
     <main>
       <slot />
     </main>
-    <SiteFooter />
-    <CallbackModal />
+    <SiteFooter site={siteContent} locale={locale} />
+    <CallbackModal site={siteContent} locale={locale} />
   </body>
 </html>
 

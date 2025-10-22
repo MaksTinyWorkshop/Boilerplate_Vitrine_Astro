@@ -1,25 +1,59 @@
 ---
 import ActionButton from "@components/CTAs/ActionButton/ActionButton.astro";
-import { siteConfig } from "@lib/siteData";
+import type { SiteConfig } from "@lib/siteData";
+import { getSiteConfig } from "@lib/siteData";
+import {
+  DEFAULT_LOCALE,
+  isInternalHref,
+  localizePath,
+  type Locale,
+} from "@lib/i18n/locales";
 import { resolveUrl } from "@lib/urlHelpers";
 import styles from "./footer.module.scss";
 import Spacer from "../Spacer.astro";
 
+interface SiteFooterProps {
+  site?: SiteConfig;
+  locale?: Locale;
+}
+
+const { site, locale = DEFAULT_LOCALE } = Astro.props as SiteFooterProps;
+
+const siteContent = site ?? getSiteConfig(locale);
+
 const year = new Date().getFullYear();
 
-const secondaryLogo = siteConfig.brand.logos[1];
+const secondaryLogo = siteContent.brand.logos[1];
 const secondaryLogoSrc = secondaryLogo
   ? resolveUrl(secondaryLogo.src)
   : "";
-const primaryAction = siteConfig.contact.primaryAction;
-const companyName = siteConfig.legal.companyName || siteConfig.brand.name;
+const primaryAction = siteContent.contact.primaryAction
+  ? {
+      ...siteContent.contact.primaryAction,
+      href: isInternalHref(siteContent.contact.primaryAction.href)
+        ? resolveUrl(localizePath(siteContent.contact.primaryAction.href, locale))
+        : siteContent.contact.primaryAction.href,
+    }
+  : undefined;
+const companyName =
+  siteContent.legal.companyName || siteContent.brand.name;
 const footerLinks = [
-  ...siteConfig.navigation.footer,
-  ...siteConfig.legal.links,
+  ...siteContent.navigation.footer,
+  ...siteContent.legal.links,
 ].filter(
   (link, index, array) =>
     array.findIndex((candidate) => candidate.href === link.href) === index
 );
+const footerSignature =
+  siteContent.footer?.signature ??
+  (siteContent.language === "en"
+    ? "Showcase site powered by Astro."
+    : "Site vitrine propulsé par Astro.");
+
+const resolveLinkHref = (href: string) =>
+  isInternalHref(href)
+    ? resolveUrl(localizePath(href, locale))
+    : href;
 ---
 
 <footer class={styles.footer}>
@@ -39,7 +73,7 @@ const footerLinks = [
     primaryAction && (
       <ActionButton
         label={primaryAction.label}
-        href={resolveUrl(primaryAction.href)}
+        href={primaryAction.href}
         icon={primaryAction.icon}
       />
     )
@@ -50,7 +84,7 @@ const footerLinks = [
       <div class={styles.cgv_legals}>
         {footerLinks.map((link, index) => (
           <span class={styles.linkWrapper}>
-            <a class={styles.link} href={resolveUrl(link.href)}>
+            <a class={styles.link} href={resolveLinkHref(link.href)}>
               {link.label}
             </a>
             {index < footerLinks.length - 1 && (
@@ -62,6 +96,6 @@ const footerLinks = [
     )
   }
   <p class={styles.copyright}>
-    © {year} {companyName}. Site vitrine propulsé par Astro.
+    © {year} {companyName}. {footerSignature}
   </p>
 </footer>
