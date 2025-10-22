@@ -1,0 +1,29 @@
+---
+import Spacer from "@components/UI/Spacer.astro";
+import SectionHeader from "@components/UI/SectionHeader.astro";
+import type { TestimonialsSectionProps } from "@app-types/testimonials";
+import styles from "./testimonialsSection.module.scss";
+
+const { title, description, testimonials } =
+  Astro.props as TestimonialsSectionProps;
+---
+
+<section class={`section-container ${styles.root}`}>
+  <SectionHeader class={styles.header} title={title} description={description} />
+  <div class={styles.grid}>
+    {
+      testimonials.map((item) => (
+        <figure class={styles.card}>
+          <blockquote>
+            <p>{item.quote}</p>
+          </blockquote>
+          <figcaption>
+            <span class={styles.author}>{item.author}</span>
+            {item.role && <span class={styles.role}>{item.role}</span>}
+          </figcaption>
+        </figure>
+      ))
+    }
+  </div>
+  <Spacer size="1.5rem" />
+</section>

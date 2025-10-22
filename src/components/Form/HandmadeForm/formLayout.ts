@@ -100,8 +100,4 @@ export const buildFormGroups = (
   return groups;
 };
 
-export type {
-  FormGroupLayout as FormGroupConfig,
-  BuildGroupOptions,
-  FormGroupDefinition,
-};
+export type FormGroupConfig = FormGroupLayout;

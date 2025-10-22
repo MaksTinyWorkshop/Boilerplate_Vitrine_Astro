@@ -1,5 +1,4 @@
 // src/components/Form/HandmadeForm/form.logic.ts
-const SECTION_SELECTOR = "[data-contact-section]";
 const SELECT_SELECTOR = "[data-contact-select]";
 const FORM_SELECTOR = "[data-formula-fields]";
 const NUMBER_FIELD_SELECTOR = "[data-number-field]";
@@ -197,14 +196,21 @@ const parseSubmissionConfig = (raw: string | undefined): SubmissionConfig | unde
     const parsed = JSON.parse(raw);
     if (parsed && typeof parsed === "object") {
       const staticFields = Array.isArray(parsed.staticFields)
-        ? parsed.staticFields.filter(
-            (entry): entry is { name: string; value: string } =>
-              entry &&
-              typeof entry.name === "string" &&
-              entry.name.trim().length > 0 &&
-              typeof entry.value === "string" &&
-              entry.value.trim().length > 0,
-          )
+        ? parsed.staticFields.filter((entry: unknown): entry is { name: string; value: string } => {
+            if (!entry || typeof entry !== "object") {
+              return false;
+            }
+            const { name, value } = entry as {
+              name?: unknown;
+              value?: unknown;
+            };
+            return (
+              typeof name === "string" &&
+              name.trim().length > 0 &&
+              typeof value === "string" &&
+              value.trim().length > 0
+            );
+          })
         : undefined;
       return {
         endpoint:

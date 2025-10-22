@@ -1,0 +1,125 @@
+.root {
+  position: relative;
+  min-height: calc(100vh - var(--navbar-total-height));
+  padding: var(--space-5) var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: var(--color-base-content);
+  color: var(--color-neutral);
+
+  &[data-overlay="true"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      var(--color-primary-transp),
+      var(--color-primary-transp)
+    );
+    pointer-events: none;
+  }
+
+  @media (min-width: 960px) {
+    padding-block: var(--space-6);
+  }
+}
+
+.alignCenter {
+  justify-content: center;
+}
+
+.alignStart {
+  justify-content: flex-start;
+
+  .content {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .eyebrow {
+    align-self: flex-start;
+  }
+
+  .ctaList {
+    align-items: flex-start;
+
+    @media (min-width: 960px) {
+      justify-content: flex-start;
+    }
+  }
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-4);
+  text-align: center;
+  max-width: min(48rem, 100%);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  h1 {
+    margin: 0;
+    line-height: 1.1;
+    font-size: var(--step-5);
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.65);
+    font-family: var(fontBold);
+    color: var(--color-base-100);
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--step-0);
+    text-shadow: 0 3px 12px rgba(0, 0, 0, 0.6);
+
+    strong,
+    em {
+      color: var(--color-secondary);
+    }
+  }
+}
+
+.eyebrow {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: center;
+  font-weight: 600;
+  font-size: var(--step--1);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.ctaList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: center;
+
+  @media (min-width: 960px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-3);
+  }
+}
+
+.ctaItem {
+  display: flex;
+}

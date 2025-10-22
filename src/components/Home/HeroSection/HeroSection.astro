@@ -1,0 +1,54 @@
+---
+import ActionButton from "@components/CTAs/ActionButton/ActionButton.astro";
+import { resolveUrl } from "@lib/urlHelpers";
+import type { HeroProps } from "@app-types/hero";
+import styles from "./heroSection.module.scss";
+
+const {
+  eyebrow,
+  title,
+  content,
+  body,
+  ctas = [],
+  image,
+  align = "center",
+  backgroundOverlay = true,
+} = Astro.props as HeroProps;
+
+const actions = ctas.map((cta) => ({
+  ...cta,
+  href: resolveUrl(cta.href || "/"),
+}));
+
+const heroContent = body ?? content ?? "";
+const backgroundStyle = image
+  ? `background-image: url(${resolveUrl(image.src)});`
+  : undefined;
+
+const sectionClassName = [
+  styles.root,
+  align === "start" ? styles.alignStart : styles.alignCenter,
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<section class={`${sectionClassName} section-container`} style={backgroundStyle} data-overlay={backgroundOverlay}>
+  <div class={styles.content}>
+    <div class={styles.copy}>
+      {eyebrow && <span class={styles.eyebrow}>{eyebrow}</span>}
+      <h1>{title}</h1>
+      {heroContent && <p set:html={heroContent} />}
+    </div>
+
+    {actions.length > 0 && (
+      <ul class={styles.ctaList}>
+        {actions.map((cta) => (
+          <li class={styles.ctaItem}>
+            <ActionButton {...cta} />
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</section>

@@ -20,11 +20,21 @@ interface Props {
 
 const { page } = Astro.props as Props;
 
-const sections = await Promise.all(
-  page.data.sections.map(async ({ slug }) => await getEntry("sections", slug))
+const sectionEntries = await Promise.all(
+  page.data.sections.map(async ({ slug }) => await getEntry("sections", slug)),
 );
 
-const resolvedSections = await Promise.all(sections.map(resolveSection));
+const validSections = sectionEntries.filter(
+  (section): section is CollectionEntry<"sections"> => Boolean(section),
+);
+
+if (validSections.length !== sectionEntries.length) {
+  console.warn(
+    `Certaines sections référencées par la page "${page.slug}" sont introuvables et ont été ignorées.`,
+  );
+}
+
+const resolvedSections = await Promise.all(validSections.map(resolveSection));
 ---
 
 <BaseLayout title={page.data.title} description={page.data.description}>

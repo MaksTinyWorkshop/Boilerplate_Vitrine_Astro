@@ -1,0 +1,24 @@
+---
+import { resolveUrl } from "@lib/urlHelpers";
+import type { ImagesGridProps } from "@app-types/images";
+import styles from "./imagesGrid.module.scss";
+
+const { images } = Astro.props as ImagesGridProps;
+const resolvedImages = images.map((image) => ({
+  ...image,
+  src: resolveUrl(image.src),
+}));
+---
+
+<section class={styles.root}>
+  <div class={styles.wrapper}>
+    {
+      resolvedImages.map((image) => (
+        <figure class={styles.item}>
+          <img src={image.src} alt={image.alt ?? ""} loading="lazy" />
+          {image.caption && <figcaption>{image.caption}</figcaption>}
+        </figure>
+      ))
+    }
+  </div>
+</section>

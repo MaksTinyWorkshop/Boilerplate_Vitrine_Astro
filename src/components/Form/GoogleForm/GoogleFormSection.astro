@@ -18,16 +18,22 @@ const {
 const embedUrl = formUrl.includes("embedded=true")
   ? formUrl
   : `${formUrl}${formUrl.includes("?") ? "&" : "?"}embedded=true`;
+const iframeStyle = `min-height: ${Math.max(height, 0)}px;`;
 ---
 
 <section class={`section-container ${styles.googleForm}`}>
   <div class={styles.content}>
+    {title && <h2 class={styles.title}>{title}</h2>}
+    {description && (
+      <p class={styles.description} set:html={description} />
+    )}
     <div class={styles.frameWrapper}>
       <iframe
         src={embedUrl}
         title={title ? `Formulaire ${title}` : "Formulaire Google"}
         loading="lazy"
         allow="camera; microphone"
+        style={iframeStyle}
       >
       </iframe>
 

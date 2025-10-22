@@ -46,6 +46,7 @@ const resolvedImages = images?.map((image) => ({
     )
   }
   {title && <h2>{title}</h2>}
+  {description && <p class={styles.description}>{description}</p>}
 
   <div class={styles.prose}>
     <Content

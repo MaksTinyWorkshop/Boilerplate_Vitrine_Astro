@@ -1,0 +1,147 @@
+@use "sass:map";
+
+.section {
+  padding: var(--space-5) 0;
+  display: flex;
+  justify-content: center;
+
+  @media (min-width: 960px) {
+    padding: var(--space-6) 0;
+  }
+}
+
+.shell {
+  width: min(960px, 100%);
+  display: grid;
+  gap: var(--space-4);
+  align-items: center;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  padding: 0.15rem 0.75rem;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-pill, 999px);
+  font-size: var(--step--1);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  align-self: center;
+}
+
+.description,
+.body {
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.6;
+}
+
+.note {
+  margin: 0;
+  font-size: var(--step--2);
+  opacity: 0.8;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  align-items: center;
+
+  @media (min-width: 960px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+.media {
+  display: flex;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    max-width: 320px;
+    border-radius: var(--radius-lg, 1.5rem);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+  }
+}
+
+.alignStart {
+  .content {
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .eyebrow {
+    align-self: flex-start;
+  }
+
+  .actions {
+    align-items: flex-start;
+
+    @media (min-width: 960px) {
+      justify-content: flex-start;
+    }
+  }
+}
+
+.alignEnd {
+  .content {
+    text-align: right;
+    align-items: flex-end;
+  }
+
+  .eyebrow {
+    align-self: flex-end;
+  }
+
+  .actions {
+    align-items: flex-end;
+
+    @media (min-width: 960px) {
+      justify-content: flex-start;
+    }
+  }
+}
+
+.variantBanner {
+  background: var(--color-primary);
+  color: var(--color-base-100);
+}
+
+.variantCard {
+  background: var(--color-secondary);
+  color: var(--color-base-content);
+}
+
+.variantTextOnly {
+  background: transparent;
+  color: var(--color-base-content);
+}
+
+.themeDark {
+  background: var(--color-base-content);
+  color: var(--color-neutral);
+}
+
+.themeLight {
+  background: var(--color-base-100);
+  color: var(--color-base-content);
+}
+
+.themeAccent {
+  background: var(--color-secondary);
+  color: var(--color-primary);
+}

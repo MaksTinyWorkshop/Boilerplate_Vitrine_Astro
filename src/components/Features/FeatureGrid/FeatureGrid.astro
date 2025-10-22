@@ -1,0 +1,75 @@
+---
+import type { FeatureSectionProps } from "@app-types/features";
+import Icon from "@components/Icons/Icon.astro";
+import SectionHeader from "@components/UI/SectionHeader.astro";
+import Spacer from "@components/UI/Spacer.astro";
+import { resolveUrl } from "@lib/urlHelpers";
+import styles from "./featureGrid.module.scss";
+
+const {
+  eyebrow,
+  title,
+  description,
+  features,
+  display = "grid",
+  theme = "light",
+} = Astro.props as FeatureSectionProps;
+
+const toKey = (value: string) =>
+  value
+    .split(/[-_]/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+
+const sectionClassName = [
+  styles.root,
+  styles[`display${toKey(display)}` as keyof typeof styles],
+  styles[`theme${toKey(theme)}` as keyof typeof styles],
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<section class={`${sectionClassName} section-container`}>
+  {(eyebrow || title || description) && (
+    <SectionHeader
+      class={styles.header}
+      eyebrow={eyebrow}
+      title={title}
+      description={description}
+      headingLevel="h2"
+      as="header"
+    />
+  )}
+
+  <div class={styles.grid}>
+    {features.map((feature) => {
+      const mediaType = feature.image ? "image" : feature.icon ? "icon" : null;
+      const resolvedImage = feature.image
+        ? {
+            ...feature.image,
+            src: resolveUrl(feature.image.src),
+          }
+        : null;
+      return (
+        <article class={styles.item} data-media={mediaType ?? undefined}>
+          {mediaType === "image" && resolvedImage && (
+            <div class={styles.mediaImage}>
+              <img src={resolvedImage.src} alt={resolvedImage.alt ?? feature.title} loading="lazy" />
+            </div>
+          )}
+          {mediaType === "icon" && feature.icon && (
+            <div class={styles.mediaIcon}>
+              <Icon type={feature.icon} size={48} color="var(--color-primary)" />
+            </div>
+          )}
+          <div class={styles.copy}>
+            <h3>{feature.title}</h3>
+            {feature.description && <p set:html={feature.description} />}
+          </div>
+        </article>
+      );
+    })}
+  </div>
+  <Spacer size="2rem" />
+</section>

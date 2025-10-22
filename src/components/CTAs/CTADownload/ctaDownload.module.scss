@@ -1,73 +1,99 @@
-.downloadCta {
-  position: relative;
-  background: var(--color-base-100);
-  overflow: hidden;
-  padding: var(--space-3);
+.section {
+  padding: var(--space-5) 0;
+  display: flex;
+  justify-content: center;
+
+  @media (min-width: 960px) {
+    padding: var(--space-6) 0;
+  }
 }
 
 .shell {
-  display: flex;
-  flex-direction: column;
+  width: min(960px, 100%);
+  display: grid;
   gap: var(--space-4);
-
-  .content {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  }
-  
 
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
 }
 
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.description {
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.6;
+}
+
+.note {
+  margin: 0;
+  font-size: var(--step--2);
+  opacity: 0.7;
+}
+
+.media {
+  display: flex;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    max-width: 360px;
+    border-radius: var(--radius-lg, 1.5rem);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+  }
+}
 
 .action {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.9rem 1.75rem;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: var(--step-0);
-  background: var(--color-secondary);
-  color: var(--color-primary);
+  justify-content: center;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-weight: 600;
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  transition: transform 0.2s ease;
+}
 
+.action:hover,
+.action:focus-visible {
+  transform: translateY(-2px);
+}
 
-  .action:hover,
-  .action:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 18px 32px rgba(0, 0, 0, 0.25);
-  }
-
-  .actionIcon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  
-    & :global(svg) {
-      display: block;
-    }
-  }
-
-
-  .actionLabel {
-    white-space: nowrap;
+.alignStart {
+  .content {
+    text-align: left;
+    align-items: flex-start;
   }
 }
 
-
-
-@media (min-width: 720px) {
+.alignEnd {
   .content {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    text-align: right;
+    align-items: flex-end;
   }
+}
 
-  .action {
-    align-self: center;
-  }
+.themeLight {
+  background: var(--color-base-100);
+  color: var(--color-base-content);
+}
+
+.themeDark {
+  background: var(--color-base-content);
+  color: var(--color-neutral);
+}
+
+.themeAccent {
+  background: var(--color-secondary);
+  color: var(--color-primary);
 }

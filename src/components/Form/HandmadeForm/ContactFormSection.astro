@@ -476,21 +476,32 @@ const formatPlaceholder = (field: FormField, isRequired: boolean) =>
       <script src="./form.submit.ts" />
       <script src="./form.logic.ts" />
 
-      <script>
+<script>
   import { initContactForm, initialiseNumberField } from "./form.logic";
-import { submitToGoogleForm } from "./form.submit";
+  import { submitToGoogleForm } from "./form.submit";
 
   document.addEventListener("DOMContentLoaded", () => {
-    const section = document.querySelector("[data-contact-section]");
-    if (section) initContactForm(section);
-    document.querySelectorAll("[data-number-field]").forEach(initialiseNumberField);
+    const section = document.querySelector<HTMLElement>("[data-contact-section]");
+    if (section) {
+      initContactForm(section);
+    }
 
-    document.querySelectorAll("form[data-formula-fields]").forEach((form) => {
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        await submitToGoogleForm(e.currentTarget);
+    document
+      .querySelectorAll<HTMLElement>("[data-number-field]")
+      .forEach((container) => {
+        initialiseNumberField(container);
       });
-    });
+
+    document
+      .querySelectorAll<HTMLFormElement>("form[data-formula-fields]")
+      .forEach((form) => {
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const currentForm = event.currentTarget as HTMLFormElement | null;
+          if (!currentForm) return;
+          await submitToGoogleForm(currentForm);
+        });
+      });
   });
 </script>
     </section>

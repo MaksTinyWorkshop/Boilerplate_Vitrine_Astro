@@ -1,6 +1,7 @@
 ---
 import { resolveUrl, isExternalUrl } from "@lib/urlHelpers";
 import type { CTASectionProps } from "@app-types/cta";
+import styles from "./ctaDownload.module.scss";
 
 const {
   title,
@@ -27,21 +28,35 @@ const resolvedMedia = media
       src: resolveUrl(media.src),
     }
   : null;
+
+const toKey = (value: string) =>
+  value
+    .split(/[-_]/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+
+const sectionClassName = [
+  styles.section,
+  styles[`theme${toKey(theme)}` as keyof typeof styles],
+  styles[`align${toKey(align)}` as keyof typeof styles],
+]
+  .filter(Boolean)
+  .join(" ");
 ---
 
-<section class={`download-section download-section--${theme} section-container download-section--align-${align}`}>
-  <div class="download-shell">
+<section class={`${sectionClassName} section-container`}>
+  <div class={styles.shell}>
     {resolvedMedia && (
-      <div class="download-media">
+      <div class={styles.media}>
         <img src={resolvedMedia.src} alt={resolvedMedia.alt ?? title ?? download.label} loading="lazy" />
       </div>
     )}
-    <div class="download-content">
+    <div class={styles.content}>
       {title && <h2>{title}</h2>}
-      {description && <p class="download-description" set:html={description} />}
-      {note && <p class="download-note">{note}</p>}
+      {description && <p class={styles.description} set:html={description} />}
+      {note && <p class={styles.note}>{note}</p>}
       <a
-        class="download-action"
+        class={styles.action}
         href={resolvedHref}
         target={externalLink ? "_blank" : undefined}
         rel={externalLink ? "noopener noreferrer" : undefined}
@@ -52,105 +67,3 @@ const resolvedMedia = media
     </div>
   </div>
 </section>
-
-<style lang="scss">
-  .download-section {
-    padding: var(--space-5) 0;
-    display: flex;
-    justify-content: center;
-  }
-
-  .download-shell {
-    width: min(960px, 100%);
-    display: grid;
-    gap: var(--space-4);
-    align-items: center;
-  }
-
-  .download-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-    text-align: center;
-  }
-
-  .download-section--align-start .download-content {
-    text-align: left;
-    align-items: flex-start;
-  }
-
-  .download-section--align-end .download-content {
-    text-align: right;
-    align-items: flex-end;
-  }
-
-  .download-description {
-    margin: 0;
-    font-size: var(--step--1);
-    line-height: 1.6;
-  }
-
-  .download-note {
-    margin: 0;
-    font-size: var(--step--2);
-    opacity: 0.7;
-  }
-
-  .download-media {
-    display: flex;
-    justify-content: center;
-  }
-
-  .download-media img {
-    width: 100%;
-    max-width: 360px;
-    border-radius: var(--radius-lg, 1.5rem);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
-  }
-
-  .download-action {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-full);
-    font-weight: 600;
-    text-decoration: none;
-    color: inherit;
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(10px);
-    transition: transform 0.2s ease;
-  }
-
-  .download-action:hover,
-  .download-action:focus-visible {
-    transform: translateY(-2px);
-  }
-
-  .download-section--light {
-    background: var(--color-base-100);
-    color: var(--color-base-content);
-  }
-
-  .download-section--dark {
-    background: var(--color-base-content);
-    color: var(--color-neutral);
-  }
-
-  .download-section--accent {
-    background: var(--color-secondary);
-    color: var(--color-primary);
-  }
-
-  @media (min-width: 768px) {
-    .download-shell {
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    }
-  }
-
-  @media (min-width: 960px) {
-    .download-section {
-      padding: var(--space-6) 0;
-    }
-  }
-</style>

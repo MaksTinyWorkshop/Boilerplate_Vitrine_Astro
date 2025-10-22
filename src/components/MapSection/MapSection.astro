@@ -1,0 +1,19 @@
+---
+import type { MapSectionProps } from "@app-types/map";
+import styles from "./mapSection.module.scss";
+
+const { title, caption, embedUrl } = Astro.props as MapSectionProps;
+---
+
+<section class={`section-container ${styles.root}`}>
+  {title && <h3>{title}</h3>}
+  <div class={styles.wrapper}>
+    <iframe
+      title={caption ?? title ?? "Localisation"}
+      src={embedUrl}
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      allowfullscreen></iframe>
+  </div>
+  {caption && <p class={styles.caption}>{caption}</p>}
+</section>

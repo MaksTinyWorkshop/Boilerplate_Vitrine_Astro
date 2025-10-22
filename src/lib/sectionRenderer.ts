@@ -3,17 +3,17 @@ import type { CollectionEntry } from "astro:content";
 import CatalogueSection from "@components/Catalogue/CatalogueSection.astro";
 import CtaBanner from "@components/CTAs/CTABanner/CtaBanner.astro";
 import CtaDownload from "@components/CTAs/CTADownload/CtaDownload.astro";
-import FeatureGrid from "@components/Features/FeatureGrid.astro";
-import HeroSection from "@components/Home/HeroSection.astro";
+import FeatureGrid from "@components/Features/FeatureGrid/FeatureGrid.astro";
+import HeroSection from "@components/Home/HeroSection/HeroSection.astro";
 import MarkdownSection from "@components/Markdown/MarkdownSection.astro";
 import ContactFormSection from "@components/Form/HandmadeForm/ContactFormSection.astro";
 import Tarifs from "@components/Tarifs/Tarifs.astro";
 import GoogleFormSection from "@components/Form/GoogleForm/GoogleFormSection.astro";
-import FAQSection from "@components/FAQSection.astro";
-import ParcoursSection from "@components/ParcoursSection.astro";
-import ImagesGrid from "@components/ImagesGrid.astro";
-import MapSection from "@components/MapSection.astro";
-import TestimonialsSection from "@components/TestimonialsSection.astro";
+import FAQSection from "@components/FAQSection/FAQSection.astro";
+import ParcoursSection from "@components/ParcoursSection/ParcoursSection.astro";
+import ImagesGrid from "@components/ImagesGrid/ImagesGrid.astro";
+import MapSection from "@components/MapSection/MapSection.astro";
+import TestimonialsSection from "@components/TestimonialsSection/TestimonialsSection.astro";
 
 const componentMap = {
   hero: HeroSection,

@@ -1,24 +1,24 @@
-const navbar = document.querySelector('[data-navbar]');
-  if (navbar) {
-    const setNavbarHeight = () => {
-      const totalHeight = navbar.offsetHeight;
-      document.documentElement.style.setProperty(
-        '--navbar-total-height',
-        `${totalHeight}px`
-      );
-    };
+const navbar = document.querySelector<HTMLElement>("[data-navbar]");
+if (!navbar) throw new Error("Navbar not found");
 
-    setNavbarHeight();
+const setNavbarHeight = () => {
+  const totalHeight = navbar.offsetHeight;
+  document.documentElement.style.setProperty(
+    "--navbar-total-height",
+    `${totalHeight}px`
+  );
+};
 
-    const resizeObserver = new ResizeObserver(() => setNavbarHeight());
-    resizeObserver.observe(navbar);
-    window.addEventListener('resize', setNavbarHeight);
+setNavbarHeight();
 
-    const cleanup = () => {
-      resizeObserver.disconnect();
-      window.removeEventListener('resize', setNavbarHeight);
-    };
+const resizeObserver = new ResizeObserver(() => setNavbarHeight());
+resizeObserver.observe(navbar);
+window.addEventListener("resize", setNavbarHeight);
 
-    addEventListener('astro:before-soft-navigate', cleanup, { once: true });
-    addEventListener('pagehide', cleanup, { once: true });
-  }
+const cleanup = () => {
+  resizeObserver.disconnect();
+  window.removeEventListener("resize", setNavbarHeight);
+};
+
+addEventListener("astro:before-soft-navigate", cleanup, { once: true });
+addEventListener("pagehide", cleanup, { once: true });

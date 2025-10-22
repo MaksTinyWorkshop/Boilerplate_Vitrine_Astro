@@ -1,0 +1,39 @@
+---
+import type { ParcoursSectionProps } from "@app-types/parcours";
+import Icon from "@components/Icons/Icon.astro";
+import Spacer from "@components/UI/Spacer.astro";
+import styles from "./parcoursSection.module.scss";
+
+const { title, description, steps } = Astro.props as ParcoursSectionProps;
+---
+
+<section class={`section-container ${styles.root}`}>
+  <Spacer size="6rem" axis="vertical" />
+  <ol class={styles.list}>
+    {
+      steps.map((step, index) => (
+        <li class={styles.item}>
+          <div class={styles.itemInner}>
+            {step.icon && (
+              <div class={styles.icon} aria-hidden="true">
+                <Icon type={step.icon} size={48} color="var(--color-primary)" />
+              </div>
+            )}
+            <article class={styles.card}>
+              <h3>
+                <span class={styles.step}>Étape {index + 1} -</span>
+                {step.title}
+              </h3>
+              <p>{step.description}</p>
+            </article>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+  <Spacer size="6rem" axis="vertical" />
+  <div class={styles.metrics}>
+    <h2>{title}</h2>
+    {description && <p set:html={description} />}
+  </div>
+</section>
