@@ -196,10 +196,7 @@ const hasXDefault = normalizedAlternates.some(
 );
 
 if (!hasXDefault) {
-  const href = makeAbsoluteUrl("/", {
-    localize: true,
-    localeOverride: DEFAULT_LOCALE,
-  });
+  const href = makeAbsoluteUrl("/");
   if (href) {
     normalizedAlternates.push({
       locale: "x-default",

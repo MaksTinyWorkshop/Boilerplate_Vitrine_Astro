@@ -1,9 +1,10 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getCollection, getEntry } from "astro:content";
-import { resolveSection } from "@lib/sectionRenderer";
+import { getEntry } from "astro:content";
 import type { CollectionEntry } from "astro:content";
-import { SUPPORTED_LOCALES, resolveLocale, localizePath } from "@lib/i18n/locales";
+import { SUPPORTED_LOCALES, resolveLocale } from "@lib/i18n/locales";
+import { getLocalizedPage } from "@lib/i18n/pages";
+import { resolveSection } from "@lib/sectionRenderer";
 import { getSiteConfig } from "@lib/siteData";
 
 export async function getStaticPaths() {
@@ -12,22 +13,15 @@ export async function getStaticPaths() {
   }));
 }
 
-const paramsLocale = Astro.params.lang;
-const locale = resolveLocale(paramsLocale);
-const site = getSiteConfig(locale);
+const requestedLocale = resolveLocale(Astro.params.lang);
+const localizedHome = await getLocalizedPage("home", requestedLocale);
 
-const homePages = await getCollection(
-  "pages",
-  ({ data }) => !data.draft && data.translationKey === "home",
-);
-
-const page = homePages.find((entry) => entry.data.lang === locale);
-
-if (!page) {
-  throw new Error(
-    `La page \"home\" est introuvable pour la langue ${locale}.`,
-  );
+if (!localizedHome) {
+  throw new Error(`Aucune page "home" n'a été trouvée.`);
 }
+
+const { entry: page, locale, alternates } = localizedHome;
+const site = getSiteConfig(locale);
 
 const sectionEntries = await Promise.all(
   page.data.sections.map(async ({ slug }) => await getEntry("sections", slug)),
@@ -44,12 +38,6 @@ if (validSections.length !== sectionEntries.length) {
 }
 
 const resolvedSections = await Promise.all(validSections.map(resolveSection));
-
-const alternates = homePages.map((entry) => ({
-  locale: entry.data.lang,
-  path: "/",
-  url: localizePath("/", entry.data.lang),
-}));
 ---
 
 <BaseLayout

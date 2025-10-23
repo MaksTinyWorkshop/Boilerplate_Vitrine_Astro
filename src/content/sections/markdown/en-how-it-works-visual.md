@@ -7,4 +7,4 @@ description: ""
 variant: "fonctionnement1"
 ---
 
-![How it works](/images/claim.svg)
+![How it works](/images/claim.png)

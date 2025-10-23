@@ -1,15 +1,15 @@
 ---
-component: 'markdown'
+component: "markdown"
 lang: fr
 translationKey: home-network
-title: 'Notre réseau en France'
-description: 'home2'
-variant: 'home2'
+title: "Notre réseau en France"
+description: "home2"
+variant: "home2"
 images:
-    - src: '/images/map-fr.svg'
-      alt: 'Mockup'
+  - src: "/images/map-fr.png"
+    alt: "Mockup"
 ---
 
 Notre service d’installation d’affichage dynamique vous accompagne du début à la fin de votre projet partout en France.
 
-Grâce à notre  couverture géographique, nos techniciens certifiés sont en capacités  d'intervenir sur nos solutions et produits dans les plus bref délais.
+Grâce à notre couverture géographique, nos techniciens certifiés sont en capacités d'intervenir sur nos solutions et produits dans les plus bref délais.

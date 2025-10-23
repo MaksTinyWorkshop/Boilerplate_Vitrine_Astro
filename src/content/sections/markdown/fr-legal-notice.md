@@ -31,7 +31,7 @@ L'ensemble des éléments figurant sur ce site (textes, images, graphismes, logo
 
 ## Données personnelles
 
-Les informations recueillies via le formulaire de rappel sont destinées à la gestion des demandes clients. Elles sont conservées pendant une durée maximale de 3 ans et ne sont pas transmises à des tiers non autorisés. Conformément au Règlement général sur la protection des données (RGPD), vous disposez d'un droit d'accès, de rectification, d'effacement, d'opposition et de portabilité de vos données. Pour exercer vos droits, contactez-nous à l'adresse [contact@envolet-toit.fr](mailto:contact@envolet-toit.fr).
+Les informations recueillies via le formulaire de rappel sont destinées à la gestion des demandes clients. Elles sont conservées pendant une durée maximale de 3 ans et ne sont pas transmises à des tiers non autorisés. Conformément au Règlement général sur la protection des données (RGPD), vous disposez d'un droit d'accès, de rectification, d'effacement, d'opposition et de portabilité de vos données. Pour exercer vos droits, contactez-nous à l'adresse [contact@masuper-boite.fr](mailto:contact@masuper-boite.fr).
 
 ## Cookies
 

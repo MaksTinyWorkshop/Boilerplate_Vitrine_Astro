@@ -1,40 +1,57 @@
 ---
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getCollection, getEntry } from "astro:content";
-import { resolveSection } from "@lib/sectionRenderer";
+import { getEntry } from "astro:content";
 import type { CollectionEntry } from "astro:content";
-import { resolveLocale, localizePath } from "@lib/i18n/locales";
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, resolveLocale } from "@lib/i18n/locales";
+import {
+  getLocalizedPage,
+  getPageSlug,
+  getPageTranslations,
+} from "@lib/i18n/pages";
+import { resolveSection } from "@lib/sectionRenderer";
 import { getSiteConfig } from "@lib/siteData";
 
 export async function getStaticPaths() {
-  const pages = await getCollection(
-    "pages",
-    ({ data }) => !data.draft && data.translationKey !== "home",
-  );
+  const translations = await getPageTranslations();
+  const paths: Array<{ params: { lang: string; slug: string }; props: { translationKey: string } }> = [];
 
-  return pages.map((page) => {
-    const slugFromFrontmatter = page.data.slug;
-    const fallbackSlug = page.slug.split("/").slice(-1)[0] ?? page.slug;
-    const slug = slugFromFrontmatter ?? fallbackSlug;
+  for (const [translationKey, locales] of translations.entries()) {
+    if (translationKey === "home") continue;
 
-    return {
-      params: {
-        lang: page.data.lang,
-        slug,
-      },
-      props: { page },
-    };
-  });
+    for (const locale of SUPPORTED_LOCALES) {
+      const entry = locales.get(locale) ?? locales.get(DEFAULT_LOCALE);
+      if (!entry) continue;
+      const slug = getPageSlug(entry);
+      paths.push({
+        params: {
+          lang: locale,
+          slug,
+        },
+        props: {
+          translationKey,
+        },
+      });
+    }
+  }
+
+  return paths;
 }
 
 interface Props {
-  page: CollectionEntry<"pages">;
+  translationKey: string;
 }
 
-const { page } = Astro.props as Props;
+const { translationKey } = Astro.props as Props;
 
-const paramsLocale = resolveLocale(Astro.params.lang);
-const site = getSiteConfig(paramsLocale);
+const requestedLocale = resolveLocale(Astro.params.lang);
+const localizedPage = await getLocalizedPage(translationKey, requestedLocale);
+
+if (!localizedPage) {
+  return Astro.redirect("/", 307);
+}
+
+const { entry: page, locale, alternates } = localizedPage;
+const site = getSiteConfig(locale);
 
 const sectionEntries = await Promise.all(
   page.data.sections.map(async ({ slug }) => await getEntry("sections", slug)),
@@ -46,39 +63,18 @@ const validSections = sectionEntries.filter(
 
 if (validSections.length !== sectionEntries.length) {
   console.warn(
-    `Certaines sections référencées par la page "${page.data.translationKey}" (${paramsLocale}) sont introuvables et ont été ignorées.`,
+    `Certaines sections référencées par la page "${translationKey}" (${locale}) sont introuvables et ont été ignorées.`,
   );
 }
 
 const resolvedSections = await Promise.all(validSections.map(resolveSection));
-
-const translationKey = page.data.translationKey;
-
-const alternatePages = await getCollection(
-  "pages",
-  ({ data }) => !data.draft && data.translationKey === translationKey,
-);
-
-const alternates = alternatePages.map((entry) => {
-  const slugFromFrontmatter = entry.data.slug;
-  const fallbackSlug = entry.slug.split("/").slice(-1)[0] ?? entry.slug;
-  const targetSlug = slugFromFrontmatter ?? fallbackSlug;
-  const path = targetSlug ? `/${targetSlug}` : "/";
-
-  return {
-    locale: entry.data.lang,
-    path,
-    url: localizePath(path, entry.data.lang),
-  };
-});
-
 ---
 
 <BaseLayout
   title={page.data.title}
   description={page.data.description}
   seo={page.data.seo}
-  lang={paramsLocale}
+  lang={locale}
   site={site}
   alternates={alternates}
 >

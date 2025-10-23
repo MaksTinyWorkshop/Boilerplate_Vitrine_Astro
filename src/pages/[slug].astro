@@ -1,28 +1,18 @@
 ---
-import { getCollection } from "astro:content";
-import { DEFAULT_LOCALE, localizePath } from "@lib/i18n/locales";
+import { listDefaultLocaleSlugs, resolveDefaultLocaleRedirect } from "@lib/i18n/pages";
 
 export async function getStaticPaths() {
-  const defaultLocalePages = await getCollection(
-    "pages",
-    ({ data }) => !data.draft && data.lang === DEFAULT_LOCALE,
-  );
+  const pages = await listDefaultLocaleSlugs();
 
-  return defaultLocalePages.map((page) => {
-    const slugFromFrontmatter = page.data.slug?.trim();
-    const fallbackSlug = page.slug.split("/").slice(-1)[0] ?? page.slug;
-    const slug =
-      slugFromFrontmatter && slugFromFrontmatter !== "/"
-        ? slugFromFrontmatter
-        : fallbackSlug;
-
-    return { params: { slug } };
-  });
+  return pages
+    .filter(({ slug }) => Boolean(slug))
+    .map(({ slug }) => ({
+      params: { slug },
+    }));
 }
 
-const slugParam = Astro.params.slug ?? "";
-const path = slugParam ? `/${slugParam}` : "/";
-const target = localizePath(path, DEFAULT_LOCALE);
-
-return Astro.redirect(target, 307);
+return Astro.redirect(
+  await resolveDefaultLocaleRedirect(Astro.params.slug ?? ""),
+  307,
+);
 ---

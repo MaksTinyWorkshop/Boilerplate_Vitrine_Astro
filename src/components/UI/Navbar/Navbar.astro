@@ -5,6 +5,8 @@ import Icon from "@components/Icons/Icon.astro";
 import Spacer from "@components/UI/Spacer.astro";
 import {
 DEFAULT_LOCALE,
+LOCALE_LABELS,
+LOCALE_SHORT_LABELS,
 isInternalHref,
 localizePath,
 stripLocaleFromPath,
@@ -86,54 +88,61 @@ const contactItems = siteContent.contact.items.map((item) => ({
 const languageSwitcherLabel =
   siteContent.language === "en" ? "Change language" : "Changer de langue";
 
-const alternateHrefByLocale = new Map<string, string>();
-alternates.forEach((alternate) => {
-  const localeCode =
-    typeof alternate.locale === "string"
-      ? alternate.locale
-      : alternate.locale;
-  if (!localeCode || localeCode === "x-default") return;
-  const href = alternate.url ?? alternate.path;
-  if (href) {
-    alternateHrefByLocale.set(localeCode, href);
+const localeDefinitions = new Map(
+  (siteContent.i18n?.locales ?? []).map((option) => [option.code, option]),
+);
+
+const normalizedAlternates = alternates
+  .map((alternate) => {
+    const localeCode =
+      typeof alternate.locale === "string"
+        ? alternate.locale
+        : alternate.locale;
+
+    if (!localeCode || localeCode === "x-default") return null;
+
+    const href = alternate.url ?? alternate.path ?? "/";
+    const meta = localeDefinitions.get(localeCode as Locale);
+
+    return {
+      code: localeCode,
+      href: resolveUrl(href),
+      label: meta?.label ?? alternate.label ?? LOCALE_LABELS[localeCode as Locale] ?? localeCode,
+      shortLabel: meta?.shortLabel ?? LOCALE_SHORT_LABELS[localeCode as Locale] ?? localeCode.toUpperCase(),
+    };
+  })
+  .filter((option): option is {
+    code: string;
+    href: string;
+    label: string;
+    shortLabel: string;
+  } => Boolean(option));
+
+const uniqueAlternates = new Map<string, typeof normalizedAlternates[number]>();
+normalizedAlternates.forEach((option) => {
+  if (!uniqueAlternates.has(option.code)) {
+    uniqueAlternates.set(option.code, option);
   }
 });
 
-const computeLocaleHref = (code: Locale): string => {
-  const directHref = alternateHrefByLocale.get(code);
-  const fallbackPath = localizePath(normalizedCurrentPath, code);
-  const target = directHref ?? fallbackPath;
+if (!uniqueAlternates.has(locale)) {
+  const fallbackHref = resolveUrl(localizePath(normalizedCurrentPath || "/", locale));
+  uniqueAlternates.set(locale, {
+    code: locale,
+    href: fallbackHref,
+    label: LOCALE_LABELS[locale] ?? locale.toUpperCase(),
+    shortLabel: LOCALE_SHORT_LABELS[locale] ?? locale.toUpperCase(),
+  });
+}
 
-  if (!target) {
-    return resolveUrl(localizePath("/", code));
-  }
+const languageOptions = Array.from(uniqueAlternates.values());
 
-  return isInternalHref(target) ? resolveUrl(target) : target;
-};
+const currentLocaleOption =
+  languageOptions.find((option) => option.code === locale) ?? languageOptions[0];
 
-const languageOptions =
-  siteContent.i18n?.locales?.map((option) => ({
-    ...option,
-    href: computeLocaleHref(option.code),
-  })) ?? [];
+const navLanguageLabel = currentLocaleOption?.shortLabel ?? currentLocaleOption?.label;
 
-const enhancedLanguageOptions = languageOptions.map((option) => ({
-  ...option,
-  isCurrent: option.code === locale,
-}));
-
-const currentLocaleOption = enhancedLanguageOptions.find(
-  (option) => option.isCurrent,
-);
-
-const navLanguageLabel =
-  currentLocaleOption?.shortLabel ??
-  currentLocaleOption?.label ??
-  locale.toUpperCase();
-
-const otherLocales = enhancedLanguageOptions.filter(
-  (option) => !option.isCurrent,
-);
+const otherLocales = languageOptions.filter((option) => option.code !== locale);
 ---
 
 <nav data-navbar>
@@ -148,6 +157,7 @@ const otherLocales = enhancedLanguageOptions.filter(
         }
       </a>
     </div>
+  
     <input
       type="checkbox"
       id="burger"
@@ -182,14 +192,14 @@ const otherLocales = enhancedLanguageOptions.filter(
                   <Icon type="chevron-down" />
                 </summary>
                 <ul>
-                  {enhancedLanguageOptions.map((option) => (
+                  {languageOptions.map((option) => (
                     <li>
                       <a
                         href={option.href}
                         lang={option.code}
-                        aria-current={option.isCurrent ? "true" : "false"}
+                        aria-current={option.code === locale ? "true" : "false"}
                       >
-                        {option.shortLabel ?? option.label}
+                        {option.shortLabel}
                       </a>
                     </li>
                   ))}

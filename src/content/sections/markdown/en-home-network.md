@@ -6,7 +6,7 @@ title: "Nationwide coverage"
 description: "home2"
 variant: "home2"
 images:
-  - src: "/images/map-fr.svg"
+  - src: "/images/map-fr.png"
     alt: "France map mockup"
 ---
 
