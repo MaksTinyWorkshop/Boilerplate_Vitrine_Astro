@@ -5,9 +5,9 @@ lang: en
 translationKey: terms
 slug: terms
 sections:
-  - slug: markdown/terms-en
+  - slug: markdown/en-terms
 seo:
-  canonical: "/terms"
+  canonical: "/cgv"
   openGraph:
     type: "article"
     image: "/images/hero-bg.svg"

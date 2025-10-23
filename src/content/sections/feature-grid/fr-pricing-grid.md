@@ -1,5 +1,7 @@
 ---
 component: feature-grid
+lang: fr
+translationKey: pricing-grid
 key: "grid-tarifs"
 display: grid
 theme: light

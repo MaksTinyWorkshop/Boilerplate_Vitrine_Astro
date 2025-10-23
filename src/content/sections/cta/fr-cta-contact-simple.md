@@ -1,5 +1,7 @@
 ---
 component: cta
+lang: fr
+translationKey: cta-contact-simple
 variant: text-only
 align: center
 body: >-

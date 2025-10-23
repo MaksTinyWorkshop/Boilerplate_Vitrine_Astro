@@ -5,12 +5,12 @@ lang: fr
 translationKey: fonctionnement
 slug: fonctionnement
 sections:
-  - slug: markdown/section1-fonctionnement
-  - slug: cta/cta-devis
-  - slug: cta/cta-mail
-  - slug: markdown/section2-fonctionnement
-  - slug: faq/foire-aux-questions
-  - slug: cta/cta-simple
+  - slug: markdown/fr-how-it-works-visual
+  - slug: cta/fr-cta-quote
+  - slug: cta/fr-cta-mail
+  - slug: markdown/fr-how-it-works-steps
+  - slug: faq/fr-faq-main
+  - slug: cta/fr-cta-contact-simple
 seo:
   canonical: "/fonctionnement"
   openGraph:

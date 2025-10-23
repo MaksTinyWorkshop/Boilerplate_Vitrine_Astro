@@ -1,5 +1,7 @@
 ---
 component: parcours
+lang: fr
+translationKey: standard-process
 title: "Un parcours simple en 3 étapes"
 description: >-
   Une trame prête à adapter pour décrire votre processus : du premier contact à la diffusion sur vos écrans.

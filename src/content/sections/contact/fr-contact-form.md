@@ -1,5 +1,7 @@
 ---
 component: contact-form
+lang: fr
+translationKey: contact-form
 title: "Contactez-nous !"
 subtitle: "Choisissez la formule qui correspond à votre projet et partagez-nous vos informations pour être recontacté rapidement."
 formulas:

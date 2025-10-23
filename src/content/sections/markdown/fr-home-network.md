@@ -1,5 +1,7 @@
 ---
 component: 'markdown'
+lang: fr
+translationKey: home-network
 title: 'Notre réseau en France'
 description: 'home2'
 variant: 'home2'

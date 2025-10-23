@@ -1,5 +1,7 @@
 ---
 component: cta
+lang: fr
+translationKey: cta-download-brochure
 variant: download
 theme: light
 title: "Télécharger la plaquette"

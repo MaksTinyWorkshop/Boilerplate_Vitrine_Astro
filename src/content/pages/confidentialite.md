@@ -5,7 +5,7 @@ lang: fr
 translationKey: privacy-policy
 slug: confidentialite
 sections:
-  - slug: markdown/confidentialite
+  - slug: markdown/fr-privacy-policy
 seo:
   canonical: "/confidentialite"
   openGraph:

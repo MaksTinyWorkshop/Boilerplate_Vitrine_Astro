@@ -1,5 +1,7 @@
 ---
 component: markdown
+lang: fr
+translationKey: equipe-studio
 title: "Une équipe pluridisciplinaire"
 ---
 ### Designers, développeurs et rédacteurs

@@ -5,14 +5,14 @@ lang: en
 translationKey: fonctionnement
 slug: how-it-works
 sections:
-  - slug: markdown/section1-how-it-works-en
-  - slug: cta/cta-quote-en
-  - slug: cta/cta-mail-en
-  - slug: markdown/section2-how-it-works-en
-  - slug: faq/faq-en
-  - slug: cta/cta-simple-en
+  - slug: markdown/en-how-it-works-visual
+  - slug: cta/en-cta-quote
+  - slug: cta/en-cta-mail
+  - slug: markdown/en-how-it-works-steps
+  - slug: faq/en-faq-main
+  - slug: cta/en-cta-contact-simple
 seo:
-  canonical: "/how-it-works"
+  canonical: "/fonctionnement"
   openGraph:
     type: "article"
     image: "/images/hero-bg.svg"

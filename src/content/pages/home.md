@@ -6,12 +6,12 @@ lang: fr
 translationKey: home
 slug: home
 sections:
-  - slug: hero/hero-accueil
-  - slug: cta/cta-devis
-  - slug: parcours/processus-standard
-  - slug: markdown/home1
-  - slug: markdown/home2
-  - slug: cta/cta-simple
+  - slug: hero/fr-hero-home
+  - slug: cta/fr-cta-quote
+  - slug: parcours/fr-standard-process
+  - slug: markdown/fr-home-hero-copy
+  - slug: markdown/fr-home-network
+  - slug: cta/fr-cta-contact-simple
 seo:
   canonical: "/"
   openGraph:

@@ -5,9 +5,9 @@ lang: en
 translationKey: privacy-policy
 slug: privacy-policy
 sections:
-  - slug: markdown/privacy-policy-en
+  - slug: markdown/en-privacy-policy
 seo:
-  canonical: "/privacy-policy"
+  canonical: "/confidentialite"
   openGraph:
     type: "article"
     image: "/images/hero-bg.svg"

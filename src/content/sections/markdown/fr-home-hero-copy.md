@@ -1,5 +1,7 @@
 ---
 component: 'markdown'
+lang: fr
+translationKey: home-hero-copy
 title: 'Donnez vie à vos contenus'
 variant: 'home'
 images:

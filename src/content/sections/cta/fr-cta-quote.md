@@ -1,5 +1,7 @@
 ---
 component: cta
+lang: fr
+translationKey: cta-quote
 variant: banner
 theme: accent
 eyebrow: "Devis"

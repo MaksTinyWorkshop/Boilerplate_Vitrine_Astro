@@ -1,5 +1,7 @@
 ---
 component: markdown
+lang: fr
+translationKey: legal-notice
 title: "Mentions légales"
 description: "legal"
 ---

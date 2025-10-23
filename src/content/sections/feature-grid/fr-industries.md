@@ -1,5 +1,7 @@
 ---
 component: feature-grid
+lang: fr
+translationKey: industries
 key: "secteurs-activites"
 display: grid
 theme: light

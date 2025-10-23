@@ -56,6 +56,8 @@
   --space-4: clamp(2rem, 4vw, 3rem); /* 32–48px */
   --space-5: clamp(3rem, 6vw, 4rem); /* 48–64px */
   --space-6: clamp(4rem, 8vw, 8rem); /* 64–96px */
+  --space-7: clamp(6rem, 12vw, 12rem); /* 96–144px */
+  --space-8: clamp(8rem, 16vw, 16rem); /* 128–192px */
 
   /* Variables d'ombrage */
   --shadow-2xs: 0 1px rgb(0 0 0 / 0.05);

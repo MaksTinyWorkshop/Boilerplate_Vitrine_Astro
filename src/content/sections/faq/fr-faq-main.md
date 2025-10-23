@@ -1,5 +1,7 @@
 ---
 component: faq
+lang: fr
+translationKey: faq-main
 
 title: "FAQ"
 

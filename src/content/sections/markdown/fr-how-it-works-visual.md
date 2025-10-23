@@ -1,5 +1,7 @@
 ---
 component: 'markdown'
+lang: fr
+translationKey: how-it-works-visual
 title: ''
 description: ''
 variant: 'fonctionnement1'

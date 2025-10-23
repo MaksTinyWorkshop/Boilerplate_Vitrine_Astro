@@ -3,10 +3,9 @@ title: "Your Company | Contact"
 description: "Tell us about your project and we'll respond quickly."
 lang: en
 translationKey: contact
-slug: contact
 sections:
-  - slug: contact/form-en
-  - slug: cta/cta-simple-en
+  - slug: contact/en-contact-form
+  - slug: cta/en-cta-contact-simple
 seo:
   canonical: "/contact"
   openGraph:

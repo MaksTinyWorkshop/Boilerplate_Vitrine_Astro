@@ -5,14 +5,14 @@ lang: en
 translationKey: pricing
 slug: pricing
 sections:
-  - slug: tarifs/offre-en
-  - slug: cta/cta-download-brochure-en
-  - slug: feature-grid/grid-pricing-en
-  - slug: cta/cta-quote-en
-  - slug: faq/faq-en
-  - slug: cta/cta-simple-en
+  - slug: tarifs/en-pricing-offer
+  - slug: cta/en-cta-download-brochure
+  - slug: feature-grid/en-pricing-grid
+  - slug: cta/en-cta-quote
+  - slug: faq/en-faq-main
+  - slug: cta/en-cta-contact-simple
 seo:
-  canonical: "/pricing"
+  canonical: "/tarifs"
   openGraph:
     type: "product.group"
     image: "/images/hero-bg.svg"

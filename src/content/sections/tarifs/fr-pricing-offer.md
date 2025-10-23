@@ -1,5 +1,7 @@
 ---
 component: tarifs
+lang: fr
+translationKey: pricing-offer
 defaultPlan: standard
 plans:
   - slug: starter

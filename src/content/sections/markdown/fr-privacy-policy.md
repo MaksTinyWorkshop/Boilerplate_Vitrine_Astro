@@ -1,5 +1,7 @@
 ---
 component: markdown
+lang: fr
+translationKey: privacy-policy
 title: "Politique de confidentialité"
 description: "privacy"
 ---

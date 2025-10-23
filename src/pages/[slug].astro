@@ -1,5 +1,24 @@
 ---
+import { getCollection } from "astro:content";
 import { DEFAULT_LOCALE, localizePath } from "@lib/i18n/locales";
+
+export async function getStaticPaths() {
+  const defaultLocalePages = await getCollection(
+    "pages",
+    ({ data }) => !data.draft && data.lang === DEFAULT_LOCALE,
+  );
+
+  return defaultLocalePages.map((page) => {
+    const slugFromFrontmatter = page.data.slug?.trim();
+    const fallbackSlug = page.slug.split("/").slice(-1)[0] ?? page.slug;
+    const slug =
+      slugFromFrontmatter && slugFromFrontmatter !== "/"
+        ? slugFromFrontmatter
+        : fallbackSlug;
+
+    return { params: { slug } };
+  });
+}
 
 const slugParam = Astro.params.slug ?? "";
 const path = slugParam ? `/${slugParam}` : "/";

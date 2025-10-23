@@ -1,5 +1,7 @@
 ---
 component: cta
+lang: fr
+translationKey: cta-mail
 variant: banner
 theme: light
 eyebrow: "Contact"

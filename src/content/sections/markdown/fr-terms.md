@@ -1,5 +1,7 @@
 ---
 component: markdown
+lang: fr
+translationKey: terms
 title: "Conditions Générales de Vente"
 description: "terms"
 ---

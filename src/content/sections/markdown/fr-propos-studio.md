@@ -1,5 +1,7 @@
 ---
 component: markdown
+lang: fr
+translationKey: propos-studio
 title: "Un studio à taille humaine"
 ---
 ### Une expertise concentrée sur les vitrines

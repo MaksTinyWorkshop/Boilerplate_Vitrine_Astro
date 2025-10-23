@@ -1,5 +1,7 @@
 ---
 component: markdown
+lang: fr
+translationKey: how-it-works-steps
 title: "Procédure d'installation du service"
 description: ""
 variant: "process"
