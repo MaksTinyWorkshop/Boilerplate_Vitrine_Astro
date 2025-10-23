@@ -1,5 +1,8 @@
 ---
 import { resolveDefaultLocaleRedirect } from "@lib/i18n/pages";
 
-return Astro.redirect(await resolveDefaultLocaleRedirect(""), 307);
+const redirectTargetPromise = resolveDefaultLocaleRedirect("");
+void redirectTargetPromise;
+
+return Astro.redirect(await redirectTargetPromise, 307);
 ---

@@ -3,6 +3,7 @@ import type { AlternateLink } from "@app-types/seo";
 import CtaToCallback from "@components/CTAs/CTAtoCallback/CtaToCallback.astro";
 import Icon from "@components/Icons/Icon.astro";
 import Spacer from "@components/UI/Spacer.astro";
+import ThemeToggle from "@components/UI/ThemeToggle/ThemeToggle.astro";
 import {
 DEFAULT_LOCALE,
 LOCALE_LABELS,
@@ -157,7 +158,10 @@ const otherLocales = languageOptions.filter((option) => option.code !== locale);
         }
       </a>
     </div>
-  
+    <div class={styles.actions}>
+      <ThemeToggle class={styles.themeToggle} />
+    </div>
+
     <input
       type="checkbox"
       id="burger"
@@ -208,8 +212,9 @@ const otherLocales = languageOptions.filter((option) => option.code !== locale);
             </div>
           )
         }
+        <ThemeToggle class={styles.menuThemeToggle} />
       </div>
-      
+
     </div>
   </div>
   {

@@ -1,0 +1,28 @@
+---
+import Icon from "@components/Icons/Icon.astro";
+import styles from "./themeToggle.module.scss";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = "" } = Astro.props as Props;
+const toggleLabel = "Basculer le thème d'affichage";
+---
+
+<button
+  type="button"
+  class={`${styles.toggle} ${className}`.trim()}
+  data-theme-toggle
+  aria-label={toggleLabel}
+  title={toggleLabel}
+>
+  <span class={styles.icon} data-theme-icon="light">
+    <Icon type="sun" size={18} />
+  </span>
+  <span class={styles.icon} data-theme-icon="dark">
+    <Icon type="moon" size={18} />
+  </span>
+</button>
+
+<script src="./themeToggle.client.ts"></script>

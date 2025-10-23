@@ -11,8 +11,8 @@ export async function getStaticPaths() {
     }));
 }
 
-return Astro.redirect(
-  await resolveDefaultLocaleRedirect(Astro.params.slug ?? ""),
-  307,
-);
+const redirectTargetPromise = resolveDefaultLocaleRedirect(Astro.params.slug ?? "");
+void redirectTargetPromise;
+
+return Astro.redirect(await redirectTargetPromise, 307);
 ---

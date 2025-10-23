@@ -14,7 +14,7 @@ const {
   lang,
   locale: localeProp,
   site,
-  theme: providedTheme,
+  themeMode: providedThemeMode,
   alternates = [],
 } = Astro.props as BaseLayoutProps;
 
@@ -31,7 +31,14 @@ const descriptionValue =
   siteContent.brand.tagline ??
   "Site vitrine moderne pour présenter vos services.";
 
-const theme = providedTheme ?? siteContent.ui.theme ?? "mindleaf";
+const themeConfig = siteContent.ui;
+const availableThemes = themeConfig.themes;
+const defaultThemeMode = themeConfig.defaultTheme ?? "light";
+const initialThemeMode = providedThemeMode ?? defaultThemeMode;
+const initialThemeName =
+  availableThemes[initialThemeMode] ??
+  availableThemes[defaultThemeMode] ??
+  "mindleaf";
 const seoProps = {
   ...seo,
   title: seo?.title ?? title,
@@ -43,12 +50,21 @@ const seoProps = {
 ---
 
 <!doctype html>
-<html lang={locale} data-theme={theme}>
+<html lang={locale} data-theme={initialThemeName} data-theme-mode={initialThemeMode}>
   <head>
     <base href={import.meta.env.BASE_URL} />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <Seo {...seoProps} />
+    <script is:inline>
+      {`window.__initialThemeConfig = ${JSON.stringify({
+        defaultTheme: themeConfig.defaultTheme,
+        themes: themeConfig.themes,
+      })};`}
+    </script>
+    <script type="module" is:inline>
+      {`import "@components/UI/ThemeToggle/themeRuntime.ts";`}
+    </script>
   </head>
   <body>
     <Navbar site={siteContent} locale={locale} alternates={alternates} />
