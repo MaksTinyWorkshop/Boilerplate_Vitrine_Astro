@@ -1,17 +1,17 @@
 ---
-import Spacer from "@components/UI/Spacer.astro";
+import type { AlternateLink } from "@app-types/seo";
 import CtaToCallback from "@components/CTAs/CTAtoCallback/CtaToCallback.astro";
 import Icon from "@components/Icons/Icon.astro";
-import type { AlternateLink } from "@app-types/seo";
+import Spacer from "@components/UI/Spacer.astro";
+import {
+DEFAULT_LOCALE,
+isInternalHref,
+localizePath,
+stripLocaleFromPath,
+type Locale,
+} from "@lib/i18n/locales";
 import type { SiteConfig } from "@lib/siteData";
 import { getSiteConfig } from "@lib/siteData";
-import {
-  DEFAULT_LOCALE,
-  isInternalHref,
-  localizePath,
-  stripLocaleFromPath,
-  type Locale,
-} from "@lib/i18n/locales";
 import { resolveUrl, stripBaseFromPath } from "@lib/urlHelpers";
 import styles from "./navbar.module.scss";
 
@@ -99,20 +99,46 @@ alternates.forEach((alternate) => {
   }
 });
 
+const computeLocaleHref = (code: Locale): string => {
+  const directHref = alternateHrefByLocale.get(code);
+  const fallbackPath = localizePath(normalizedCurrentPath, code);
+  const target = directHref ?? fallbackPath;
+
+  if (!target) {
+    return resolveUrl(localizePath("/", code));
+  }
+
+  return isInternalHref(target) ? resolveUrl(target) : target;
+};
+
 const languageOptions =
   siteContent.i18n?.locales?.map((option) => ({
     ...option,
-    href: alternateHrefByLocale.get(option.code),
+    href: computeLocaleHref(option.code),
   })) ?? [];
 
-const otherLocales = languageOptions.filter(
-  (option) => option.code !== locale && Boolean(option.href),
+const enhancedLanguageOptions = languageOptions.map((option) => ({
+  ...option,
+  isCurrent: option.code === locale,
+}));
+
+const currentLocaleOption = enhancedLanguageOptions.find(
+  (option) => option.isCurrent,
+);
+
+const navLanguageLabel =
+  currentLocaleOption?.shortLabel ??
+  currentLocaleOption?.label ??
+  locale.toUpperCase();
+
+const otherLocales = enhancedLanguageOptions.filter(
+  (option) => !option.isCurrent,
 );
 ---
 
 <nav data-navbar>
   <div class={styles.navbar}>
-    <Spacer size="30px" axis="horizontal" />
+    <Spacer size="var(--space-2)" axis="horizontal" />
     <div class={styles.logo}>
       <a href={resolveHref("/")}>
         {
@@ -122,6 +148,7 @@ const otherLocales = languageOptions.filter(
         }
       </a>
     </div>
+  
     <input
       type="checkbox"
       id="burger"
@@ -144,19 +171,36 @@ const otherLocales = languageOptions.filter(
           ))
         }
       </ul>
-      <Spacer size="3rem" axis="vertical" />
+      <Spacer size="var(--space-4)" axis="vertical" />
       <CtaToCallback label={siteContent.interactions.callback.triggerLabel} />
-      {
-        otherLocales.length > 0 && (
-          <div class={styles.languageSwitcher} aria-label={languageSwitcherLabel}>
-            {otherLocales.map((option) => (
-              <a href={option.href} lang={option.code}>
-                {option.shortLabel ?? option.label}
-              </a>
-            ))}
-          </div>
-        )
-      }
+      <div class={styles.menu_footer}>
+        {
+          otherLocales.length > 0 && (
+            <div class={styles.languageButton}>
+              <details>
+                <summary aria-label={languageSwitcherLabel}>
+                  <span>{navLanguageLabel}</span>
+                  <Icon type="chevron-down" />
+                </summary>
+                <ul>
+                  {enhancedLanguageOptions.map((option) => (
+                    <li>
+                      <a
+                        href={option.href}
+                        lang={option.code}
+                        aria-current={option.isCurrent ? "true" : "false"}
+                      >
+                        {option.shortLabel ?? option.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </div>
+          )
+        }
+      </div>
+      
     </div>
   </div>
   {
