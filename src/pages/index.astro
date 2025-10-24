@@ -6,3 +6,16 @@ void redirectTargetPromise;
 
 return Astro.redirect(await redirectTargetPromise, 307);
 ---
+
+<script>
+  import { config } from '@lib/CookieConsentConfig';
+import { reset, run } from 'vanilla-cookieconsent';
+
+	const resetBtn = document.getElementById("reset-btn");
+
+	resetBtn?.addEventListener('click', () => {
+		reset(true);
+		run(config);
+	});
+
+</script>

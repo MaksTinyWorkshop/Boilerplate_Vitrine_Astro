@@ -1,6 +1,6 @@
 import { collectContactData, syncNumberField } from "./form.logic";
 
-const API_SUBMIT_URL = "/api/submit";
+const API_SUBMIT_URL = import.meta.env.PUBLIC_CONTACT_FORM_ENDPOINT;
 
 /**
  * Nettoie et prépare les valeurs avant envoi
@@ -25,7 +25,10 @@ const FORM_SUCCESS_SELECTOR = "[data-form-success]";
 const FORM_ERROR_SELECTOR = "[data-form-error]";
 const NUMBER_FIELD_SELECTOR = "[data-number-field]";
 
-const toggleVisibility = (element: Element | null | undefined, visible: boolean) => {
+const toggleVisibility = (
+  element: Element | null | undefined,
+  visible: boolean
+) => {
   if (!element) return;
   if (visible) {
     element.removeAttribute("hidden");
@@ -46,7 +49,9 @@ export async function submitToGoogleForm(form: HTMLFormElement) {
 
   const successMessage = form.querySelector<HTMLElement>(FORM_SUCCESS_SELECTOR);
   const errorMessage = form.querySelector<HTMLElement>(FORM_ERROR_SELECTOR);
-  const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"], [type="submit"]');
+  const submitButton = form.querySelector<HTMLButtonElement>(
+    'button[type="submit"], [type="submit"]'
+  );
 
   toggleVisibility(successMessage, false);
   toggleVisibility(errorMessage, false);

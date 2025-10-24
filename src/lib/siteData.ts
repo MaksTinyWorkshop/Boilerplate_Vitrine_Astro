@@ -54,13 +54,6 @@ export type CallbackConfig = {
   };
 };
 
-export type ThemeMode = "light" | "dark";
-
-export type ThemeConfig = {
-  defaultTheme: ThemeMode;
-  themes: Record<ThemeMode, string>;
-};
-
 export type SiteConfig = {
   language: Locale;
   brand: {
@@ -98,7 +91,6 @@ export type SiteConfig = {
   interactions: {
     callback: CallbackConfig;
   };
-  ui: ThemeConfig;
   seo?: {
     siteUrl?: string;
     defaultTitle?: string;
@@ -245,13 +237,6 @@ const SITE_CONFIGS: SiteConfigMap = {
         },
       },
     },
-    ui: {
-      defaultTheme: "light",
-      themes: {
-        light: "mindleaf",
-        dark: "mindleaf-dark",
-      },
-    },
     seo: {
       siteUrl: "https://www.domaine.com",
       defaultTitle: "Votre entreprise",
@@ -384,13 +369,6 @@ const SITE_CONFIGS: SiteConfigMap = {
         },
       },
     },
-    ui: {
-      defaultTheme: "light",
-      themes: {
-        light: "mindleaf",
-        dark: "mindleaf-dark",
-      },
-    },
     seo: {
       siteUrl: "https://www.domaine.com",
       defaultTitle: "Your Company",
@@ -410,9 +388,8 @@ const SITE_CONFIGS: SiteConfigMap = {
   },
 };
 
-export const getSiteConfig = (
-  locale: Locale = DEFAULT_LOCALE,
-): SiteConfig => SITE_CONFIGS[locale] ?? SITE_CONFIGS[DEFAULT_LOCALE];
+export const getSiteConfig = (locale: Locale = DEFAULT_LOCALE): SiteConfig =>
+  SITE_CONFIGS[locale] ?? SITE_CONFIGS[DEFAULT_LOCALE];
 
 export const siteConfig = getSiteConfig(DEFAULT_LOCALE);
 

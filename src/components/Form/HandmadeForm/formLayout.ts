@@ -19,11 +19,7 @@ export interface BuildGroupOptions {
 const BASE_LAYOUT: FormGroupLayout[] = [
   {
     title: "Vous",
-    rows: [
-      ["lastName", "firstName"],
-      ["email"],
-      ["phone"],
-    ],
+    rows: [["lastName", "firstName"], ["email"], ["phone"]],
   },
   {
     title: "Votre entreprise",
@@ -37,12 +33,8 @@ const BASE_LAYOUT: FormGroupLayout[] = [
     ],
   },
   {
-    title: "C'Com",
-    rows: [
-      ["visuals", "videos"],
-      ["commitmentDuration"],
-      ["customRequest"],
-    ],
+    title: "Extras",
+    rows: [["visuals", "videos"], ["commitmentDuration"], ["customRequest"]],
   },
 ];
 
@@ -54,7 +46,7 @@ const DEFAULT_OPTIONS: Required<BuildGroupOptions> = {
 
 export const buildFormGroups = (
   fields: FormField[],
-  options: BuildGroupOptions = {},
+  options: BuildGroupOptions = {}
 ): FormGroupDefinition[] => {
   const { layout, includeRemainingFields, remainingGroupTitle } = {
     ...DEFAULT_OPTIONS,
@@ -74,7 +66,7 @@ export const buildFormGroups = (
               if (field) assignedIds.add(id);
               return field;
             })
-            .filter((field): field is FormField => Boolean(field)),
+            .filter((field): field is FormField => Boolean(field))
         )
         .filter((row) => row.length > 0);
 
@@ -87,7 +79,9 @@ export const buildFormGroups = (
     .filter((group): group is FormGroupDefinition => group !== null);
 
   if (includeRemainingFields) {
-    const remainingFields = fields.filter((field) => !assignedIds.has(field.id));
+    const remainingFields = fields.filter(
+      (field) => !assignedIds.has(field.id)
+    );
 
     if (remainingFields.length > 0) {
       groups.push({

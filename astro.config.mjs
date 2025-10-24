@@ -1,4 +1,5 @@
 import mdx from "@astrojs/mdx";
+import partytown from "@astrojs/partytown";
 import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 import { webcore } from "webcoreui/integration";
@@ -14,7 +15,7 @@ export default defineConfig({
     allowedHosts: ["domaine.com"],
   },
   scopedStyleStrategy: "where",
-  integrations: [tailwind(), mdx(), webcore()],
+  integrations: [tailwind(), mdx(), webcore(), partytown({ config: { forward: ["dataLayer.push"] } })],
   output: "static",
   /* A Activer si petit backend
     adapter: node({

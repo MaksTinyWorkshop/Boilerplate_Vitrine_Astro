@@ -1,0 +1,10 @@
+---
+import "vanilla-cookieconsent/dist/cookieconsent.css";
+---
+
+<script>
+  import { config } from "@lib/CookieConsentConfig";
+import { run } from "vanilla-cookieconsent";
+
+  document.addEventListener("DOMContentLoaded", () => run(config));
+</script>

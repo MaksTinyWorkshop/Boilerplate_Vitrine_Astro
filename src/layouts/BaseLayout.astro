@@ -1,5 +1,6 @@
 ---
 import type { BaseLayoutProps } from "@app-types/layout";
+import CookieConsent from "@components/CookieConsent/CookieConsent.astro";
 import CallbackModal from "@components/Modals/CallbackModal/CallbackModal.astro";
 import Seo from "@components/SEO/Seo.astro";
 import SiteFooter from "@components/UI/Footer/SiteFooter.astro";
@@ -57,8 +58,11 @@ const seoProps = {
     </main>
     <SiteFooter site={siteContent} locale={locale} />
     <CallbackModal site={siteContent} locale={locale} />
+    <CookieConsent />
   </body>
 </html>
+
+
 
 <style lang="scss" is:global>
   @use "webcoreui/styles" as *;

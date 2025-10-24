@@ -39,7 +39,7 @@ Browsing this site may result in cookies being stored on your device to measure 
 
 ## Liability
 
-Envolet'toit strives to provide accurate and up-to-date information. However, the company cannot be held responsible for errors, omissions, or results that may occur from using this information, nor for the use of external links featured on the site.
+Our company strives to provide accurate and up-to-date information. However, the company cannot be held responsible for errors, omissions, or results that may occur from using this information, nor for the use of external links featured on the site.
 
 ## Governing law
 

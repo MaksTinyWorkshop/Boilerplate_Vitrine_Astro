@@ -39,7 +39,7 @@ La navigation sur ce site peut entraîner l'installation de cookies sur le termi
 
 ## Responsabilité
 
-Envolet'toit s'efforce de fournir des informations exactes et à jour. Toutefois, l'entreprise ne saurait être tenue responsable des erreurs, omissions ou résultats obtenus par l'usage de ces informations, ni de l'utilisation des liens externes présents sur le site.
+Notre société s'efforce de fournir des informations exactes et à jour. Toutefois, l'entreprise ne saurait être tenue responsable des erreurs, omissions ou résultats obtenus par l'usage de ces informations, ni de l'utilisation des liens externes présents sur le site.
 
 ## Droit applicable
 

@@ -1,6 +1,6 @@
-import type { APIRoute } from "astro";
-
 export const prerender = false;
+
+import type { APIRoute } from "astro";
 
 interface Payload {
   name?: string;
@@ -64,7 +64,7 @@ export const POST: APIRoute = async ({ request }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -95,7 +95,7 @@ export const POST: APIRoute = async ({ request }) => {
       {
         status,
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
   }
 };

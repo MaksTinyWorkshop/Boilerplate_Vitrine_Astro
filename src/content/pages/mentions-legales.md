@@ -1,5 +1,5 @@
 ---
-title: "Mentions légales — Envolet'toit"
+title: "Mentions légales — Mon Entreprise"
 description: "Informations légales et conditions d'utilisation"
 lang: fr
 translationKey: legal-notice

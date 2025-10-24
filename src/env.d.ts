@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly GOOGLE_APPS_SCRIPT_URL?: string;
   readonly GOOGLE_CALLBACK_SCRIPT_URL?: string;
   readonly GOOGLE_CONTACT_SCRIPT_URL?: string;
+  readonly PUBLIC_GA_MEASUREMENT_ID?: string;
 }
 
 interface ImportMeta {
