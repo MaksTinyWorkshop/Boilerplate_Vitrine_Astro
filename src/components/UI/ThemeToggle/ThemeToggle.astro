@@ -1,28 +1,42 @@
 ---
 import Icon from "@components/Icons/Icon.astro";
-import styles from "./themeToggle.module.scss";
+import "./themeToggle.module.scss";
 
 interface Props {
   class?: string;
+  lightTheme?: string;
+  darkTheme?: string;
 }
 
-const { class: className = "" } = Astro.props as Props;
-const toggleLabel = "Basculer le thème d'affichage";
+const {
+  class: className = "",
+  lightTheme = "light",
+  darkTheme = "dark",
+} = Astro.props as Props;
 ---
 
-<button
-  type="button"
-  class={`${styles.toggle} ${className}`.trim()}
-  data-theme-toggle
-  aria-label={toggleLabel}
-  title={toggleLabel}
+<label
+  class={`swap swap-rotate text-primary ${className}`.trim()}
+  for="themeswitch"
+  data-theme-switcher
 >
-  <span class={styles.icon} data-theme-icon="light">
-    <Icon type="sun" size={18} />
-  </span>
-  <span class={styles.icon} data-theme-icon="dark">
-    <Icon type="moon" size={18} />
-  </span>
-</button>
+  <input
+    id="themeswitch"
+    type="checkbox"
+    class="theme-controller"
+    data-theme-toggle-checkbox
+    data-light-theme={lightTheme}
+    data-dark-theme={darkTheme}
+    aria-label="Changer le thème"
+  />
 
-<script src="./themeToggle.client.ts"></script>
+  <span class="swap-off">
+    <Icon type="sun" size={20} color="var(--color-secondary)"/>
+  </span>
+  <span class="swap-on">
+    <Icon type="moon" size={20} color="var(--color-secondary)"/>
+  </span>
+</label>
+
+<script src="./themeToggle.client.ts">
+</script>

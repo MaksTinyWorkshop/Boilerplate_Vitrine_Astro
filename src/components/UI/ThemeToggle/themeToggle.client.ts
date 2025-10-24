@@ -1,75 +1,74 @@
-export {};
+export {}
 
 declare global {
   interface Window {
-    __theme?: {
-      config?: {
-        defaultTheme?: string;
-        themes?: Record<string, string>;
-      };
-      setMode?: (mode: string) => void;
-    };
-    __themeToggleInit?: boolean;
+    __themeToggleInit?: boolean
+    __themeToggleObserver?: MutationObserver
   }
 }
 
-const getRuntime = () => window.__theme;
+const CHECKBOX_SELECTOR = "[data-theme-toggle-checkbox]" as const
+const THEME_ATTR = "data-theme" as const
+const PREF_ATTR = "data-theme-preference" as const
 
-const getModes = (): string[] => {
-  const themes = getRuntime()?.config?.themes;
-  const keys = themes ? Object.keys(themes) : [];
-  return keys.length > 0 ? keys : ["light", "dark"];
-};
+const getCurrentTheme = (): string =>
+  document.documentElement.getAttribute(PREF_ATTR) ||
+  document.documentElement.getAttribute(THEME_ATTR) ||
+  "light"
 
-const getCurrentMode = (): string => {
-  return (
-    document.documentElement.dataset.themeMode ||
-    getRuntime()?.config?.defaultTheme ||
-    "light"
-  );
-};
+const getCheckboxThemes = (checkbox: HTMLInputElement) => ({
+  light: checkbox.dataset.lightTheme ?? "light",
+  dark: checkbox.dataset.darkTheme ?? "dark",
+})
 
-const getNextMode = (mode: string): string => {
-  const modes = getModes();
-  const index = modes.indexOf(mode);
-  if (index === -1) {
-    return modes[0] || "light";
-  }
-  return modes[(index + 1) % modes.length] || modes[0] || "light";
-};
+const updateCheckboxes = (mode: string) => {
+  document
+    .querySelectorAll<HTMLInputElement>(CHECKBOX_SELECTOR)
+    .forEach((checkbox) => {
+      const { dark } = getCheckboxThemes(checkbox)
+      checkbox.checked = mode === dark
+    })
+}
 
-const updateButtons = (mode: string) => {
-  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]");
-  buttons.forEach((button) => {
-    button.dataset.themeMode = mode;
-    button.setAttribute("aria-pressed", mode === "dark" ? "true" : "false");
-  });
-};
+const handleCheckboxChange = (event: Event) => {
+  const checkbox = event.currentTarget as HTMLInputElement
+  const { light, dark } = getCheckboxThemes(checkbox)
+  const targetTheme = checkbox.checked ? dark : light
+  document.dispatchEvent(new CustomEvent("set-theme", { detail: targetTheme }))
+}
 
 const attachListeners = () => {
-  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]");
-  buttons.forEach((button) => {
-    if (button.dataset.themeToggleReady === "true") return;
-    button.dataset.themeToggleReady = "true";
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
-      const next = getNextMode(getCurrentMode());
-      getRuntime()?.setMode?.(next);
-      updateButtons(next);
-    });
-  });
-  updateButtons(getCurrentMode());
-};
+  const checkboxes = document.querySelectorAll<HTMLInputElement>(CHECKBOX_SELECTOR)
 
-if (!window.__themeToggleInit) {
-  window.__themeToggleInit = true;
-  window.addEventListener("themechange", (event) => {
-    const detail = (event as CustomEvent<{ mode?: string }>).detail;
-    if (detail?.mode) {
-      updateButtons(detail.mode);
-    }
-  });
-  document.addEventListener("astro:after-swap", attachListeners);
+  checkboxes.forEach((checkbox) => {
+    if (checkbox.dataset.themeToggleReady === "true") return
+    checkbox.dataset.themeToggleReady = "true"
+    checkbox.addEventListener("change", handleCheckboxChange)
+  })
+
+  updateCheckboxes(getCurrentTheme())
 }
 
-attachListeners();
+const startObserver = () => {
+  if (window.__themeToggleObserver) return
+
+  window.__themeToggleObserver = new MutationObserver(() => {
+    updateCheckboxes(getCurrentTheme())
+  })
+
+  window.__themeToggleObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: [THEME_ATTR, PREF_ATTR],
+  })
+}
+
+if (!window.__themeToggleInit) {
+  window.__themeToggleInit = true
+  document.addEventListener("astro:after-swap", () => {
+    attachListeners()
+    startObserver()
+  })
+}
+
+attachListeners()
+startObserver()

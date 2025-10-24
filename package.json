@@ -21,6 +21,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
     "@types/node": "^20.11.17",
+    "astro-themes": "^0.2.7",
     "typescript": "^5.4.5"
   }
 }

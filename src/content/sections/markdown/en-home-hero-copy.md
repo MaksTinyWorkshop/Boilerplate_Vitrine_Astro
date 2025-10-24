@@ -5,7 +5,7 @@ translationKey: home-hero-copy
 title: "Bring your stories to life"
 variant: "home"
 images:
-  - src: "/images/mockup-phone.svg"
+  - src: "/images/mockup-phone.png"
     alt: "Mockup"
 ---
 
