@@ -1,6 +1,5 @@
 ---
 import Icon from "@components/Icons/Icon.astro";
-import "./themeToggle.module.scss";
 
 interface Props {
   class?: string;
@@ -15,13 +14,8 @@ const {
 } = Astro.props as Props;
 ---
 
-<label
-  class={`swap swap-rotate text-primary ${className}`.trim()}
-  for="themeswitch"
-  data-theme-switcher
->
+<label class={`swap swap-rotate text-primary ${className}`.trim()}>
   <input
-    id="themeswitch"
     type="checkbox"
     class="theme-controller"
     data-theme-toggle-checkbox
