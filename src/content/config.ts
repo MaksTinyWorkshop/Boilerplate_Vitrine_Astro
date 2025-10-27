@@ -353,7 +353,7 @@ const catalogueSchema = z.object({
   eyebrow: z.string().optional(),
   title: z.string().optional(),
   intro: z.string().optional(),
-  categories: z.array(catalogueCategorySchema).min(1),
+  categories: z.array(catalogueCategorySchema).default([]),
   defaultCategory: z.string().optional(),
   footnote: z.string().optional(),
 }).extend(localizedFields);

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "service-consulting",
+    "title": "Consulting digital",
+    "description": "Accompagnement complet pour définir et piloter votre stratégie numérique.",
+    "price": "À partir de 450€",
+    "image_src": "/images/catalogue/service-consulting.svg",
+    "image_alt": "Consultant travaillant sur un ordinateur portable",
+    "category": "Services"
+  },
+  {
+    "id": "formation-astro",
+    "title": "Formation Astro",
+    "description": "Atelier de démarrage pour apprendre à construire un site Astro moderne.",
+    "price": "790€",
+    "image_src": "/images/catalogue/formation-astro.svg",
+    "image_alt": "Illustration de développeurs apprenant Astro",
+    "category": "Formations"
+  },
+  {
+    "id": "audit-seo",
+    "title": "Audit SEO",
+    "description": "Analyse complète de l'expérience utilisateur et du référencement naturel.",
+    "price": "350€",
+    "image_src": "/images/catalogue/audit-seo.svg",
+    "image_alt": "Graphique représentant l'amélioration du SEO",
+    "category": "Services"
+  }
+]

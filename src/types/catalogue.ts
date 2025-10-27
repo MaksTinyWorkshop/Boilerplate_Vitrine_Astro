@@ -9,12 +9,14 @@ export interface CatalogueImage {
 }
 
 export interface CatalogueItem {
+  id?: string;
   title: string;
   reference?: string;
   description?: string;
   price?: string;
   image?: CatalogueImage;
   cta?: CatalogueLink;
+  category?: string;
 }
 
 export interface CatalogueCategory {

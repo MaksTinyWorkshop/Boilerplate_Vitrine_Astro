@@ -48,7 +48,6 @@ npm run lint    # vérifier schémas et types de contenu
   - `contact` : coordonnées, bouton principal, liens sociaux,
   - `legal` : libellés et URLs des pages légales,
   - `interactions.callback` : libellés et champs du module “Être rappelé”,
-  - `ui.theme` : thème WebCoreUI utilisé par défaut.
 - Remplacez les logos et visuels dans `public/images` puis ajustez les chemins/alt dans `siteConfig`.
 
 ### Contenus éditoriaux

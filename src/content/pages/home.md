@@ -10,6 +10,7 @@ sections:
   - slug: cta/fr-cta-quote
   - slug: parcours/fr-standard-process
   - slug: markdown/fr-home-hero-copy
+  - slug: catalogue/fr-catalogue
   - slug: markdown/fr-home-network
   - slug: cta/fr-cta-contact-simple
 seo:

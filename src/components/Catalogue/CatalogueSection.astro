@@ -4,6 +4,7 @@ import { Tabs } from "webcoreui/astro";
 
 import styles from "./catalogue.module.scss";
 import { resolveUrl } from "@lib/urlHelpers";
+import { getCatalogueItems, getCategories } from "@lib/catalogue";
 import type {
   CatalogueCategory,
   CatalogueItem,
@@ -11,6 +12,7 @@ import type {
 } from "@app-types/catalogue";
 
 type ProcessedItem = CatalogueItem & {
+  id?: string;
   descriptionHtml: string | null;
   hasDetails: boolean;
   detailsId: string;
@@ -22,32 +24,60 @@ type ProcessedCategory = CatalogueCategory & {
   items: ProcessedItem[];
 };
 
-const {
-  eyebrow,
-  title,
-  intro,
-  categories = [],
-  defaultCategory,
-  footnote,
-} = Astro.props as CatalogueSectionProps;
+const { eyebrow, title, intro, defaultCategory, footnote } =
+  Astro.props as CatalogueSectionProps;
 
-const validCategories = categories.filter(
-  (category) =>
-    category &&
-    category.id &&
-    Array.isArray(category.items) &&
-    category.items.length > 0
-);
+const slugifyCategoryId = (value: string, fallback: string) => {
+  if (!value) return fallback;
 
-if (validCategories.length === 0) {
-  throw new Error(
-    "CatalogueSection nécessite au moins une catégorie contenant des produits."
+  const slug = value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return slug || fallback;
+};
+
+const categoriesFromDb = getCategories();
+const allItems = getCatalogueItems();
+
+const catalogueCategories: CatalogueCategory[] = categoriesFromDb
+  .map(({ category }, index) => {
+    const id = slugifyCategoryId(category, `category-${index}`);
+    const items = allItems
+      .filter((item) => item.category === category)
+      .map(({ category: _category, ...itemData }) => itemData);
+
+    return {
+      id,
+      label: category,
+      description: undefined,
+      note: undefined,
+      items,
+    };
+  })
+  .filter(
+    (category) =>
+      category.id &&
+      Array.isArray(category.items) &&
+      category.items.length > 0
   );
-}
+
+const validCategories = catalogueCategories;
 
 const firstCategoryId = validCategories[0]?.id;
 const initialCategoryId =
-  validCategories.find((category) => category.id === defaultCategory)?.id ??
+  (defaultCategory
+    ? validCategories.find(
+        (category) =>
+          category.id === slugifyCategoryId(defaultCategory, defaultCategory)
+      )?.id ??
+      validCategories.find(
+        (category) => category.label === defaultCategory
+      )?.id
+    : undefined) ??
   firstCategoryId;
 
 const markdownProcessor = await createMarkdownProcessor();
@@ -67,6 +97,10 @@ const processedCategories: ProcessedCategory[] = await Promise.all(
       category.items.map(async (item, itemIndex) => {
         const descriptionHtml = await renderMarkdown(item.description);
         const hasDetails = Boolean(descriptionHtml || item.price || item.cta);
+        const itemIdentifier =
+          typeof item.id === "string" && item.id.length > 0
+            ? item.id
+            : itemIndex;
         const resolvedImage = item.image
           ? {
               ...item.image,
@@ -81,7 +115,7 @@ const processedCategories: ProcessedCategory[] = await Promise.all(
           ...item,
           descriptionHtml,
           hasDetails,
-          detailsId: `${category.id}-item-${itemIndex}`,
+          detailsId: `${category.id}-item-${itemIdentifier}`,
           image: resolvedImage,
           cta: resolvedCta,
         };
@@ -92,6 +126,7 @@ const processedCategories: ProcessedCategory[] = await Promise.all(
 
 const introHtml = await renderMarkdown(intro);
 const footnoteHtml = await renderMarkdown(footnote);
+const hasCategories = processedCategories.length > 0;
 const tabItems = processedCategories.map((category) => ({
   label: category.label,
   value: category.id,
@@ -106,113 +141,121 @@ const tabItems = processedCategories.map((category) => ({
     {introHtml && <div class={styles.catalogue__intro} set:html={introHtml} />}
   </div>
 
-  <Tabs items={tabItems} even={true} className={styles.catalogue__tabs}>
-    {
-      processedCategories.map((category: ProcessedCategory) => {
-        const isActive = category.id === initialCategoryId;
+  {
+    hasCategories ? (
+      <Tabs items={tabItems} even={true} className={styles.catalogue__tabs}>
+        {
+          processedCategories.map((category: ProcessedCategory) => {
+            const isActive = category.id === initialCategoryId;
 
-        return (
-          <section
-            data-tab={category.id}
-            data-active={isActive ? "true" : "false"}
-            class={`${styles.catalogue__panel} ${isActive ? "is-active" : ""}`}
-          >
-            {category.descriptionHtml && (
-              <div
-                class={styles.catalogue__panel_description}
-                set:html={category.descriptionHtml}
-              />
-            )}
+            return (
+              <section
+                data-tab={category.id}
+                data-active={isActive ? "true" : "false"}
+                class={`${styles.catalogue__panel} ${isActive ? "is-active" : ""}`}
+              >
+                {category.descriptionHtml && (
+                  <div
+                    class={styles.catalogue__panel_description}
+                    set:html={category.descriptionHtml}
+                  />
+                )}
 
-            <div class={styles.catalogue__items}>
-              {category.items.map((item: ProcessedItem) => (
-                <div class={styles.catalogue__cardWrapper}>
-                  <article
-                    class={styles.catalogue__card}
-                    data-card
-                    data-card-open="false"
-                  >
-                    <div class={styles.catalogue__card__inner}>
-                      {item.image && (
-                        <figure class={styles.catalogue__card__media}>
-                          <img
-                            src={item.image.src}
-                            alt={item.image.alt ?? ""}
-                            loading="lazy"
-                          />
-                        </figure>
-                      )}
-
-                      <div
-                        class={styles.catalogue__card__content}
-                        id={item.detailsId}
-                        data-card-details
-                        aria-hidden="true"
-                        hidden
+                <div class={styles.catalogue__items}>
+                  {category.items.map((item: ProcessedItem) => (
+                    <div class={styles.catalogue__cardWrapper}>
+                      <article
+                        class={styles.catalogue__card}
+                        data-card
+                        data-card-open="false"
                       >
-                        <header class={styles.catalogue__card__header}>
-                          <h3>{item.title}</h3>
-                          {item.reference && (
-                            <p class={styles.catalogue__card__reference}>
-                              {item.reference}
-                            </p>
+                        <div class={styles.catalogue__card__inner}>
+                          {item.image && (
+                            <figure class={styles.catalogue__card__media}>
+                              <img
+                                src={item.image.src}
+                                alt={item.image.alt ?? ""}
+                                loading="lazy"
+                              />
+                            </figure>
                           )}
-                        </header>
 
-                        {item.descriptionHtml && (
                           <div
-                            class={styles.catalogue__card__description}
-                            set:html={item.descriptionHtml}
-                          />
-                        )}
-
-                        {item.price && (
-                          <p class={styles.catalogue__card__price}>
-                            {item.price}
-                          </p>
-                        )}
-
-                        {item.cta && (
-                          <a
-                            class={styles.catalogue__card__cta}
-                            href={item.cta.href}
+                            class={styles.catalogue__card__content}
+                            id={item.detailsId}
+                            data-card-details
+                            aria-hidden="true"
+                            hidden
                           >
-                            {item.cta.label}
-                          </a>
-                        )}
-                      </div>
+                            <header class={styles.catalogue__card__header}>
+                              <h3>{item.title}</h3>
+                              {item.reference && (
+                                <p class={styles.catalogue__card__reference}>
+                                  {item.reference}
+                                </p>
+                              )}
+                            </header>
+
+                            {item.descriptionHtml && (
+                              <div
+                                class={styles.catalogue__card__description}
+                                set:html={item.descriptionHtml}
+                              />
+                            )}
+
+                            {item.price && (
+                              <p class={styles.catalogue__card__price}>
+                                {item.price}
+                              </p>
+                            )}
+
+                            {item.cta && (
+                              <a
+                                class={styles.catalogue__card__cta}
+                                href={item.cta.href}
+                              >
+                                {item.cta.label}
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </article>
+
+                      {item.hasDetails && (
+                        <button
+                          type="button"
+                          class={styles.catalogue__card__toggle}
+                          data-card-toggle
+                          data-card-target={item.detailsId}
+                          data-label-show="Details"
+                          data-label-hide="Masquer"
+                          aria-expanded="false"
+                          aria-controls={item.detailsId}
+                        >
+                          Détails
+                        </button>
+                      )}
                     </div>
-                  </article>
-
-                  {item.hasDetails && (
-                    <button
-                      type="button"
-                      class={styles.catalogue__card__toggle}
-                      data-card-toggle
-                      data-card-target={item.detailsId}
-                      data-label-show="Details"
-                      data-label-hide="Masquer"
-                      aria-expanded="false"
-                      aria-controls={item.detailsId}
-                    >
-                      Détails
-                    </button>
-                  )}
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            {category.noteHtml && (
-              <div
-                class={styles.catalogue__note}
-                set:html={category.noteHtml}
-              />
-            )}
-          </section>
-        );
-      })
-    }
-  </Tabs>
+                {category.noteHtml && (
+                  <div
+                    class={styles.catalogue__note}
+                    set:html={category.noteHtml}
+                  />
+                )}
+              </section>
+            );
+          })
+        }
+      </Tabs>
+    ) : (
+      <div class={styles.catalogue__note}>
+        <p>Aucun produit n'est disponible pour le moment.</p>
+      </div>
+    )
+  }
 
   {
     footnoteHtml && (
