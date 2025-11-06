@@ -1,6 +1,6 @@
 ---
 import type { AlternateLink } from "@app-types/seo";
-import CtaToCallback from "@components/CTAs/CTAtoCallback/CtaToCallback.astro";
+import CtaModalTrigger from "@components/CTAs/CTAModalTrigger/CtaModalTrigger.astro";
 import Icon from "@components/Icons/Icon.astro";
 import Spacer from "@components/UI/Spacer.astro";
 import ThemeToggle from "@components/UI/ThemeToggle/ThemeToggle.astro";
@@ -226,7 +226,7 @@ const otherLocales = languageOptions.filter((option) => option.code !== locale);
 
       <Spacer size="var(--space-4)" axis="vertical" />
 
-      <CtaToCallback label={siteContent.interactions.callback.triggerLabel} />
+      <CtaModalTrigger label={siteContent.interactions.callback.triggerLabel} />
 
       <div class={styles.menu_footer}>
         {

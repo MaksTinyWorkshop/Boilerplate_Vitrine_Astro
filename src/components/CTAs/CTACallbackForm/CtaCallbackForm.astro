@@ -1,0 +1,32 @@
+---
+import Icon from '@components/Icons/Icon.astro';
+import { siteConfig } from '@lib/siteData';
+import styles from './ctaCallbackForm.module.scss';
+
+const infos = siteConfig.interactions.callback;
+
+---
+
+<form class={styles.form} data-cta-callback>
+  <label class={styles.visuallyHidden} for={infos.fields.phone.id}>
+    {infos.triggerLabel}
+  </label>
+  <input
+    id={infos.fields.phone.id}
+    name={infos.fields.phone.label}
+    type={infos.fields.phone.type}
+    required={infos.fields.phone.required}
+    pattern={infos.fields.phone.pattern}
+    placeholder={`${infos.fields.phone.placeholder}${infos.fields.phone.required ? "*" : ""}`}
+  />
+
+  <button class={styles.submitButton} type="submit">
+    <span aria-hidden="true" class={styles.icon}>
+      <Icon type="phone" color="var(--color-base-content)" />
+    </span>
+    {infos.submitLabel}
+  </button>
+</form>
+
+
+<script src="./ctaCallbackForm.client.ts"></script>
