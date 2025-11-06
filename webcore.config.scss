@@ -1,34 +1,55 @@
 :root {
   /*Variables nommées comme DaisyUI*/
-  --color-base-100: #faf4f4; /* rgb(216, 245, 255) */
-  --color-base-200: #f3f3f3; /* rgb(243, 243, 243) */
-  --color-base-300: #9dd0fb; /* rgb(157, 208, 251) */
-  --color-base-content: #040404; /* rgb(4, 4, 4) */
+  --color-base-100: #faf4f4;
+  /* rgb(216, 245, 255) */
+  --color-base-200: #f3f3f3;
+  /* rgb(243, 243, 243) */
+  --color-base-300: #9dd0fb;
+  /* rgb(157, 208, 251) */
+  --color-base-content: #040404;
+  /* rgb(4, 4, 4) */
 
-  --color-primary: #2144d3; /* rgb(200, 33, 211) */
-  --color-primary-transp: rgba(33, 68, 211, 0.5); /* rgba(200, 33, 211, 0.5) */
-  --color-primary-content: #e4f3fe; /* rgb(228, 243, 254) */
+  --color-primary: #2144d3;
+  /* rgb(200, 33, 211) */
+  --color-primary-transp: rgba(33, 68, 211, 0.5);
+  /* rgba(200, 33, 211, 0.5) */
+  --color-primary-content: #e4f3fe;
+  /* rgb(228, 243, 254) */
 
-  --color-secondary: #fbfd51; /* rgb(251, 253, 81) */
-  --color-secondary-content: #e1f5f6; /* rgb(225, 245, 246) */
+  --color-secondary: #fbfd51;
+  /* rgb(251, 253, 81) */
+  --color-secondary-content: #e1f5f6;
+  /* rgb(225, 245, 246) */
 
-  --color-accent: #75bd33; /* rgb(117, 189, 51) */
-  --color-accent-content: #e5f5eb; /* rgb(229, 245, 235) */
+  --color-accent: #75bd33;
+  /* rgb(117, 189, 51) */
+  --color-accent-content: #e5f5eb;
+  /* rgb(229, 245, 235) */
 
-  --color-neutral: #a5909d; /* rgb(165, 144, 157) */
-  --color-neutral-content: #a5909d; /* rgb(165, 144, 157) */
+  --color-neutral: #a5909d;
+  /* rgb(165, 144, 157) */
+  --color-neutral-content: #a5909d;
+  /* rgb(165, 144, 157) */
 
-  --color-info: #0078e4; /* rgb(0, 120, 228) */
-  --color-info-content: #e1f4fb; /* rgb(225, 244, 251) */
+  --color-info: #0078e4;
+  /* rgb(0, 120, 228) */
+  --color-info-content: #e1f4fb;
+  /* rgb(225, 244, 251) */
 
-  --color-success: #006e00; /* rgb(0, 110, 0) */
-  --color-success-content: #e9f4e6; /* rgb(233, 244, 230) */
+  --color-success: #006e00;
+  /* rgb(0, 110, 0) */
+  --color-success-content: #e9f4e6;
+  /* rgb(233, 244, 230) */
 
-  --color-warning: #ff5d00; /* rgb(255, 93, 0) */
-  --color-warning-content: #040200; /* rgb(4, 2, 0) */
+  --color-warning: #ff5d00;
+  /* rgb(255, 93, 0) */
+  --color-warning-content: #040200;
+  /* rgb(4, 2, 0) */
 
-  --color-error: #ff0000; /* rgb(255, 0, 0) */
-  --color-error-content: #ffebe8; /* rgb(255, 235, 232) */
+  --color-error: #ff0000;
+  /* rgb(255, 0, 0) */
+  --color-error-content: #ffebe8;
+  /* rgb(255, 235, 232) */
 
   --radius-selector: 0rem;
   --radius-field: 0rem;
@@ -39,25 +60,45 @@
   --depth: 0;
   --noise: 0;
 
+  /* Variables de police */
+  --font-bold: Bold, sans-serif;
+  --font-regular: Regular, serif;
+
   /* Variables de taille texte Responsive */
-  --step--2: clamp(0.75rem, 0.5vw, 0.875rem); /* petit texte */
-  --step--1: clamp(0.875rem, 0.75vw, 1rem); /* texte secondaire */
-  --step-0: clamp(1rem, 1vw, 1.125rem); /* texte normal (base) */
-  --step-1: clamp(1.25rem, 1.5vw, 1.5rem); /* h4, sous-titres */
-  --step-2: clamp(1.5rem, 2vw, 2rem); /* h3 */
-  --step-3: clamp(2rem, 3vw, 2.5rem); /* h2 */
-  --step-4: clamp(2.5rem, 4vw, 3rem); /* h1 */
-  --step-5: clamp(2.5rem, 5vw, 4rem); /* hero title */
+  --step--2: clamp(0.75rem, 0.5vw, 0.875rem);
+  /* petit texte */
+  --step--1: clamp(0.875rem, 0.75vw, 1rem);
+  /* texte secondaire */
+  --step-0: clamp(1rem, 1vw, 1.125rem);
+  /* texte normal (base) */
+  --step-1: clamp(1.25rem, 1.5vw, 1.5rem);
+  /* h4, sous-titres */
+  --step-2: clamp(1.5rem, 2vw, 2rem);
+  /* h3 */
+  --step-3: clamp(2rem, 3vw, 2.5rem);
+  /* h2 */
+  --step-4: clamp(2.5rem, 4vw, 3rem);
+  /* h1 */
+  --step-5: clamp(2.5rem, 5vw, 4rem);
+  /* hero title */
 
   /* Variables d'espacement Padding | Margin */
-  --space-1: clamp(0.5rem, 1vw, 1rem); /* 8–16px */
-  --space-2: clamp(1rem, 1.5vw, 1.5rem); /* 16–24px */
-  --space-3: clamp(1.5rem, 3vw, 2.5rem); /* 24–40px */
-  --space-4: clamp(2rem, 4vw, 3rem); /* 32–48px */
-  --space-5: clamp(3rem, 6vw, 4rem); /* 48–64px */
-  --space-6: clamp(4rem, 8vw, 8rem); /* 64–96px */
-  --space-7: clamp(6rem, 12vw, 12rem); /* 96–144px */
-  --space-8: clamp(8rem, 16vw, 16rem); /* 128–192px */
+  --space-1: clamp(0.5rem, 1vw, 1rem);
+  /* 8–16px */
+  --space-2: clamp(1rem, 1.5vw, 1.5rem);
+  /* 16–24px */
+  --space-3: clamp(1.5rem, 3vw, 2.5rem);
+  /* 24–40px */
+  --space-4: clamp(2rem, 4vw, 3rem);
+  /* 32–48px */
+  --space-5: clamp(3rem, 6vw, 4rem);
+  /* 48–64px */
+  --space-6: clamp(4rem, 8vw, 8rem);
+  /* 64–96px */
+  --space-7: clamp(6rem, 12vw, 12rem);
+  /* 96–144px */
+  --space-8: clamp(8rem, 16vw, 16rem);
+  /* 128–192px */
 
   /* Variables d'ombrage */
   --shadow-2xs: 0 1px rgb(0 0 0 / 0.05);
@@ -71,14 +112,22 @@
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 
   /* Variables de radius */
-  --radius-xs: 0.125rem; /* 2px */
-  --radius-sm: 0.25rem; /* 4px */
-  --radius-md: 0.375rem; /* 6px */
-  --radius-lg: 0.5rem; /* 8px */
-  --radius-xl: 0.75rem; /* 12px */
-  --radius-2xl: 1rem; /* 16px */
-  --radius-3xl: 1.5rem; /* 24px */
-  --radius-4xl: 2rem; /* 32px */
+  --radius-xs: 0.125rem;
+  /* 2px */
+  --radius-sm: 0.25rem;
+  /* 4px */
+  --radius-md: 0.375rem;
+  /* 6px */
+  --radius-lg: 0.5rem;
+  /* 8px */
+  --radius-xl: 0.75rem;
+  /* 12px */
+  --radius-2xl: 1rem;
+  /* 16px */
+  --radius-3xl: 1.5rem;
+  /* 24px */
+  --radius-4xl: 2rem;
+  /* 32px */
   --radius-full: 9999px;
 
   /* Couleurs de la modale de consentement des cookies */
