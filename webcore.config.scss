@@ -85,6 +85,11 @@
   --radius-4xl: 2rem;
   --radius-full: 9999px;
 
+  /* Variables de taille Navbar */
+  --navbar-height: var(--space-7);
+  --contact-height: calc(var(--space-2) + var(--space-1));
+  --navbar-total-height: calc(var(--navbar-height) + var(--contact-height));
+
   /* Couleurs de la modale de consentement des cookies */
   --cc-bg: var(--color-base-100);
   --cc-primary-color: var(--color-base-content);

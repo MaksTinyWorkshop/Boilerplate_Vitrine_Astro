@@ -5,9 +5,13 @@ import styles from './ctaCallbackForm.module.scss';
 
 const infos = siteConfig.interactions.callback;
 
+const { class: customClass } = Astro.props as { class?: string };
+const combinedClass = [styles.form, customClass].filter(Boolean).join(" ");
+
+
 ---
 
-<form class={styles.form} data-cta-callback>
+<form class={combinedClass} data-cta-callback>
   <label class={styles.visuallyHidden} for={infos.fields.phone.id}>
     {infos.triggerLabel}
   </label>

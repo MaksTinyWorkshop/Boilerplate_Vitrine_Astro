@@ -1,8 +1,4 @@
 nav {
-  --navbar-height: var(--space-7);
-  --contact-height: calc(var(--space-2) + var(--space-1));
-  --navbar-total-height: calc(var(--navbar-height) + var(--contact-height));
-
   position: sticky;
   top: 0;
   z-index: 100;
@@ -49,27 +45,27 @@ nav {
       clip-path: inset(50%);
       overflow: hidden;
 
-      &:checked + .burger span {
+      &:checked+.burger span {
         background: var(--color-neutral);
       }
 
-      &:checked + .burger span:nth-of-type(1) {
+      &:checked+.burger span:nth-of-type(1) {
         top: 50%;
         transform: translateY(-50%) rotate(45deg);
       }
 
-      &:checked + .burger span:nth-of-type(2) {
+      &:checked+.burger span:nth-of-type(2) {
         width: 0;
         opacity: 0;
       }
 
-      &:checked + .burger span:nth-of-type(3) {
+      &:checked+.burger span:nth-of-type(3) {
         top: 50%;
         bottom: auto;
         transform: translateY(-50%) rotate(-45deg);
       }
 
-      &:checked ~ .menulist {
+      &:checked~.menulist {
         transform: translateX(0);
         pointer-events: auto;
         visibility: visible;
@@ -78,14 +74,14 @@ nav {
           visibility 0s;
       }
 
-      &:checked ~ .overlay {
+      &:checked~.overlay {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
         transition: opacity 0.3s ease-in-out, visibility 0s;
       }
 
-      &:focus-visible + .burger {
+      &:focus-visible+.burger {
         outline: 2px solid var(--color-primary);
         outline-offset: 6px;
       }
@@ -204,8 +200,7 @@ nav {
             gap: var(--space-1);
             padding: calc(var(--space-1) * 0.75) var(--space-2);
             border-radius: var(--radius-full);
-            border: var(--border) solid
-              var(--color-base-300, rgba(0, 0, 0, 0.1));
+            border: var(--border) solid var(--color-base-300, rgba(0, 0, 0, 0.1));
             background-color: var(--color-base-200, rgba(255, 255, 255, 0.85));
             color: var(--color-base-content, #0b0b0b);
             font-weight: 600;
@@ -341,6 +336,7 @@ nav {
       .overlay {
         display: none;
       }
+
       .desktopNav {
         display: flex;
         align-items: center;
@@ -414,8 +410,7 @@ nav {
             gap: var(--space-1);
             padding: calc(var(--space-1) * 0.75) var(--space-2);
             border-radius: var(--radius-full);
-            border: var(--border) solid
-              var(--color-base-300, rgba(0, 0, 0, 0.1));
+            border: var(--border) solid var(--color-base-300, rgba(0, 0, 0, 0.1));
             background-color: var(--color-base-200, rgba(255, 255, 255, 0.85));
             color: var(--color-base-content, #0b0b0b);
             font-weight: 600;

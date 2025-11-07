@@ -10,10 +10,12 @@ const {
   iconProps = {},
   target,
   rel,
-} = Astro.props as CtaAction;
+  class: customClass,
+} = Astro.props as CtaAction & { class?: string };
+const combinedClass = [styles.card, customClass].filter(Boolean).join(" ");
 ---
 
-<a href={href} class={styles.card} target={target} rel={rel}>
+<a href={href} class={combinedClass} target={target} rel={rel}>
   {
     icon && (
       <span class={styles.icon} aria-hidden="true">

@@ -19,9 +19,11 @@ export type BrandLogo = {
 
 export type ContactItem = {
   id: string;
-  type: "phone" | "mail" | "link";
+  type: "phone" | "mail" | "link" | "address";
   label: string;
-  href: string;
+  zipcode?: string;
+  city?: string;
+  href?: string;
   icon?: IconProps["type"];
 };
 
