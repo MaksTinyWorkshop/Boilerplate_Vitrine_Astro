@@ -1,0 +1,53 @@
+---
+import ActionButton from "@components/CTAs/ActionButton/ActionButton.astro";
+import { resolveUrl } from "@lib/urlHelpers";
+import type { CTASectionProps } from "@app-types/cta";
+import styles from "./ctaTextOnly.module.scss";
+
+const {
+  eyebrow,
+  title,
+  description,
+  body,
+  note,
+  actions = [],
+  align = "center",
+  theme = "light",
+} = Astro.props as CTASectionProps;
+
+const resolvedActions = actions.map((action) => ({
+  ...action,
+  href: resolveUrl(action.href || "/"),
+}));
+
+const toKey = (value: string) =>
+  value
+    .split(/[-_]/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+
+const sectionClassName = [
+  styles.section,
+  styles[`theme${toKey(theme)}` as keyof typeof styles],
+  styles[`align${toKey(align)}` as keyof typeof styles],
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<section class={`${sectionClassName} section-container`}>
+  <div class={styles.shell}>
+    {eyebrow && <span class={styles.eyebrow}>{eyebrow}</span>}
+    {title && <h2>{title}</h2>}
+    {description && <p class={styles.description} set:html={description} />}
+    {body && <div class={styles.body} set:html={body} />}
+    {note && <p class={styles.note}>{note}</p>}
+    {resolvedActions.length > 0 && (
+      <div class={styles.actions}>
+        {resolvedActions.map((action) => (
+          <ActionButton {...action} />
+        ))}
+      </div>
+    )}
+  </div>
+</section>

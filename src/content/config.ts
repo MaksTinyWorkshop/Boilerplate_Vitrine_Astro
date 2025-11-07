@@ -277,7 +277,7 @@ const mapSchema = z.object({
 
 const ctaSchema = z.object({
   component: z.literal("cta"),
-  variant: z.enum(["banner", "card", "text-only", "download"]).optional(),
+  variant: z.enum(["banner", "card", "text-only", "download", "action-button"]).optional(),
   theme: z.enum(["light", "dark", "accent"]).optional(),
   align: z.enum(["start", "center", "end"]).optional(),
   eyebrow: z.string().optional(),

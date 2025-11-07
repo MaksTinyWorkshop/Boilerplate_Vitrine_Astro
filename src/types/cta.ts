@@ -11,7 +11,7 @@ export type CtaAction = {
   rel?: string;
 };
 
-export type CTASectionVariant = "banner" | "download" | "text-only" | "card";
+export type CTASectionVariant = "banner" | "download" | "text-only" | "card" | "action-button";
 
 export type CTASectionTheme = "light" | "dark" | "accent";
 
