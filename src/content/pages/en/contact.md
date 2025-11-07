@@ -4,8 +4,8 @@ description: "Tell us about your project and we'll respond quickly."
 lang: en
 translationKey: contact
 sections:
-  - slug: contact/en-contact-form
-  - slug: cta/en-cta-contact-simple
+  - slug: en/contact/contact-form
+  - slug: en/cta/cta-contact-simple
 seo:
   canonical: "/contact"
   openGraph:

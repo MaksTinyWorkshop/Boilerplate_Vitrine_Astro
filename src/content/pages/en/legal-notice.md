@@ -5,7 +5,7 @@ lang: en
 translationKey: legal-notice
 slug: legal-notice
 sections:
-  - slug: markdown/en-legal-notice
+  - slug: en/markdown/legal-notice
 seo:
   canonical: "/mentions-legales"
   openGraph:

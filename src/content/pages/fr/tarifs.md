@@ -5,12 +5,12 @@ lang: fr
 translationKey: pricing
 slug: tarifs
 sections:
-  - slug: tarifs/fr-pricing-offer
-  - slug: cta/fr-cta-download-brochure
-  - slug: feature-grid/fr-pricing-grid
-  - slug: cta/fr-cta-quote
-  - slug: faq/fr-faq-main
-  - slug: cta/fr-cta-contact-simple
+  - slug: fr/tarifs/pricing-offer
+  - slug: fr/cta/cta-download-brochure
+  - slug: fr/feature-grid/pricing-grid
+  - slug: fr/cta/cta-quote
+  - slug: fr/faq/faq-main
+  - slug: fr/cta/cta-contact-simple
 seo:
   canonical: "/tarifs"
   openGraph:

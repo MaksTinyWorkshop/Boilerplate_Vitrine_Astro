@@ -5,8 +5,8 @@ lang: fr
 translationKey: contact
 slug: contact
 sections:
-  - slug: contact/fr-contact-form
-  - slug: cta/fr-cta-contact-simple
+  - slug: fr/contact/contact-form
+  - slug: fr/cta/cta-contact-simple
 seo:
   canonical: "/contact"
   openGraph:

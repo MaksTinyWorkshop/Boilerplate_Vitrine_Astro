@@ -5,7 +5,7 @@ lang: fr
 translationKey: legal-notice
 slug: mentions-legales
 sections:
-  - slug: markdown/fr-legal-notice
+  - slug: fr/markdown/legal-notice
 seo:
   canonical: "/mentions-legales"
   robots: "index,follow"

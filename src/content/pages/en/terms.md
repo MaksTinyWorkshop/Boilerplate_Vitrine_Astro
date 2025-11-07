@@ -5,7 +5,7 @@ lang: en
 translationKey: terms
 slug: terms
 sections:
-  - slug: markdown/en-terms
+  - slug: en/markdown/terms
 seo:
   canonical: "/cgv"
   openGraph:

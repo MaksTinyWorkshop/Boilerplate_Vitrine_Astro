@@ -5,11 +5,11 @@ lang: fr
 translationKey: sectors
 slug: secteurs
 sections:
-  - slug: feature-grid/fr-industries
-  - slug: cta/fr-cta-quote
-  - slug: cta/fr-cta-mail
-  - slug: faq/fr-faq-main
-  - slug: cta/fr-cta-contact-simple
+  - slug: fr/feature-grid/industries
+  - slug: fr/cta/cta-quote
+  - slug: fr/cta/cta-mail
+  - slug: fr/faq/faq-main
+  - slug: fr/cta/cta-contact-simple
 seo:
   canonical: "/secteurs"
   openGraph:

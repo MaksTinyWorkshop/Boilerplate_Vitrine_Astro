@@ -5,7 +5,7 @@ lang: fr
 translationKey: terms
 slug: cgv
 sections:
-  - slug: markdown/fr-terms
+  - slug: fr/markdown/terms
 seo:
   canonical: "/cgv"
   openGraph:

@@ -4,12 +4,12 @@ description: "Generic homepage ready to customise for your showcase site."
 lang: en
 translationKey: home
 sections:
-  - slug: hero/en-hero-home
-  - slug: cta/en-cta-quote
-  - slug: parcours/en-standard-process
-  - slug: markdown/en-home-hero-copy
-  - slug: markdown/en-home-network
-  - slug: cta/en-cta-contact-simple
+  - slug: en/hero/hero-home
+  - slug: en/cta/cta-quote
+  - slug: en/parcours/standard-process
+  - slug: en/markdown/home-hero-copy
+  - slug: en/markdown/home-network
+  - slug: en/cta/cta-contact-simple
 seo:
   canonical: "/"
   openGraph:
