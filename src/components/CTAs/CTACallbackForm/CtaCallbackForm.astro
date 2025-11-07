@@ -1,9 +1,11 @@
 ---
 import Icon from '@components/Icons/Icon.astro';
-import { siteConfig } from '@lib/siteData';
+import { useLangContext } from "@lib/i18n/useLangContext";
 import styles from './ctaCallbackForm.module.scss';
 
-const infos = siteConfig.interactions.callback;
+const { siteContent } = useLangContext(Astro);
+
+const infos = siteContent.interactions.callback;
 
 const { class: customClass } = Astro.props as { class?: string };
 const combinedClass = [styles.form, customClass].filter(Boolean).join(" ");
