@@ -50,6 +50,16 @@ npm run lint    # vérifier schémas et types de contenu
   - `interactions.callback` : libellés et champs du module “Être rappelé”,
 - Remplacez les logos et visuels dans `public/images` puis ajustez les chemins/alt dans `siteConfig`.
 
+### Internationalisation optionnelle
+
+Par défaut, le routage est préfixé par la langue (`/fr/...`, `/en/...`). Pour servir uniquement la version française sans préfixe, définissez la variable d'environnement `PUBLIC_I18N_ENABLED` à `false` (par exemple dans `.env`, `.env.local` ou directement avant la commande `npm run dev`). Exemple :
+
+```bash
+echo "PUBLIC_I18N_ENABLED=false" >> .env
+```
+
+Relancez ensuite le serveur Astro. Le site sera servi sur `/`, `/contact`, etc., et le sélecteur de langue disparaîtra. Repassez la variable à `true` (ou supprimez-la) pour réactiver instantanément l'internationalisation et les URLs préfixées.
+
 ### Contenus éditoriaux
 
 - **Pages** : dupliquez un fichier dans `src/content/pages`, ajustez le frontmatter et les sections.

@@ -1,11 +1,55 @@
 ---
-import { resolveDefaultLocaleRedirect } from "@lib/i18n/pages";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getEntry, type CollectionEntry } from "astro:content";
+import {
+  DEFAULT_LOCALE,
+  I18N_ENABLED,
+} from "@lib/i18n/locales";
+import { getLocalizedPage, resolveDefaultLocaleRedirect } from "@lib/i18n/pages";
+import { resolveSection } from "@lib/sectionRenderer";
+import { getSiteConfig } from "@lib/siteData";
 
-const redirectTargetPromise = resolveDefaultLocaleRedirect("");
-void redirectTargetPromise;
+if (I18N_ENABLED) {
+  const redirectTargetPromise = resolveDefaultLocaleRedirect("");
+  void redirectTargetPromise;
 
-return Astro.redirect(await redirectTargetPromise, 307);
+  return Astro.redirect(await redirectTargetPromise, 307);
+}
+
+const localizedHome = await getLocalizedPage("home", DEFAULT_LOCALE);
+
+if (!localizedHome) {
+  throw new Error("Aucune page 'home' n'a été trouvée pour la langue par défaut.");
+}
+
+const { entry: page, locale, alternates } = localizedHome;
+const site = getSiteConfig(locale);
+const sectionEntries = await Promise.all(
+  page.data.sections.map(async ({ slug }) => await getEntry("sections", slug)),
+);
+
+const validSections = sectionEntries.filter(
+  (section): section is CollectionEntry<"sections"> => Boolean(section),
+);
+
+if (validSections.length !== sectionEntries.length) {
+  console.warn("Certaines sections référencées par la page home sont introuvables et ont été ignorées.");
+}
+
+const resolvedSections = await Promise.all(validSections.map(resolveSection));
+const pageAlternates = I18N_ENABLED ? alternates : [];
 ---
+
+<BaseLayout
+  title={page.data.title}
+  description={page.data.description}
+  seo={page.data.seo}
+  lang={locale}
+  site={site}
+  alternates={pageAlternates}
+>
+  {resolvedSections.map(({ Component, props }) => <Component {...props} />)}
+</BaseLayout>
 
 <script>
   import { config } from '@lib/CookieConsentConfig';

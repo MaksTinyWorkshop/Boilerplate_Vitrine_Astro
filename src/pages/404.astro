@@ -2,8 +2,9 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getSiteConfig } from "@lib/siteData";
 import {
+  ACTIVE_LOCALES,
   DEFAULT_LOCALE,
-  SUPPORTED_LOCALES,
+  I18N_ENABLED,
   isLocale,
   localizePath,
 } from "@lib/i18n/locales";
@@ -44,11 +45,13 @@ const copy = locale === "en"
         "La page demandée est introuvable. Retournez à l'accueil ou contactez-nous.",
     };
 
-const alternates = SUPPORTED_LOCALES.map((code) => ({
-  locale: code,
-  path: remainderPath,
-  url: localizePath(remainderPath, code),
-}));
+const alternates = I18N_ENABLED
+  ? ACTIVE_LOCALES.map((code) => ({
+      locale: code,
+      path: remainderPath,
+      url: localizePath(remainderPath, code),
+    }))
+  : [];
 ---
 
 <BaseLayout

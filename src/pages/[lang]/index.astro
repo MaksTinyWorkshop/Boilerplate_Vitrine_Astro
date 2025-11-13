@@ -2,13 +2,17 @@
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getEntry } from "astro:content";
 import type { CollectionEntry } from "astro:content";
-import { SUPPORTED_LOCALES, resolveLocale } from "@lib/i18n/locales";
+import { ACTIVE_LOCALES, I18N_ENABLED, resolveLocale } from "@lib/i18n/locales";
 import { getLocalizedPage } from "@lib/i18n/pages";
 import { resolveSection } from "@lib/sectionRenderer";
 import { getSiteConfig } from "@lib/siteData";
 
 export async function getStaticPaths() {
-  return SUPPORTED_LOCALES.map((locale) => ({
+  if (!I18N_ENABLED) {
+    return [];
+  }
+
+  return ACTIVE_LOCALES.map((locale) => ({
     params: { lang: locale },
   }));
 }
@@ -21,6 +25,7 @@ if (!localizedHome) {
 }
 
 const { entry: page, locale, alternates } = localizedHome;
+const pageAlternates = I18N_ENABLED ? alternates : [];
 const site = getSiteConfig(locale);
 
 const sectionEntries = await Promise.all(
@@ -46,7 +51,7 @@ const resolvedSections = await Promise.all(validSections.map(resolveSection));
   seo={page.data.seo}
   lang={locale}
   site={site}
-  alternates={alternates}
+  alternates={pageAlternates}
 >
   {resolvedSections.map(({ Component, props }) => <Component {...props} />)}
 </BaseLayout>

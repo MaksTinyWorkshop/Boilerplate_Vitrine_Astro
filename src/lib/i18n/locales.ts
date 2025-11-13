@@ -1,9 +1,21 @@
-export const SUPPORTED_LOCALES = ["fr", "en"] as const;
+const DECLARED_LOCALES = ["fr", "en"] as const;
 
-export type Locale = (typeof SUPPORTED_LOCALES)[number];
+export type Locale = (typeof DECLARED_LOCALES)[number];
+
+const normalizeBoolean = (value: string | undefined): boolean => {
+  if (!value) return true;
+  return !["0", "false", "off", "no"].includes(value.trim().toLowerCase());
+};
+
+export const I18N_ENABLED = normalizeBoolean(import.meta.env.PUBLIC_I18N_ENABLED);
+
+export const SUPPORTED_LOCALES = DECLARED_LOCALES;
 
 export const DEFAULT_LOCALE: Locale = "fr";
 export const FALLBACK_LOCALE: Locale = DEFAULT_LOCALE;
+export const ACTIVE_LOCALES: Locale[] = I18N_ENABLED
+  ? [...SUPPORTED_LOCALES]
+  : [DEFAULT_LOCALE];
 
 export const LOCALE_LABELS: Record<Locale, string> = {
   fr: "Français",
@@ -19,7 +31,7 @@ const EXTERNAL_URL_PATTERN = /^(?:[a-z+]+:)?\/\//i;
 
 export const isLocale = (value: string | undefined): value is Locale =>
   typeof value === "string" &&
-  SUPPORTED_LOCALES.includes(value as Locale);
+  ACTIVE_LOCALES.includes(value as Locale);
 
 export const resolveLocale = (value: string | undefined): Locale =>
   isLocale(value) ? value : DEFAULT_LOCALE;
@@ -36,7 +48,7 @@ const ensureLeadingSlash = (path: string): string =>
 const ensureTrailingSlash = (path: string): string =>
   path.endsWith("/") ? path : `${path}/`;
 
-const sanitizePath = (path: string): string => {
+const sanitizePath = (path: string | undefined): string => {
   if (!path) return "/";
   const [segment, rest] = path.split(/([?#].*)/, 2);
   const normalized = segment
@@ -49,6 +61,10 @@ export const localizePath = (
   href: string,
   locale: Locale,
 ): string => {
+  if (!I18N_ENABLED) {
+    return sanitizePath(href);
+  }
+
   if (!href) {
     return ensureTrailingSlash(`/${locale}`);
   }
@@ -81,7 +97,11 @@ export const stripLocaleFromPath = (
   if (!path) return "/";
   const sanitized = sanitizePath(path);
 
-  const localesToCheck = locale ? [locale] : SUPPORTED_LOCALES;
+  if (!I18N_ENABLED) {
+    return sanitized;
+  }
+
+  const localesToCheck = locale ? [locale] : ACTIVE_LOCALES;
 
   for (const code of localesToCheck) {
     if (sanitized === `/${code}` || sanitized === `/${code}/`) {

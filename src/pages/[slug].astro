@@ -1,5 +1,14 @@
 ---
-import { listDefaultLocaleSlugs, resolveDefaultLocaleRedirect } from "@lib/i18n/pages";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getEntry, type CollectionEntry } from "astro:content";
+import { DEFAULT_LOCALE, I18N_ENABLED } from "@lib/i18n/locales";
+import {
+  getLocalizedPage,
+  listDefaultLocaleSlugs,
+  resolveDefaultLocaleRedirect,
+} from "@lib/i18n/pages";
+import { resolveSection } from "@lib/sectionRenderer";
+import { getSiteConfig } from "@lib/siteData";
 
 export async function getStaticPaths() {
   const pages = await listDefaultLocaleSlugs();
@@ -11,8 +20,55 @@ export async function getStaticPaths() {
     }));
 }
 
-const redirectTargetPromise = resolveDefaultLocaleRedirect(Astro.params.slug ?? "");
-void redirectTargetPromise;
+if (I18N_ENABLED) {
+  const redirectTargetPromise = resolveDefaultLocaleRedirect(Astro.params.slug ?? "");
+  void redirectTargetPromise;
 
-return Astro.redirect(await redirectTargetPromise, 307);
+  return Astro.redirect(await redirectTargetPromise, 307);
+}
+
+const targetSlug = Astro.params.slug ?? "";
+
+const defaultPages = await listDefaultLocaleSlugs();
+const targetPage = defaultPages.find(({ slug }) => slug === targetSlug);
+
+if (!targetPage) {
+  return Astro.redirect("/", 307);
+}
+
+const localizedPage = await getLocalizedPage(targetPage.translationKey, DEFAULT_LOCALE);
+
+if (!localizedPage) {
+  return Astro.redirect("/", 307);
+}
+
+const { entry: page, locale, alternates } = localizedPage;
+const site = getSiteConfig(locale);
+const sectionEntries = await Promise.all(
+  page.data.sections.map(async ({ slug }) => await getEntry("sections", slug)),
+);
+
+const validSections = sectionEntries.filter(
+  (section): section is CollectionEntry<"sections"> => Boolean(section),
+);
+
+if (validSections.length !== sectionEntries.length) {
+  console.warn(
+    `Certaines sections référencées par la page "${targetPage.translationKey}" sont introuvables et ont été ignorées.`,
+  );
+}
+
+const resolvedSections = await Promise.all(validSections.map(resolveSection));
+const pageAlternates = I18N_ENABLED ? alternates : [];
 ---
+
+<BaseLayout
+  title={page.data.title}
+  description={page.data.description}
+  seo={page.data.seo}
+  lang={locale}
+  site={site}
+  alternates={pageAlternates}
+>
+  {resolvedSections.map(({ Component, props }) => <Component {...props} />)}
+</BaseLayout>

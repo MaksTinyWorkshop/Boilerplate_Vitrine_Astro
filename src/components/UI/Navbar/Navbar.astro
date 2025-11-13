@@ -6,6 +6,7 @@ import Spacer from "@components/UI/Spacer.astro";
 import ThemeToggle from "@components/UI/ThemeToggle/ThemeToggle.astro";
 import {
 DEFAULT_LOCALE,
+I18N_ENABLED,
 LOCALE_LABELS,
 LOCALE_SHORT_LABELS,
 isInternalHref,
@@ -93,7 +94,7 @@ const localeDefinitions = new Map(
   (siteContent.i18n?.locales ?? []).map((option) => [option.code, option]),
 );
 
-const normalizedAlternates = alternates
+const normalizedAlternates = (I18N_ENABLED ? alternates : [])
   .map((alternate) => {
     const localeCode =
       typeof alternate.locale === "string"
