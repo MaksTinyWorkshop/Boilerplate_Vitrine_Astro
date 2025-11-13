@@ -15,6 +15,7 @@ export type BrandLogo = {
   id: string;
   src: string;
   alt: string;
+  darkSrc?: string;
 };
 
 export type ContactItem = {
@@ -133,6 +134,7 @@ const SITE_CONFIGS: SiteConfigMap = {
         {
           id: "primary",
           src: "images/company-logo.svg",
+          darkSrc: "images/logos/company-logo-dark.svg",
           alt: "Logo principal",
         },
         {
@@ -265,6 +267,7 @@ const SITE_CONFIGS: SiteConfigMap = {
         {
           id: "primary",
           src: "images/company-logo.svg",
+          darkSrc: "images/logos/company-logo-dark.svg",
           alt: "Primary logo",
         },
         {
@@ -417,6 +420,7 @@ export const getCompanyDetails = (locale: Locale = DEFAULT_LOCALE) => {
       source: {
         src: logo.src,
         alt: logo.alt,
+        darkSrc: logo.darkSrc,
       },
     })),
   };

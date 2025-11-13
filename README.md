@@ -49,6 +49,7 @@ npm run lint    # vérifier schémas et types de contenu
   - `legal` : libellés et URLs des pages légales,
   - `interactions.callback` : libellés et champs du module “Être rappelé”,
 - Remplacez les logos et visuels dans `public/images` puis ajustez les chemins/alt dans `siteConfig`.
+  - Ajoutez `darkSrc` sur le logo principal si vous souhaitez afficher automatiquement une variante sombre (ex. `images/logos/company-logo-dark.svg` sera utilisée lorsque le thème "dark" est actif).
 
 ### Internationalisation optionnelle
 

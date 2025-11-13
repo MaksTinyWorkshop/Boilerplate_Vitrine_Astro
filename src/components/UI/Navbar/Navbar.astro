@@ -60,12 +60,14 @@ const currentPath = stripLocaleFromPath(
 const normalizedCurrentPath = normalizePath(currentPath);
 
 const primaryLogo = siteContent.brand.logos[0];
-const logoAsset = primaryLogo
+const logoAsset = primaryLogo?.src
   ? {
-      url: resolveUrl(primaryLogo.src),
+      light: resolveUrl(primaryLogo.src),
+      dark: primaryLogo.darkSrc ? resolveUrl(primaryLogo.darkSrc) : undefined,
       alt: primaryLogo.alt ?? siteContent.brand.name,
     }
-  : { url: "", alt: "" };
+  : undefined;
+const hasDarkLogo = Boolean(logoAsset?.dark);
 
 const menu = siteContent.navigation.main.map((item) => {
   const targetPath = item.href;
@@ -82,10 +84,17 @@ const menu = siteContent.navigation.main.map((item) => {
   };
 });
 
-const contactItems = siteContent.contact.items.map((item) => ({
-  ...item,
-  href: isInternalHref(item.href) ? resolveHref(item.href) : item.href,
-}));
+const contactItems = siteContent.contact.items.map((item) => {
+  const href = item.href;
+  const resolvedHref = href && isInternalHref(href)
+    ? resolveHref(href)
+    : href;
+
+  return {
+    ...item,
+    href: resolvedHref,
+  };
+});
 
 const languageSwitcherLabel =
   siteContent.language === "en" ? "Change language" : "Changer de langue";
@@ -152,8 +161,31 @@ const otherLocales = languageOptions.filter((option) => option.code !== locale);
     <div class={styles.logo}>
       <a href={resolveHref("/")}>
         {
-          logoAsset.url && (
-            <img src={logoAsset.url} alt={logoAsset.alt ?? "Logo"} />
+          logoAsset && (
+            <span
+              class={styles.logoImage}
+              data-has-dark={hasDarkLogo ? "true" : undefined}
+            >
+              <img
+                src={logoAsset.light}
+                alt={logoAsset.alt}
+                loading="eager"
+                decoding="async"
+                data-logo-variant="light"
+              />
+              {
+                hasDarkLogo && logoAsset.dark && (
+                  <img
+                    src={logoAsset.dark}
+                    alt={logoAsset.alt}
+                    loading="eager"
+                    decoding="async"
+                    data-logo-variant="dark"
+                    hidden
+                  />
+                )
+              }
+            </span>
           )
         }
       </a>

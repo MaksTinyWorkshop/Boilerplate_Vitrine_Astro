@@ -26,11 +26,34 @@ nav {
       z-index: 102;
       margin-inline: auto;
 
-      img {
-        display: block;
-        height: auto;
-        max-height: var(--space-6);
-        width: auto;
+      .logoImage {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-1);
+
+        img {
+          display: block;
+          height: auto;
+          max-height: var(--space-6);
+          width: auto;
+        }
+
+        &[data-has-dark="true"] {
+          img[data-logo-variant="dark"] {
+            display: none;
+          }
+
+          :global([data-theme="dark"]) &,
+          :global([data-theme-preference="dark"]) & {
+            img[data-logo-variant="light"] {
+              display: none;
+            }
+
+            img[data-logo-variant="dark"] {
+              display: block;
+            }
+          }
+        }
       }
     }
 
